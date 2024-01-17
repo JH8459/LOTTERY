@@ -1,0 +1,71 @@
+version: '1.0'
+
+services:
+  lottery_net:
+    image: traefik:v2.10
+    container_name: lottery_net
+    command:
+      - --log.level=ERROR
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:3000
+      - --entrypoints.web.forwardedHeaders.insecure=true
+    ports:
+      - target: 3000
+        published: 8459
+        mode: host
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - lottery_net_default
+
+  lottery_crawler_server:
+    container_name: lottery_crawler_server 
+    build:
+      context: ./crawler
+      dockerfile: Dockerfile
+    volumes:
+      - ./crawler/logs:/crawler/logs
+      - ./crawler/public:/crawler/public
+      - ./crawler/resource:/crawler/resource
+    env_file:
+      - ./crawler/.env
+    environment:
+      - TZ=Asia/Seoul
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.lottery_crawler_server.rule=Host(`localhost`)
+      - traefik.http.routers.lottery_crawler_server.service=lottery_crawler_server
+      - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=3000
+      - traefik.http.routers.lottery_crawler_server.entrypoints=web
+      - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.path=/health
+      - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.interval=11s
+      - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.timeout=1s
+      - traefik.docker.network=lottery_net_default
+    networks:
+      - lottery_net_default
+    depends_on:
+      - lottery_net
+      - lottery_redis
+
+  lottery_redis:
+    image: redis:latest
+    container_name: lottery_redis
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lottery_net_default
+
+networks:
+  lottery_net_default:
+    driver: bridge

@@ -1,0 +1,7 @@
+# crawler
+/crawler/node_modules
+/crawler/public
+/crawler/resource
+
+# common
+**/.env*
