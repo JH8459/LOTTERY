@@ -12,7 +12,7 @@ services:
       - --entrypoints.web.forwardedHeaders.insecure=true
     ports:
       - target: 3000
-        published: 8459
+        published: 10010
         mode: host
     restart: always
     volumes:
