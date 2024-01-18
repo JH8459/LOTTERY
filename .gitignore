@@ -1,5 +1,6 @@
 # crawler
 /crawler/node_modules
+/crawler/dist
 /crawler/public
 /crawler/resource
 
