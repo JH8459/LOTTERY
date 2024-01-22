@@ -1,5 +1,5 @@
-import 'dotenv/config'
-import express, { Request, Response } from "express";
+import 'dotenv/config';
+import express, { Request, Response } from 'express';
 import compression from 'compression';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: false,
-  }),
+  })
 );
 app.use(morgan('dev'));
 app.use(
@@ -31,16 +31,16 @@ app.use(
     origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-  }),
+  })
 );
 
-app.get("/", (req: Request, res: Response) => {
-  console.log('WELCOME ✅')
+app.get('/', (req: Request, res: Response) => {
+  console.log('WELCOME ✅');
   res.send('HI');
 });
 
-app.get("/health", (req: Request, res: Response) => {
-  console.log('HEALTHY 💪')
+app.get('/health', (req: Request, res: Response) => {
+  console.log('HEALTHY 💪');
   res.send(new Date());
 });
 

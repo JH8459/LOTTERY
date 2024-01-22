@@ -1,25 +1,25 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'lotto' })
 export class LottoEntity {
-  @PrimaryColumn()
-  id!: number
+  @PrimaryColumn({ name: 'id', type: 'smallint' })
+  id: number;
 
-  @Column()
-  one!: number
+  @Column({ name: 'one', type: 'tinyint' })
+  one: number;
 
-  @Column()
-  two!: number
+  @Column({ name: 'two', type: 'tinyint' })
+  two: number;
 
-  @Column()
-  three!: number
+  @Column({ name: 'three', type: 'tinyint' })
+  three: number;
 
-  @Column()
-  four!: number
+  @Column({ name: 'four', type: 'tinyint' })
+  four: number;
 
-  @Column()
-  five!: number
+  @Column({ name: 'five', type: 'tinyint' })
+  five: number;
 
-  @Column()
-  bonus!: number
+  @Column({ name: 'bonus', type: 'tinyint' })
+  bonus: number;
 }

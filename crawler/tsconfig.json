@@ -1,14 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
-    "module": "CommonJS",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2016", "esnext.asynciterable"],
+    "types": ["node"],
+    "target": "es2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "outDir": "./dist",
+    "strict": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "src/test", "**/*.spec.ts", "**/*.test.ts"]
 }
