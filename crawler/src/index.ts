@@ -36,7 +36,7 @@ app.use(
 
 app.get('/', (req: Request, res: Response) => {
   console.log('WELCOME ✅');
-  res.send('HI');
+  res.send('WELCOME');
 });
 
 app.get('/health', (req: Request, res: Response) => {
