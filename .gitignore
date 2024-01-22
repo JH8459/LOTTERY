@@ -1,3 +1,6 @@
+# root
+**/.vscode/*
+
 # crawler
 /crawler/node_modules
 /crawler/dist

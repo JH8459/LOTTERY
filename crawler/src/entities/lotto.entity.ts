@@ -20,6 +20,9 @@ export class LottoEntity {
   @Column({ name: 'five', type: 'tinyint' })
   five: number;
 
+  @Column({ name: 'six', type: 'tinyint' })
+  six: number;
+
   @Column({ name: 'bonus', type: 'tinyint' })
   bonus: number;
 }
