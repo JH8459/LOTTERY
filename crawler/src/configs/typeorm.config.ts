@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { DataSource } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 import { LottoEntity } from '../entities/lotto.entity';
 
-export const TYPE_ORM_CONFIG = new DataSource({
+export const TYPE_ORM_CONFIG: DataSourceOptions = {
   type: 'mariadb',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
@@ -10,6 +10,6 @@ export const TYPE_ORM_CONFIG = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [LottoEntity],
-  synchronize: true,
+  synchronize: false,
   logging: true,
-});
+};

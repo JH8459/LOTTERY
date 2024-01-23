@@ -4,10 +4,15 @@ import compression from 'compression';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+import { indexRouter } from './routes/index.routes';
+import { lottoSchedule } from './services/scheduler.service';
+import { healthRouter } from './routes/health.routes';
+import { DataSource } from 'typeorm';
 import { TYPE_ORM_CONFIG } from './configs/typeorm.config';
+import { db } from './database/init.database';
 
 // Connect typeORM mariaDB
-TYPE_ORM_CONFIG.initialize()
+db.initialize()
   .then(() => {
     console.log('Database Connected :)');
   })
@@ -16,7 +21,7 @@ TYPE_ORM_CONFIG.initialize()
 // Create express server
 const app = express();
 
-// middlewares
+// Middlewares
 app.set('port', process.env.CRAWLER_SERVER_PORT);
 app.use(compression());
 app.use(bodyParser.json());
@@ -34,14 +39,11 @@ app.use(
   })
 );
 
-app.get('/', (req: Request, res: Response) => {
-  console.log('WELCOME ✅');
-  res.send('WELCOME');
-});
+// Routes
+app.use('/', indexRouter);
+app.use('/health', healthRouter);
 
-app.get('/health', (req: Request, res: Response) => {
-  console.log('HEALTHY 💪');
-  res.send(new Date());
-});
+// Crawler
+lottoSchedule('0 * * * * *');
 
 app.listen(app.get('port'));
