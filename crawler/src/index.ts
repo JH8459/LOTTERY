@@ -44,6 +44,6 @@ app.use('/', indexRouter);
 app.use('/health', healthRouter);
 
 // Crawler
-lottoSchedule('0 * * * * *');
+// lottoSchedule('0 * * * * *');
 
 app.listen(app.get('port'));
