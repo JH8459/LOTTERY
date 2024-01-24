@@ -1,5 +1,6 @@
 # root
 **/.vscode/*
+/redis-data
 
 # crawler
 /crawler/node_modules
