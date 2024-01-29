@@ -2,19 +2,16 @@ import axios, { AxiosResponse } from 'axios';
 import ioredis from 'ioredis';
 import cheerio, { CheerioAPI, Element } from 'cheerio';
 import { scheduleJob } from 'node-schedule';
-import { getRecentlyDrwNo } from '../repositories/lotto.repository';
-import { drwtNo } from './interface/scheduler.interface';
+import { getRecentlyDrwNo, insertDrwInfo } from '../repositories/lotto.repository';
+import { DrwtNoInterface } from './interface/scheduler.interface';
+import { DrwInfoDto } from './dto/drwInfo.dto';
 
 export const lottoSchedule = (rule: string) =>
   scheduleJob(rule, async () => {
     const redis = new ioredis(6379, 'lottery_redis');
-    const redisDrwNo = await redis.get('drwNo');
 
-    console.log('✅ redisDrwNo: ', redisDrwNo);
-
-    const recentlyDrwNo: number = await getRecentlyDrwNo();
     let drwNo: number = 0;
-    const drwtNoList: drwtNo[] = [];
+    const drwtNoList: DrwtNoInterface[] = [];
     let firstWinamnt: number = 0;
     let firstPrzwnerCo: number = 0;
     let secondWinamnt: number = 0;
@@ -111,47 +108,49 @@ export const lottoSchedule = (rule: string) =>
         $drwNoDateInfo.slice(0, 4) + '-' + $drwNoDateInfo.slice(4, 6) + '-' + $drwNoDateInfo.slice(6)
       );
 
-      const recentlyDrwInfo = {
-        recentlyDrwNo,
-        drwNo,
-        drwtNoList,
-        firstWinamnt,
-        firstPrzwnerCo,
-        secondWinamnt,
-        secondPrzwnerCo,
-        thirdWinamnt,
-        thirdPrzwnerCo,
-        drwNoDate,
-      };
+      // Redis DrwNo Check
+      const redisDrwNo: number = Number(await redis.get('drwNo'));
 
-      // Set Redis
-      const week = 60 * 60 * 24 * 7;
-      await redis.set('drwNo', drwNo, 'EX', week);
-      await redis.set('drwtNo1', drwtNoList[0].value, 'EX', week);
-      await redis.set('drwtNo2', drwtNoList[1].value, 'EX', week);
-      await redis.set('drwtNo3', drwtNoList[2].value, 'EX', week);
-      await redis.set('drwtNo4', drwtNoList[3].value, 'EX', week);
-      await redis.set('drwtNo5', drwtNoList[4].value, 'EX', week);
-      await redis.set('drwtNo6', drwtNoList[5].value, 'EX', week);
-      await redis.set('bnusNo', drwtNoList[6].value, 'EX', week);
-      await redis.set('firstWinamnt', firstWinamnt, 'EX', week);
-      await redis.set('firstPrzwnerCo', firstPrzwnerCo, 'EX', week);
-      await redis.set('secondWinamnt', secondWinamnt, 'EX', week);
-      await redis.set('secondPrzwnerCo', secondPrzwnerCo, 'EX', week);
-      await redis.set('thirdWinamnt', thirdWinamnt, 'EX', week);
-      await redis.set('thirdPrzwnerCo', thirdPrzwnerCo, 'EX', week);
-      await redis.set('drwNoDate', drwNoDate.toString(), 'EX', week);
+      if (redisDrwNo !== drwNo) {
+        // Set Redis ( 1WEEK )
+        const week = 60 * 60 * 24 * 7;
+        await redis.set('drwNo', drwNo, 'EX', week);
+        await redis.set('drwtNo1', drwtNoList[0].value, 'EX', week);
+        await redis.set('drwtNo2', drwtNoList[1].value, 'EX', week);
+        await redis.set('drwtNo3', drwtNoList[2].value, 'EX', week);
+        await redis.set('drwtNo4', drwtNoList[3].value, 'EX', week);
+        await redis.set('drwtNo5', drwtNoList[4].value, 'EX', week);
+        await redis.set('drwtNo6', drwtNoList[5].value, 'EX', week);
+        await redis.set('bnusNo', drwtNoList[6].value, 'EX', week);
+        await redis.set('firstWinamnt', firstWinamnt, 'EX', week);
+        await redis.set('firstPrzwnerCo', firstPrzwnerCo, 'EX', week);
+        await redis.set('secondWinamnt', secondWinamnt, 'EX', week);
+        await redis.set('secondPrzwnerCo', secondPrzwnerCo, 'EX', week);
+        await redis.set('thirdWinamnt', thirdWinamnt, 'EX', week);
+        await redis.set('thirdPrzwnerCo', thirdPrzwnerCo, 'EX', week);
+        await redis.set('drwNoDate', drwNoDate.toString(), 'EX', week);
 
-      console.log('✅ recentlyDrwNo: ', recentlyDrwNo);
-      console.log('✅ drwNo: ', drwNo);
-      console.log('✅ drwtNoList: ', drwtNoList);
-      console.log('✅ firstWinamnt: ', firstWinamnt);
-      console.log('✅ firstPrzwnerCo: ', firstPrzwnerCo);
-      console.log('✅ secondWinamnt: ', secondWinamnt);
-      console.log('✅ secondPrzwnerCo: ', secondPrzwnerCo);
-      console.log('✅ thirdWinamnt: ', thirdWinamnt);
-      console.log('✅ thirdPrzwnerCo: ', thirdPrzwnerCo);
-      console.log('✅ drwNoDate: ', drwNoDate);
+        // DB DrwNo Check
+        const dbDrwNo: number = await getRecentlyDrwNo();
+
+        if (redisDrwNo !== dbDrwNo) {
+          // Set drwInfo DTO
+          const drwInfo: DrwInfoDto = {
+            drwNo,
+            drwtNoList,
+            firstWinamnt,
+            firstPrzwnerCo,
+            secondWinamnt,
+            secondPrzwnerCo,
+            thirdWinamnt,
+            thirdPrzwnerCo,
+            drwNoDate,
+          };
+
+          // Insert DB
+          await insertDrwInfo(drwInfo);
+        }
+      }
     } catch (err) {
       console.log(err);
     }

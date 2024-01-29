@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import compression from 'compression';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
@@ -7,8 +7,6 @@ import morgan from 'morgan';
 import { indexRouter } from './routes/index.routes';
 import { lottoSchedule } from './services/scheduler.service';
 import { healthRouter } from './routes/health.routes';
-import { DataSource } from 'typeorm';
-import { TYPE_ORM_CONFIG } from './configs/typeorm.config';
 import { db } from './database/init.database';
 
 // Connect typeORM mariaDB
@@ -44,6 +42,6 @@ app.use('/', indexRouter);
 app.use('/health', healthRouter);
 
 // Crawler
-// lottoSchedule('0 * * * * *');
+lottoSchedule('00 22 * * *');
 
 app.listen(app.get('port'));

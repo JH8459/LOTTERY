@@ -1,4 +1,4 @@
-export interface drwtNo {
+export interface DrwtNoInterface {
   no: string;
   value: number;
 }
