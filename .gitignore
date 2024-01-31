@@ -2,7 +2,15 @@
 **/.vscode/*
 /redis-data
 
+# api
+/api/logs
+/api/node_modules
+/api/dist
+/api/public
+/api/resource
+
 # crawler
+/crawler/logs
 /crawler/node_modules
 /crawler/dist
 /crawler/public
