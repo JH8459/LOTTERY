@@ -49,6 +49,7 @@ jobs:
             echo "DB_USER=${{ secrets.DB_USER }}" >> .env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+            echo "API_NODE_ENV=${{ secrets.API_NODE_ENV }}" >> .env
             echo "API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}" >> .env
             cat .env
 
