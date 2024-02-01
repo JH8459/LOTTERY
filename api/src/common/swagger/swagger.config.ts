@@ -9,7 +9,7 @@ const swaggerCustomOptions: SwaggerCustomOptions = {
 };
 
 export function setupSwagger(app: INestApplication): void {
-  if (process.env.NODE_ENV === 'dev') {
+  if (process.env.API_NODE_ENV === 'dev') {
     const options: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
       .setTitle('LOTTERY 🍀')
       .setDescription('LOTTERY 🍀 API Swagger 문서')

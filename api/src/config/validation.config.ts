@@ -7,7 +7,7 @@ export const validationOptions = {
   transform: true,
 
   exceptionFactory: (validationErrors: ValidationError[] = []) => {
-    if (process.env.NODE_ENV === 'dev') {
+    if (process.env.API_NODE_ENV === 'dev') {
       const logger = new Logger();
       for (const { property, constraints } of validationErrors) {
         logger.warn(
