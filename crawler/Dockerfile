@@ -8,6 +8,7 @@ RUN npm install
 
 COPY . /crawler
 
+RUN npm run build
 CMD npm run dev
 
 HEALTHCHECK --interval=30s --timeout=2s --retries=1 \
