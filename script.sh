@@ -5,11 +5,11 @@ sleep 2s
 echo "=> Docker System Prune..."
 docker system prune -f
 sleep 2s
-echo "=> Docker Network Prune..."
-docker network prune -f
-sleep 2s
 echo "=> Docker Volume Prune..."
 docker volume prune -f
+sleep 2s
+echo "=> Docker Network Prune..."
+docker network prune -f
 sleep 2s
 echo "=> Docker Compose Build..."
 docker compose build
