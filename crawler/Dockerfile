@@ -5,7 +5,6 @@ WORKDIR /crawler/
 COPY ./package*.json /crawler/
 
 RUN npm install
-RUN npm build
 
 COPY . /crawler
 
