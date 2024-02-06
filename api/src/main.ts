@@ -38,6 +38,6 @@ async function bootstrap() {
 
   const API_SERVER_PORT = configService.get<number>('API_SERVER_PORT');
 
-  await app.listen(API_SERVER_PORT);
+  await app.listen(API_SERVER_PORT, '0.0.0.0');
 }
 bootstrap();
