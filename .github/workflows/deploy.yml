@@ -51,6 +51,11 @@ jobs:
             echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
             echo "API_NODE_ENV=${{ secrets.API_NODE_ENV }}" >> .env
             echo "API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}" >> .env
+            echo "API_EMAIL_USERNAME=${{ secrets.API_EMAIL_USERNAME }}" >> .env
+            echo "API_EMAIL_PASSWORD=${{ secrets.API_EMAIL_PASSWORD }}" >> .env
+            echo "API_EMAIL_HOST=${{ secrets.API_EMAIL_HOST }}" >> .env
+            echo "API_EMAIL_PORT=${{ secrets.API_EMAIL_PORT }}" >> .env
+            echo "API_EMAIL_FROM=${{ secrets.API_EMAIL_FROM }}" >> .env
             cat .env
 
             echo "############# DOCKER SCRIPT #############"
