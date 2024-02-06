@@ -4,6 +4,7 @@ import compression from 'compression';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+import schedule from 'node-schedule';
 import { indexRouter } from './routes/index.routes';
 import { lottoSchedule } from './services/scheduler.service';
 import { healthRouter } from './routes/health.routes';
@@ -42,6 +43,13 @@ app.use('/', indexRouter);
 app.use('/health', healthRouter);
 
 // Crawler
-lottoSchedule('00 22 * * *');
+const rule = new schedule.RecurrenceRule();
+
+rule.dayOfWeek = [0, new schedule.Range(2, 4)];
+rule.hour = 11;
+rule.minute = 10;
+rule.tz = 'Asia/Seoul';
+
+lottoSchedule(rule);
 
 app.listen(app.get('port'));
