@@ -13,8 +13,8 @@ import { REDIS_CONFIG } from 'src/config/redis.config';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    RedisModule.forRootAsync(REDIS_CONFIG),
     MailerModule.forRootAsync(EMAIL_CONFIG),
+    RedisModule.forRootAsync(REDIS_CONFIG),
     WinstonModule.forRoot(WINSTON_CONFIG),
     HealthModule,
     NotificationsModule,

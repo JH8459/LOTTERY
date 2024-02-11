@@ -46,8 +46,8 @@ app.use('/health', healthRouter);
 const rule = new schedule.RecurrenceRule();
 
 rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-rule.hour = 4;
-rule.minute = 0;
+rule.hour = 22;
+rule.minute = 16;
 rule.tz = 'Asia/Seoul';
 
 lottoSchedule(rule);

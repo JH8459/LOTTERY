@@ -1,13 +1,13 @@
-import { RedisModuleAsyncOptions } from '@liaoliaots/nestjs-redis';
+import { RedisModuleAsyncOptions, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export const REDIS_CONFIG: RedisModuleAsyncOptions = {
   imports: [ConfigModule],
   inject: [ConfigService],
-  useFactory: (configService: ConfigService) => ({
-    transport: {
+  useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => ({
+    config: {
       host: configService.get<string>('API_REDIS_HOST'),
-      port: configService.get<string>('API_REDIS_PORT'),
+      port: Number(configService.get<string>('API_REDIS_PORT')),
       db: 0,
       lazyConnect: true,
       retryStrategy(times) {
