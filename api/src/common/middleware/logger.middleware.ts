@@ -10,6 +10,7 @@ export class LoggerMiddleware implements NestMiddleware {
     res.on('finish', async () => {
       this.logger.log(`${req.ip}, ${req.originalUrl}, ${req.method}, ${res.statusCode}`);
     });
+
     next();
   }
 }

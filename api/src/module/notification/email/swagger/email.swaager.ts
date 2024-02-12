@@ -1,4 +1,4 @@
-import { ApiBodyOptions, ApiOperationOptions, ApiParamOptions } from '@nestjs/swagger';
+import { ApiBodyOptions, ApiOperationOptions } from '@nestjs/swagger';
 import { InputEmailDto } from '../dto/inputEmail.dto';
 
 export const SEND_EMAIL = {

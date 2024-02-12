@@ -12,7 +12,9 @@ import { WINSTON_CONFIG } from './config/logger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
+    cors: {
+      origin: true,
+    },
     logger: WinstonModule.createLogger(WINSTON_CONFIG),
   });
 
@@ -23,7 +25,8 @@ async function bootstrap() {
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
     credentials: true,
   });
-  // Proxy Setting, 환경에서 실제 IP 분별 처리
+
+  // Proxy Setting, 실제 IP 분별 처리
   app.set('trust proxy', true);
   // Swagger Options Setting, API DOCS 처리
   setupSwagger(app);

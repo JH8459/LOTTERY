@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { WinstonModule } from 'nest-winston';
 import { LoggerMiddleware } from 'src/common/middleware/logger.middleware';
 import { HealthModule } from './health/health.module';

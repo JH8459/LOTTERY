@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 import { emailTemplate } from './template/email.template';
-import { InputEmailDto } from '../dto/inputEmail.dto';
+import { InputEmailDto } from './dto/inputEmail.dto';
 import { convertDateFormat } from 'src/common/utils/utils';
 
 @Injectable()
@@ -15,34 +15,27 @@ export class EmailService {
     @InjectRedis() private readonly redis: Redis
   ) {}
 
-  async sendEmail(emailInfo: any): Promise<void> {
+  async sendEmail({ emailInfo }: InputEmailDto): Promise<void> {
     const from: string = this.configService.get<string>('API_EMAIL_FROM');
-    const drwNo: number = Number(await this.redis.get('drwNo'));
-    const drwtNo1: number = Number(await this.redis.get('drwtNo1'));
-    const drwtNo2: number = Number(await this.redis.get('drwtNo2'));
-    const drwtNo3: number = Number(await this.redis.get('drwtNo3'));
-    const drwtNo4: number = Number(await this.redis.get('drwtNo4'));
-    const drwtNo5: number = Number(await this.redis.get('drwtNo5'));
-    const drwtNo6: number = Number(await this.redis.get('drwtNo6'));
-    const bnusNo: number = Number(await this.redis.get('bnusNo'));
-    const drwNoDate: Date = new Date(await this.redis.get('drwNoDate'));
 
-    console.log('✅ drwNo: ', drwNo);
-    console.log('✅ drwtNo1: ', drwtNo1);
-    console.log('✅ drwtNo2: ', drwtNo2);
-    console.log('✅ drwtNo3: ', drwtNo3);
-    console.log('✅ drwtNo4: ', drwtNo4);
-    console.log('✅ drwtNo5: ', drwtNo5);
-    console.log('✅ drwtNo6: ', drwtNo6);
-    console.log('✅ bnusNo: ', bnusNo);
-    console.log('✅ drwNoDate: ', drwNoDate);
+    const mailInfo = {
+      drwNo: Number(await this.redis.get('drwNo')),
+      drwtNo1: Number(await this.redis.get('drwtNo1')),
+      drwtNo2: Number(await this.redis.get('drwtNo2')),
+      drwtNo3: Number(await this.redis.get('drwtNo3')),
+      drwtNo4: Number(await this.redis.get('drwtNo4')),
+      drwtNo5: Number(await this.redis.get('drwtNo5')),
+      drwtNo6: Number(await this.redis.get('drwtNo6')),
+      bnusNo: Number(await this.redis.get('bnusNo')),
+      drwNoDate: new Date(await this.redis.get('drwNoDate')),
+    };
 
     try {
       await this.mailerService.sendMail({
         to: emailInfo,
         from,
-        subject: `[${convertDateFormat(drwNoDate)}] ${drwNo}회 당첨결과 🍀`,
-        html: emailTemplate(),
+        subject: `[${convertDateFormat(mailInfo.drwNoDate)}] ${mailInfo.drwNo}회 당첨결과 🍀`,
+        html: emailTemplate(mailInfo),
       });
     } catch (err) {
       throw new BadRequestException('메일 전송에 실패했습니다.');

@@ -22,10 +22,9 @@ const dailyOptions = (level: string) => {
 export const WINSTON_CONFIG = {
   transports: [
     new winston.transports.Console({
-      level: 'silly',
+      level: 'info',
       format: winston.format.combine(utilities.format.nestLike('🍀', { colors: true, prettyPrint: true })),
     }),
-    new winstonDaily(dailyOptions('silly')),
     new winstonDaily(dailyOptions('info')),
     new winstonDaily(dailyOptions('error')),
   ],
