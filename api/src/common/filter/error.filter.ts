@@ -10,6 +10,8 @@ export class ServerErrorFilter implements ExceptionFilter {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response: Response = ctx.getResponse<Response>();
 
+    console.log('❌ Error: ', exception);
+
     if (exception instanceof HttpException) {
       // HttpException Error 처리
       const status: number = exception.getStatus();

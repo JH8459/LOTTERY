@@ -4,7 +4,7 @@ WORKDIR /api/
 
 COPY ./package*.json /api/
 
-RUN npm install --force
+RUN npm install
 
 COPY . /api
 
