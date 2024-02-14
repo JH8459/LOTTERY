@@ -6,6 +6,7 @@ import { Redis } from 'ioredis';
 import { emailTemplate } from './template/email.template';
 import { InputEmailDto } from './dto/inputEmail.dto';
 import { convertDateFormat } from 'src/common/utils/utils';
+import { LottoInfoInterface } from './interface/mailInfo.interface';
 
 @Injectable()
 export class EmailService {
@@ -18,7 +19,7 @@ export class EmailService {
   async sendEmail({ emailInfo }: InputEmailDto): Promise<void> {
     const from: string = this.configService.get<string>('API_EMAIL_FROM');
 
-    const mailInfo = {
+    const lottoInfo: LottoInfoInterface = {
       drwNo: Number(await this.redis.get('drwNo')),
       drwtNo1: Number(await this.redis.get('drwtNo1')),
       drwtNo2: Number(await this.redis.get('drwtNo2')),
@@ -27,6 +28,12 @@ export class EmailService {
       drwtNo5: Number(await this.redis.get('drwtNo5')),
       drwtNo6: Number(await this.redis.get('drwtNo6')),
       bnusNo: Number(await this.redis.get('bnusNo')),
+      firstWinamnt: Number(await this.redis.get('firstWinamnt')),
+      firstPrzwnerCo: Number(await this.redis.get('firstPrzwnerCo')),
+      secondWinamnt: Number(await this.redis.get('secondWinamnt')),
+      secondPrzwnerCo: Number(await this.redis.get('secondPrzwnerCo')),
+      thirdWinamnt: Number(await this.redis.get('thirdWinamnt')),
+      thirdPrzwnerCo: Number(await this.redis.get('thirdPrzwnerCo')),
       drwNoDate: new Date(await this.redis.get('drwNoDate')),
     };
 
@@ -34,8 +41,8 @@ export class EmailService {
       await this.mailerService.sendMail({
         to: emailInfo,
         from,
-        subject: `[${convertDateFormat(mailInfo.drwNoDate)}] ${mailInfo.drwNo}회 당첨결과 🍀`,
-        html: emailTemplate(mailInfo),
+        subject: `[${convertDateFormat(lottoInfo.drwNoDate)}] ${lottoInfo.drwNo}회 당첨결과 🍀`,
+        html: emailTemplate(lottoInfo),
       });
     } catch (err) {
       throw new BadRequestException('메일 전송에 실패했습니다.');

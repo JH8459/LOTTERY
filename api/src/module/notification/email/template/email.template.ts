@@ -1,17 +1,18 @@
-import { convertDateFormat } from 'src/common/utils/utils';
+import {
+  convertDateFormat,
+  convertKRLocaleStringFormat,
+  convertNumberToCSSBackground,
+  convertNumberToCSSTextShadow,
+} from 'src/common/utils/utils';
+import { LottoInfoInterface } from '../interface/mailInfo.interface';
 
-export const emailTemplate = (mailInfo: any) => {
+export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
   return `<!DOCTYPE html>
   <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
     <head>
       <title></title>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="viewport" content="width=device-width,initial-scale=1" />
-      <!--[if mso
-        ]><xml
-          ><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG /></o:OfficeDocumentSettings></xml
-      ><![endif]-->
-      <!--[if !mso]><!-->
       <link
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700;900&amp;display=swap"
         rel="stylesheet"
@@ -34,9 +35,6 @@ export const emailTemplate = (mailInfo: any) => {
           color: inherit;
           text-decoration: none;
         }
-        p {
-          line-height: inherit;
-        }
         .desktop_hide,
         .desktop_hide table {
           mso-hide: all;
@@ -47,6 +45,7 @@ export const emailTemplate = (mailInfo: any) => {
         .image_block img + div {
           display: none;
         }
+  
         @media (max-width: 620px) {
           .social_block.desktop_hide .social-table {
             display: inline-block !important;
@@ -59,10 +58,6 @@ export const emailTemplate = (mailInfo: any) => {
           }
           .row-content {
             width: 100% !important;
-          }
-          .stack .column {
-            width: 100%;
-            display: block;
           }
           .mobile_hide {
             min-height: 0;
@@ -260,7 +255,7 @@ export const emailTemplate = (mailInfo: any) => {
                                           "
                                         >
                                           <span style="font-size: 18px"
-                                            >${convertDateFormat(mailInfo.drwNoDate)} 추첨</span
+                                            >${convertDateFormat(lottoInfo.drwNoDate)} 추첨</span
                                           >
                                         </p>
                                       </div>
@@ -299,7 +294,7 @@ export const emailTemplate = (mailInfo: any) => {
                                           "
                                         >
                                           <strong
-                                            ><span style="font-size: 48px">${mailInfo.drwNo}회 당첨결과</span></strong
+                                            ><span style="font-size: 40px">${lottoInfo.drwNo}회 당첨결과</span></strong
                                           >
                                         </p>
                                       </div>
@@ -441,8 +436,8 @@ export const emailTemplate = (mailInfo: any) => {
                                 text-align: left;
                                 border-left: 1px solid #1a7616;
                                 border-right: 1px solid #1a7616;
-                                padding-bottom: 5px;
-                                padding-top: 5px;
+                                padding-bottom: 20px;
+                                padding-top: 20px;
                                 vertical-align: top;
                                 border-top: 0;
                                 border-bottom: 0;
@@ -478,7 +473,7 @@ export const emailTemplate = (mailInfo: any) => {
                                             mso-line-height-alt: 16.8px;
                                           "
                                         >
-                                          <strong><span style="font-size: 20px">당첨 번호</span></strong>
+                                          <strong><span style="font-size: 20px">🍀 로또 당첨 번호</span></strong>
                                         </p>
                                       </div>
                                     </div>
@@ -556,24 +551,21 @@ export const emailTemplate = (mailInfo: any) => {
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
                                       <div
-                                        class
                                         style="
                                           font-size: 14px;
                                           font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
                                         "
                                       >
                                         <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                          style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                            lottoInfo.drwtNo1
+                                          )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo1)};"
                                         >
-                                          ${mailInfo.drwtNo1}
+                                          ${lottoInfo.drwtNo1}
                                         </p>
                                       </div>
                                     </div>
@@ -610,25 +602,22 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                    <div
+                                    style="
+                                      font-size: 14px;
+                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                      text-align: center;
+                                      vertical-align: middle;
+                                      height: 40px;
+                                      line-height: 40px
+                                    "
+                                  >
+                                    <p
+                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                        lottoInfo.drwtNo2
+                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo2)};"
                                         >
-                                          ${mailInfo.drwtNo2}
+                                          ${lottoInfo.drwtNo2}
                                         </p>
                                       </div>
                                     </div>
@@ -665,25 +654,22 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                    <div
+                                    style="
+                                      font-size: 14px;
+                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                      text-align: center;
+                                      vertical-align: middle;
+                                      height: 40px;
+                                      line-height: 40px
+                                    "
+                                  >
+                                    <p
+                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                        lottoInfo.drwtNo3
+                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo3)};"
                                         >
-                                          ${mailInfo.drwtNo3}
+                                          ${lottoInfo.drwtNo3}
                                         </p>
                                       </div>
                                     </div>
@@ -720,25 +706,22 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                    <div
+                                    style="
+                                      font-size: 14px;
+                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                      text-align: center;
+                                      vertical-align: middle;
+                                      height: 40px;
+                                      line-height: 40px
+                                    "
+                                  >
+                                    <p
+                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                        lottoInfo.drwtNo4
+                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo4)};"
                                         >
-                                          ${mailInfo.drwtNo4}
+                                          ${lottoInfo.drwtNo4}
                                         </p>
                                       </div>
                                     </div>
@@ -775,25 +758,22 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                    <div
+                                    style="
+                                      font-size: 14px;
+                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                      text-align: center;
+                                      vertical-align: middle;
+                                      height: 40px;
+                                      line-height: 40px
+                                    "
+                                  >
+                                    <p
+                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                        lottoInfo.drwtNo5
+                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo5)};"
                                         >
-                                          ${mailInfo.drwtNo5}
+                                          ${lottoInfo.drwtNo5}
                                         </p>
                                       </div>
                                     </div>
@@ -829,25 +809,22 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                    <div
+                                    style="
+                                      font-size: 14px;
+                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                      text-align: center;
+                                      vertical-align: middle;
+                                      height: 40px;
+                                      line-height: 40px
+                                    "
+                                  >
+                                    <p
+                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                        lottoInfo.drwtNo6
+                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo6)};"
                                         >
-                                          ${mailInfo.drwtNo6}
+                                          ${lottoInfo.drwtNo6}
                                         </p>
                                       </div>
                                     </div>
@@ -884,25 +861,22 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad">
                                     <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
+                                    <div
+                                    style="
+                                      font-size: 14px;
+                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                      text-align: center;
+                                      vertical-align: middle;
+                                      height: 40px;
+                                      line-height: 40px
+                                    "
+                                  >
+                                    <p
+                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
+                                        lottoInfo.bnusNo
+                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.bnusNo)};"
                                         >
-                                          ${mailInfo.bnusNo}
+                                          ${lottoInfo.bnusNo}
                                         </p>
                                       </div>
                                     </div>
@@ -1229,7 +1203,12 @@ export const emailTemplate = (mailInfo: any) => {
                                         mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0"><strong>17명 / 23438659</strong></p>
+                                      <p style="margin: 0">
+                                        <strong
+                                          >${convertKRLocaleStringFormat(lottoInfo.firstPrzwnerCo)}명 /
+                                          ${convertKRLocaleStringFormat(lottoInfo.firstWinamnt)}원</strong
+                                        >
+                                      </p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1405,7 +1384,12 @@ export const emailTemplate = (mailInfo: any) => {
                                         mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0"><strong>17명 / 23438659</strong></p>
+                                      <p style="margin: 0">
+                                        <strong
+                                          >${convertKRLocaleStringFormat(lottoInfo.secondPrzwnerCo)}명 /
+                                          ${convertKRLocaleStringFormat(lottoInfo.secondWinamnt)}원</strong
+                                        >
+                                      </p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1581,7 +1565,12 @@ export const emailTemplate = (mailInfo: any) => {
                                         mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0"><strong>17명 / 23438659</strong></p>
+                                      <p style="margin: 0">
+                                        <strong
+                                          >${convertKRLocaleStringFormat(lottoInfo.thirdPrzwnerCo)}명 /
+                                          ${convertKRLocaleStringFormat(lottoInfo.thirdWinamnt)}원</strong
+                                        >
+                                      </p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1726,13 +1715,19 @@ export const emailTemplate = (mailInfo: any) => {
                                 style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                  <td
+                                    class="pad"
+                                    style="text-align: center; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
                                     <div
                                       class="spacer_block block-1"
                                       style="height: 60px; line-height: 60px; font-size: 1px"
                                     >
                                       &#8202;
                                     </div>
+                                    <p style="margin-bottom: 20px">
+                                      <strong>더 많은 정보를 담기 위해 준비중입니다 :)</strong>
+                                    </p>
                                   </td>
                                 </tr>
                               </table>
@@ -1806,12 +1801,6 @@ export const emailTemplate = (mailInfo: any) => {
                                 <tr>
                                   <td class="pad" style="text-align: center">
                                     <div class="alignment" align="center">
-                                      <!--[if mso]>
-  <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:42px;width:82px;v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#555555">
-  <w:anchorlock/>
-  <v:textbox inset="0px,0px,0px,0px">
-  <center style="color:#ffffff; font-family:Tahoma, Verdana, sans-serif; font-size:16px">
-  <![endif]-->
                                       <div
                                         style="
                                           text-decoration: none;
@@ -1836,18 +1825,20 @@ export const emailTemplate = (mailInfo: any) => {
                                       >
                                         <span
                                           style="
+                                            cursor: pointer;
                                             padding-left: 20px;
                                             padding-right: 20px;
                                             font-size: 16px;
                                             display: inline-block;
                                             letter-spacing: normal;
+                                            word-break: break-word;
+                                            line-height: 32px;
                                           "
-                                          ><span style="word-break: break-word; line-height: 32px"
-                                            ><strong>TEST</strong></span
-                                          ></span
+                                          onclick="location.href='https://dhlottery.co.kr/'"
                                         >
+                                          <strong>동행복권 바로가기</strong>
+                                        </span>
                                       </div>
-                                      <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
                                     </div>
                                   </td>
                                 </tr>
