@@ -1,7 +1,9 @@
+import { EntityManager, getManager } from 'typeorm';
 import { db } from '../database/init.database';
 import { LottoEntity } from '../entities/lotto.entity';
 import { DrwtNoInfoEnum } from '../services/constant/enum';
 import { DrwInfoDto } from '../services/dto/drwInfo.dto';
+import { StatisticDrwNoInterface } from '../services/interface/scheduler.interface';
 
 export const getRecentlyDrwNo = async (): Promise<number> => {
   const { drwNo } = await db
@@ -12,6 +14,69 @@ export const getRecentlyDrwNo = async (): Promise<number> => {
     .getRawOne();
 
   return drwNo;
+};
+
+export const getStatisticByDrwNo = async (): Promise<StatisticDrwNoInterface[]> => {
+  const union1Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.drwtNo1 AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.drwtNo1')
+    .getQuery();
+
+  const union2Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.drwtNo2 AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.drwtNo2')
+    .getQuery();
+
+  const union3Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.drwtNo3 AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.drwtNo3')
+    .getQuery();
+
+  const union4Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.drwtNo4 AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.drwtNo4')
+    .getQuery();
+
+  const union5Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.drwtNo5 AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.drwtNo5')
+    .getQuery();
+
+  const union6Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.drwtNo6 AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.drwtNo6')
+    .getQuery();
+
+  const union7Query = db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select(['lottoEntity.bnusNo AS lottoNo', 'COUNT(*) AS cnt'])
+    .groupBy('lottoEntity.bnusNo')
+    .getQuery();
+  // UNION ALL
+  const unionAllQuery = `((${union1Query}) UNION ALL (${union2Query}) UNION ALL (${union3Query}) UNION ALL (${union4Query}) UNION ALL (${union5Query}) UNION ALL (${union6Query}) UNION ALL (${union7Query}))`;
+  // 1~45번 (보너스 번호 포함) 번호 별 통계 내림차순
+  const statisticInfoList: StatisticDrwNoInterface[] = await db
+    .createQueryBuilder()
+    .select(['lottoNo AS lottoNo', 'CAST(SUM(cnt) AS DOUBLE) AS cnt'])
+    .from(unionAllQuery, 'union')
+    .groupBy('lottoNo')
+    .orderBy('cnt', 'DESC')
+    .getRawMany();
+
+  return statisticInfoList;
 };
 
 export const insertDrwInfo = async ({

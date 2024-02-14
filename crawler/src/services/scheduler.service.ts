@@ -3,8 +3,8 @@ import ioredis from 'ioredis';
 import cheerio, { CheerioAPI, Element } from 'cheerio';
 import schedule from 'node-schedule';
 import { scheduleJob } from 'node-schedule';
-import { getRecentlyDrwNo, insertDrwInfo } from '../repositories/lotto.repository';
-import { DrwtNoInterface } from './interface/scheduler.interface';
+import { getRecentlyDrwNo, getStatisticByDrwNo, insertDrwInfo } from '../repositories/lotto.repository';
+import { DrwtNoInterface, StatisticDrwNoInterface } from './interface/scheduler.interface';
 import { DrwInfoDto } from './dto/drwInfo.dto';
 
 export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
@@ -111,8 +111,11 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
         $drwNoDateInfo.slice(0, 4) + '-' + $drwNoDateInfo.slice(4, 6) + '-' + $drwNoDateInfo.slice(6)
       );
 
-      // Set Redis ( 1WEEK )
-      const week = 60 * 60 * 24 * 7;
+      const statisticInfoList: StatisticDrwNoInterface[] = await getStatisticByDrwNo();
+
+      // Set Redis ( Lotto Info )
+      const week = 60 * 60 * 24 * 7; // 1WEEK
+
       await redis.set('drwNo', drwNo, 'EX', week);
       await redis.set('drwtNo1', drwtNoList[0].value, 'EX', week);
       await redis.set('drwtNo2', drwtNoList[1].value, 'EX', week);
@@ -128,6 +131,13 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
       await redis.set('thirdWinamnt', thirdWinamnt, 'EX', week);
       await redis.set('thirdPrzwnerCo', thirdPrzwnerCo, 'EX', week);
       await redis.set('drwNoDate', drwNoDate.toString(), 'EX', week);
+      // Set Redis ( Lotto Statistic Info )
+      await redis.set('firstLottoNo', statisticInfoList[0].lottoNo, 'EX', week);
+      await redis.set('firstLottoNoCnt', statisticInfoList[0].cnt, 'EX', week);
+      await redis.set('secondLottoNo', statisticInfoList[1].lottoNo, 'EX', week);
+      await redis.set('secondLottoNoCnt', statisticInfoList[1].cnt, 'EX', week);
+      await redis.set('thirdLottoNo', statisticInfoList[2].lottoNo, 'EX', week);
+      await redis.set('thirdLottoNoCnt', statisticInfoList[2].cnt, 'EX', week);
 
       // DB DrwNo Check
       const dbDrwNo: number = await getRecentlyDrwNo();
