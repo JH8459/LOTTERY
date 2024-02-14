@@ -4,9 +4,9 @@ import {
   convertNumberToCSSBackground,
   convertNumberToCSSTextShadow,
 } from 'src/common/utils/utils';
-import { LottoInfoInterface } from '../interface/mailInfo.interface';
+import { LottoInfoInterface, LottoStatisticInfoInterface } from '../interface/mailInfo.interface';
 
-export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
+export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo: LottoStatisticInfoInterface) => {
   return `<!DOCTYPE html>
   <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
     <head>
@@ -89,6 +89,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
         <tbody>
           <tr>
             <td>
+              <!-- 로고 테이블 (row row-1) -->
               <table
                 class="row row-1"
                 align="center"
@@ -173,6 +174,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 상단 타이틀(추첨일자 & 회차) 테이블 (row row-2) -->
               <table
                 class="row row-2"
                 align="center"
@@ -310,6 +312,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 이미지 삽화 테이블 (row row-3) -->
               <table
                 class="row row-3"
                 align="center"
@@ -393,6 +396,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 당첨 번호 라벨 테이블 (row row-4) -->
               <table
                 class="row row-4"
                 align="center"
@@ -488,6 +492,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 당첨 번호 테이블 (row row-5) -->
               <table
                 class="row row-5"
                 align="center"
@@ -891,6 +896,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 빈 공간 테이블 (row row-6) -->
               <table
                 class="row row-6"
                 align="center"
@@ -966,7 +972,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 구분선 테이블 (row row-7) -->
               <table
                 class="row row-7"
                 align="center"
@@ -1040,7 +1046,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 1등 당첨자 라벨 테이블 (row row-8) -->
               <table
                 class="row row-8"
                 align="center"
@@ -1128,7 +1134,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 1등 당첨자 데이터 테이블 (row row-9) -->
               <table
                 class="row row-9"
                 align="center"
@@ -1221,7 +1227,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 2등 당첨자 라벨 테이블 (row row-10) -->
               <table
                 class="row row-10"
                 align="center"
@@ -1309,7 +1315,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 2등 당첨자 데이터 테이블 (row row-11) -->
               <table
                 class="row row-11"
                 align="center"
@@ -1402,7 +1408,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 3등 당첨자 라벨 테이블 (row row-12) -->
               <table
                 class="row row-12"
                 align="center"
@@ -1490,7 +1496,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 3등 당첨자 데이터 테이블 (row row-13) -->
               <table
                 class="row row-13"
                 align="center"
@@ -1583,7 +1589,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 구분선 테이블 (row row-14) -->
               <table
                 class="row row-14"
                 align="center"
@@ -1657,7 +1663,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 추가 정보 테이블 (row row-15) -->
               <table
                 class="row row-15"
                 align="center"
@@ -1739,7 +1745,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
-  
+              <!-- 버튼 테이블 (row row-16) -->
               <table
                 class="row row-16"
                 align="center"
@@ -1851,6 +1857,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 안내사항 테이블 (row row-17) -->
               <table
                 class="row row-17"
                 align="center"
@@ -2014,6 +2021,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 수신거부 테이블 (row row-18) -->
               <table
                 class="row row-18"
                 align="center"
@@ -2143,6 +2151,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface) => {
                   </tr>
                 </tbody>
               </table>
+              <!-- 소셜 & 하단 테이블 (row row-19) -->
               <table
                 class="row row-19"
                 align="center"

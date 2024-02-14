@@ -6,7 +6,7 @@ import { Redis } from 'ioredis';
 import { emailTemplate } from './template/email.template';
 import { InputEmailDto } from './dto/inputEmail.dto';
 import { convertDateFormat } from 'src/common/utils/utils';
-import { LottoInfoInterface } from './interface/mailInfo.interface';
+import { LottoInfoInterface, LottoStatisticInfoInterface } from './interface/mailInfo.interface';
 
 @Injectable()
 export class EmailService {
@@ -37,12 +37,21 @@ export class EmailService {
       drwNoDate: new Date(await this.redis.get('drwNoDate')),
     };
 
+    const lottoStatisticInfo: LottoStatisticInfoInterface = {
+      firstLottoNo: Number(await this.redis.get('firstLottoNo')),
+      firstLottoNoCnt: Number(await this.redis.get('firstLottoNoCnt')),
+      secondLottoNo: Number(await this.redis.get('secondLottoNo')),
+      secondLottoNoCnt: Number(await this.redis.get('secondLottoNoCnt')),
+      thirdLottoNo: Number(await this.redis.get('thirdLottoNo')),
+      thirdLottoNoCnt: Number(await this.redis.get('thirdLottoNoCnt')),
+    };
+
     try {
       await this.mailerService.sendMail({
         to: emailInfo,
         from,
         subject: `[${convertDateFormat(lottoInfo.drwNoDate)}] ${lottoInfo.drwNo}회 당첨결과 🍀`,
-        html: emailTemplate(lottoInfo),
+        html: emailTemplate(lottoInfo, lottoStatisticInfo),
       });
     } catch (err) {
       throw new BadRequestException('메일 전송에 실패했습니다.');

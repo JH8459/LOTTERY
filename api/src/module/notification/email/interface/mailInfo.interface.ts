@@ -15,3 +15,12 @@ export interface LottoInfoInterface {
   thirdPrzwnerCo?: number;
   drwNoDate: Date;
 }
+
+export interface LottoStatisticInfoInterface {
+  firstLottoNo: number;
+  firstLottoNoCnt: number;
+  secondLottoNo: number;
+  secondLottoNoCnt: number;
+  thirdLottoNo: number;
+  thirdLottoNoCnt: number;
+}
