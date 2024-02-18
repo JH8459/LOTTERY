@@ -2,6 +2,12 @@ import { ApiBodyOptions, ApiOperationOptions } from '@nestjs/swagger';
 import { InputEmailDto } from '../dto/inputEmail.dto';
 
 export const SEND_EMAIL = {
+  GET: {
+    API_OPERATION: {
+      summary: '구독자 단체 발송 API',
+      description: '구독자들에게 현재 REDIS에 저장된 내용을 기반으로한 이메일을 발송한다.',
+    } as ApiOperationOptions,
+  },
   POST: {
     API_OPERATION: {
       summary: '샘플 이메일 발송 API',

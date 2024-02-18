@@ -3,10 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { emailTemplate } from './template/email.template';
-import { InputEmailDto } from './dto/inputEmail.dto';
 import { convertDateFormat } from 'src/common/utils/utils';
 import { LottoInfoInterface, LottoStatisticInfoInterface } from './interface/mailInfo.interface';
+import { PublicSubscriberInfoInterface } from './interface/subscriber.interface';
 
 @Injectable()
 export class EmailService {
@@ -16,7 +17,7 @@ export class EmailService {
     @InjectRedis() private readonly redis: Redis
   ) {}
 
-  async sendEmail({ emailInfo }: InputEmailDto): Promise<void> {
+  async sendLottoEmail(emailInfo: string): Promise<void> {
     const from: string = this.configService.get<string>('API_EMAIL_FROM');
 
     const lottoInfo: LottoInfoInterface = {
@@ -55,6 +56,36 @@ export class EmailService {
       });
     } catch (err) {
       throw new BadRequestException('메일 전송에 실패했습니다.');
+    }
+  }
+
+  async getSubscribersList(): Promise<void> {
+    try {
+      const GITHUB_TOKEN: string = this.configService.get<string>('COMMON_GITHUB_TOKEN');
+
+      const axiosReqConfig: AxiosRequestConfig = {
+        headers: {
+          Accept: 'application/vnd.github+json',
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+        },
+      };
+
+      const subscriberList: AxiosResponse = await axios.get(
+        'https://api.github.com/repos/jh8459/LOTTERY/subscribers',
+        axiosReqConfig
+      );
+
+      await Promise.all(
+        subscriberList.data.map(async (subscriber: PublicSubscriberInfoInterface) => {
+          const subscriberInfo: AxiosResponse = await axios.get(subscriber.url, axiosReqConfig);
+
+          const emailInfo: string = subscriberInfo.data.email;
+
+          await this.sendLottoEmail(emailInfo);
+        })
+      );
+    } catch {
+      throw new BadRequestException('구독자 목록을 불러오는데 실패했습니다.');
     }
   }
 }
