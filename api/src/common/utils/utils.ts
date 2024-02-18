@@ -3,7 +3,7 @@ export const convertDateFormat = (date: Date): string => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  return `${year}-${month}-${day}`;
+  return `${year}년 ${month}월 ${day}일`;
 };
 
 export const convertKRLocaleStringFormat = (number: number): string => {

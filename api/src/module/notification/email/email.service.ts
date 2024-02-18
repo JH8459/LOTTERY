@@ -50,7 +50,7 @@ export class EmailService {
       await this.mailerService.sendMail({
         to: emailInfo,
         from,
-        subject: `[${convertDateFormat(lottoInfo.drwNoDate)}] ${lottoInfo.drwNo}회 당첨결과 🍀`,
+        subject: `[LOTTERY🍀] ${lottoInfo.drwNo}회 당첨결과 (${convertDateFormat(lottoInfo.drwNoDate)})`,
         html: emailTemplate(lottoInfo, lottoStatisticInfo),
       });
     } catch (err) {
