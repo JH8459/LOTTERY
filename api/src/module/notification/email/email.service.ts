@@ -59,7 +59,7 @@ export class EmailService {
     }
   }
 
-  async getSubscribersList(): Promise<void> {
+  async sendLottoEmailToSubscriberList(): Promise<void> {
     try {
       const GITHUB_TOKEN: string = this.configService.get<string>('COMMON_GITHUB_TOKEN');
 

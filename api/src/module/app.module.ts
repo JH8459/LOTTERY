@@ -9,6 +9,7 @@ import { NotificationsModule } from './notification/notification.module';
 import { WINSTON_CONFIG } from 'src/config/logger.config';
 import { EMAIL_CONFIG } from 'src/config/email.config';
 import { REDIS_CONFIG } from 'src/config/redis.config';
+import { SchedulerModule } from './scheduler/scheduler.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { REDIS_CONFIG } from 'src/config/redis.config';
     WinstonModule.forRoot(WINSTON_CONFIG),
     HealthModule,
     NotificationsModule,
+    SchedulerModule,
   ],
 })
 export class AppModule implements NestModule {

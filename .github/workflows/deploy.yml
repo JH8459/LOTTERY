@@ -38,6 +38,7 @@ jobs:
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
             echo "CRAWLER_SERVER_PORT=${{ secrets.CRAWLER_SERVER_PORT }}" >> .env
+            echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
             cat .env
 
             echo "############# CREATE API .ENV #############"
@@ -58,6 +59,7 @@ jobs:
             echo "API_EMAIL_FROM=${{ secrets.API_EMAIL_FROM }}" >> .env
             echo "API_REDIS_HOST=${{ secrets.API_REDIS_HOST }}" >> .env
             echo "API_REDIS_PORT=${{ secrets.API_REDIS_PORT }}" >> .env
+            echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
             cat .env
 
             echo "############# DOCKER SCRIPT #############"

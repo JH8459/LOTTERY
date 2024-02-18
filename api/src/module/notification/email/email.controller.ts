@@ -13,7 +13,7 @@ export class EmailController {
   @ApiOperation(SEND_EMAIL.GET.API_OPERATION)
   @Get()
   async sendSubscribersEmail(): Promise<ResponseDto> {
-    await this.emailService.getSubscribersList();
+    await this.emailService.sendLottoEmailToSubscriberList();
 
     const result: ResponseDto = {
       message: '구독자 이메일 발송 성공',
