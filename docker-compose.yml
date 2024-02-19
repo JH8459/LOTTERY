@@ -24,6 +24,7 @@ services:
   lottery_api_server:
     image: jh8459/lottery_api_server:latest
     container_name: lottery_api_server
+    platform: linux/amd64
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -59,6 +60,7 @@ services:
   lottery_crawler_server:
     image: jh8459/lottery_crawler_server:latest
     container_name: lottery_crawler_server
+    platform: linux/amd64
     build:
       context: ./crawler
       dockerfile: Dockerfile
