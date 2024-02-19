@@ -11,5 +11,5 @@ COPY . /crawler
 RUN npm run build
 CMD npm run start
 
-HEALTHCHECK --interval=30s --timeout=2s --retries=1 \
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
   CMD curl -f http://localhost:4000/health -s -w %{http_code} | grep 200 || kill -9 `pgrep -f "node ./dist/index.js"`
