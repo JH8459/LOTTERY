@@ -3,7 +3,7 @@ import { db } from '../database/init.database';
 import { LottoEntity } from '../entities/lotto.entity';
 import { DrwtNoInfoEnum } from '../services/constant/enum';
 import { DrwInfoDto } from '../services/dto/drwInfo.dto';
-import { StatisticDrwNoInterface } from '../services/interface/scheduler.interface';
+import { HighestPrizeDrwNoInterface, StatisticDrwNoInterface } from '../services/interface/scheduler.interface';
 
 export const getRecentlyDrwNo = async (): Promise<number> => {
   const { drwNo } = await db
@@ -77,6 +77,46 @@ export const getStatisticByDrwNo = async (): Promise<StatisticDrwNoInterface[]> 
     .getRawMany();
 
   return statisticInfoList;
+};
+
+export const getHighestPrizeByYear = async (date: Date): Promise<HighestPrizeDrwNoInterface[]> => {
+  const highestPrizeInfoList: HighestPrizeDrwNoInterface[] = await db
+    .getRepository(LottoEntity)
+    .createQueryBuilder('lottoEntity')
+    .select([
+      'lottoEntity.drwNo AS drwNo',
+      'lottoEntity.firstWinamnt AS firstWinamnt',
+      'lottoEntity.firstPrzwnerCo AS firstPrzwnerCo',
+      'lottoEntity.drwNoDate AS drwNoDate',
+    ])
+    .where(
+      `(YEAR(lottoEntity.drwNoDate), lottoEntity.firstWinamnt) IN 
+        (
+          (
+            SELECT 
+              YEAR(lottoEntity.drwNoDate), 
+              MAX(lottoEntity.firstWinamnt) 
+            FROM 
+              lotto as lottoEntity
+            WHERE 
+              YEAR(lottoEntity.drwNoDate) = :date
+          ), 
+          (
+            SELECT 
+              YEAR(lottoEntity.drwNoDate), 
+              MAX(lottoEntity.firstWinamnt) 
+            FROM 
+            lotto as lottoEntity
+            WHERE 
+              YEAR(lottoEntity.drwNoDate) = :date - 1
+          )
+        )`,
+      { date: date.getFullYear() }
+    )
+    .orderBy('drwNoDate')
+    .getRawMany();
+
+  return highestPrizeInfoList;
 };
 
 export const insertDrwInfo = async ({

@@ -3,8 +3,13 @@ import ioredis from 'ioredis';
 import cheerio, { CheerioAPI, Element } from 'cheerio';
 import schedule from 'node-schedule';
 import { scheduleJob } from 'node-schedule';
-import { getRecentlyDrwNo, getStatisticByDrwNo, insertDrwInfo } from '../repositories/lotto.repository';
-import { DrwtNoInterface, StatisticDrwNoInterface } from './interface/scheduler.interface';
+import {
+  getHighestPrizeByYear,
+  getRecentlyDrwNo,
+  getStatisticByDrwNo,
+  insertDrwInfo,
+} from '../repositories/lotto.repository';
+import { DrwtNoInterface, HighestPrizeDrwNoInterface, StatisticDrwNoInterface } from './interface/scheduler.interface';
 import { DrwInfoDto } from './dto/drwInfo.dto';
 
 export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
@@ -113,9 +118,10 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
 
       const statisticInfoList: StatisticDrwNoInterface[] = await getStatisticByDrwNo();
 
-      // Set Redis ( Lotto Info )
-      const week = 60 * 60 * 24 * 7; // 1WEEK
+      const highestPrizeInfoList: HighestPrizeDrwNoInterface[] = await getHighestPrizeByYear(drwNoDate);
 
+      const week = 60 * 60 * 24 * 7; // 1WEEK
+      // Set Redis ( Lotto Info )
       await redis.set('drwNo', drwNo, 'EX', week);
       await redis.set('drwtNo1', drwtNoList[0].value, 'EX', week);
       await redis.set('drwtNo2', drwtNoList[1].value, 'EX', week);
@@ -138,6 +144,35 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
       await redis.set('secondLottoNoCnt', statisticInfoList[1].cnt, 'EX', week);
       await redis.set('thirdLottoNo', statisticInfoList[2].lottoNo, 'EX', week);
       await redis.set('thirdLottoNoCnt', statisticInfoList[2].cnt, 'EX', week);
+      // Set Redis ( Lotto Highest Prize Info )
+      await redis.set(
+        'thisYearDrwNo',
+        highestPrizeInfoList.length === 2 ? highestPrizeInfoList[1].drwNo : drwNo,
+        'EX',
+        week
+      );
+      await redis.set(
+        'thisYearFirstWinamnt',
+        highestPrizeInfoList.length === 2 ? highestPrizeInfoList[1].firstWinamnt : firstWinamnt,
+        'EX',
+        week
+      );
+      await redis.set(
+        'thisYearFirstPrzwnerCo',
+        highestPrizeInfoList.length === 2 ? highestPrizeInfoList[1].firstPrzwnerCo : firstPrzwnerCo,
+        'EX',
+        week
+      );
+      await redis.set(
+        'thisYearDrwNoDate',
+        highestPrizeInfoList.length === 2 ? highestPrizeInfoList[1].drwNoDate.toString() : drwNoDate.toString(),
+        'EX',
+        week
+      );
+      await redis.set('lastYearDrwNo', highestPrizeInfoList[0].drwNo, 'EX', week);
+      await redis.set('lastYearFirstWinamnt', highestPrizeInfoList[0].firstWinamnt, 'EX', week);
+      await redis.set('lastYearFirstPrzwnerCo', highestPrizeInfoList[0].firstPrzwnerCo, 'EX', week);
+      await redis.set('lastYearDrwNoDate', highestPrizeInfoList[0].drwNoDate.toString(), 'EX', week);
 
       // DB DrwNo Check
       const dbDrwNo: number = await getRecentlyDrwNo();
