@@ -32,7 +32,7 @@ jobs:
             echo "############# START #############"
             cd /home/ubuntu/LOTTERY
             echo "############# GIT PULL #############"
-            git pull origin master
+            sudo git pull origin master
 
             echo "############# CREATE CRAWLER .ENV #############"
             cd /home/ubuntu/LOTTERY/crawler
