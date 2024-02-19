@@ -6,7 +6,11 @@ import { Redis } from 'ioredis';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { emailTemplate } from './template/email.template';
 import { convertDateFormat } from 'src/common/utils/utils';
-import { LottoInfoInterface, LottoStatisticInfoInterface } from './interface/mailInfo.interface';
+import {
+  LottoHighestPrizeInfoInterface,
+  LottoInfoInterface,
+  LottoStatisticInfoInterface,
+} from './interface/mailInfo.interface';
 import { PublicSubscriberInfoInterface } from './interface/subscriber.interface';
 
 @Injectable()
@@ -47,12 +51,23 @@ export class EmailService {
       thirdLottoNoCnt: Number(await this.redis.get('thirdLottoNoCnt')),
     };
 
+    const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface = {
+      thisYearDrwNo: Number(await this.redis.get('thisYearDrwNo')),
+      thisYearFirstWinamnt: Number(await this.redis.get('thisYearFirstWinamnt')),
+      thisYearFirstPrzwnerCo: Number(await this.redis.get('thisYearFirstPrzwnerCo')),
+      thisYearDrwNoDate: new Date(await this.redis.get('thisYearDrwNoDate')),
+      lastYearDrwNo: Number(await this.redis.get('lastYearDrwNo')),
+      lastYearFirstWinamnt: Number(await this.redis.get('lastYearFirstWinamnt')),
+      lastYearFirstPrzwnerCo: Number(await this.redis.get('lastYearFirstPrzwnerCo')),
+      lastYearDrwNoDate: new Date(await this.redis.get('lastYearDrwNoDate')),
+    };
+
     try {
       await this.mailerService.sendMail({
         to: emailInfo,
         from,
         subject: `[LOTTERY🍀] ${lottoInfo.drwNo}회 당첨결과 (${convertDateFormat(lottoInfo.drwNoDate)})`,
-        html: emailTemplate(lottoInfo, lottoStatisticInfo),
+        html: emailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
       });
     } catch (err) {
       throw new BadRequestException('메일 전송에 실패했습니다.');

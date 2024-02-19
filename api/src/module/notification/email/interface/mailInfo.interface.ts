@@ -24,3 +24,14 @@ export interface LottoStatisticInfoInterface {
   thirdLottoNo: number;
   thirdLottoNoCnt: number;
 }
+
+export interface LottoHighestPrizeInfoInterface {
+  thisYearDrwNo: number;
+  thisYearFirstWinamnt: number;
+  thisYearFirstPrzwnerCo: number;
+  thisYearDrwNoDate: Date;
+  lastYearDrwNo: number;
+  lastYearFirstWinamnt: number;
+  lastYearFirstPrzwnerCo: number;
+  lastYearDrwNoDate: Date;
+}

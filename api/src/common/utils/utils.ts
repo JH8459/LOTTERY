@@ -12,6 +12,21 @@ export const convertKRLocaleStringFormat = (number: number): string => {
   return string;
 };
 
+export const convertKoreanStringFormat = (number: number): string => {
+  const koreanUnits = ['조', '억', '만', ''];
+  const unit = 10000;
+  let answer = '';
+
+  while (number > 0) {
+    const mod = number % unit;
+    const modToString = mod.toString().replace(/(\d)(\d{3})/, '$1,$2');
+    number = Math.floor(number / unit);
+    answer = `${modToString}${koreanUnits.pop()} ${answer}`;
+  }
+
+  return answer.slice(0, -1);
+};
+
 export const convertNumberToCSSBackground = (number: number): string => {
   if (number < 10) {
     return '#fbc400';

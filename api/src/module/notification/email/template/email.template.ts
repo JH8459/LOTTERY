@@ -1,12 +1,23 @@
 import {
   convertDateFormat,
   convertKRLocaleStringFormat,
+  convertKoreanStringFormat,
   convertNumberToCSSBackground,
   convertNumberToCSSTextShadow,
 } from 'src/common/utils/utils';
-import { LottoInfoInterface, LottoStatisticInfoInterface } from '../interface/mailInfo.interface';
+import {
+  LottoHighestPrizeInfoInterface,
+  LottoInfoInterface,
+  LottoStatisticInfoInterface,
+} from '../interface/mailInfo.interface';
 
-export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo: LottoStatisticInfoInterface) => {
+export const emailTemplate = (
+  lottoInfo: LottoInfoInterface,
+  lottoStatisticInfo: LottoStatisticInfoInterface,
+  lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface
+) => {
+  const thisYear = new Date().getFullYear();
+
   return `<!DOCTYPE html>
   <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
     <head>
@@ -1298,10 +1309,14 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                                       "
                                     >
                                       <p style="margin: 0">
-                                        <strong
-                                          >${convertKRLocaleStringFormat(lottoInfo.firstPrzwnerCo)}명 /
-                                          ${convertKRLocaleStringFormat(lottoInfo.firstWinamnt)}원</strong
-                                        >
+                                        <strong>
+                                          <span>
+                                            ${convertKRLocaleStringFormat(lottoInfo.firstPrzwnerCo)}명 / 
+                                          </span>
+                                          <span style="color: #c3421f">
+                                            ${convertKoreanStringFormat(lottoInfo.firstWinamnt)}원
+                                          </span>
+                                        </strong>
                                       </p>
                                     </div>
                                   </td>
@@ -1479,10 +1494,14 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                                       "
                                     >
                                       <p style="margin: 0">
-                                        <strong
-                                          >${convertKRLocaleStringFormat(lottoInfo.secondPrzwnerCo)}명 /
-                                          ${convertKRLocaleStringFormat(lottoInfo.secondWinamnt)}원</strong
-                                        >
+                                        <strong>
+                                          <span>
+                                            ${convertKRLocaleStringFormat(lottoInfo.secondPrzwnerCo)}명 / 
+                                          </span>
+                                          <span style="color: #c3421f">
+                                            ${convertKoreanStringFormat(lottoInfo.secondWinamnt)}원
+                                          </span>
+                                        </strong>
                                       </p>
                                     </div>
                                   </td>
@@ -1660,10 +1679,14 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                                       "
                                     >
                                       <p style="margin: 0">
-                                        <strong
-                                          >${convertKRLocaleStringFormat(lottoInfo.thirdPrzwnerCo)}명 /
-                                          ${convertKRLocaleStringFormat(lottoInfo.thirdWinamnt)}원</strong
-                                        >
+                                        <strong>
+                                          <span>
+                                            ${convertKRLocaleStringFormat(lottoInfo.thirdPrzwnerCo)}명 / 
+                                          </span>
+                                          <span style="color: #c3421f">
+                                            ${convertKoreanStringFormat(lottoInfo.thirdWinamnt)}원
+                                          </span>
+                                        </strong>
                                       </p>
                                     </div>
                                   </td>
@@ -1872,7 +1895,6 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                                 border-left: 1px solid #1a7616;
                                 border-right: 1px solid #1a7616;
                                 padding-bottom: 20px;
-                                padding-top: 20px;
                                 vertical-align: top;
                                 border-top: 0;
                                 border-bottom: 0;
@@ -2168,7 +2190,7 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 통계 데이터 테이블 (row row-19) -->
+              <!-- 빈 공간 테이블 (row row-19) -->
               <table
                 class="row row-19"
                 align="center"
@@ -2244,9 +2266,83 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-20) -->
+              <!-- 구분선 테이블 (row row-20) -->
               <table
                 class="row row-20"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="divider_inner"
+                                    style="font-size: 1px; line-height: 1px; border-top: 1px solid #bbb"
+                                  >
+                                    <span>&#8202;</span>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 빈 공간 테이블 (row row-21) -->
+              <table
+                class="row row-21"
                 align="center"
                 width="100%"
                 border="0"
@@ -2320,9 +2416,717 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 추가 정보 테이블 (row row-21) -->
+              <!-- 연도 통계 라벨 테이블 (row row-22) -->
               <table
-                class="row row-21"
+                class="row row-2"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          border-radius: 0;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                                padding-bottom: 20px;
+                                vertical-align: top;
+                                border-top: 0;
+                                border-bottom: 0;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad">
+                                    <div style="
+                                        font-size: 14px;
+                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        text-align: center;
+                                        mso-line-height-alt: 16.8px;
+                                        color: #555;
+                                        line-height: 1.2;
+                                      "
+                                    >
+                                      <div
+                                        class
+                                        style="
+                                          font-size: 14px;
+                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                          text-align: center;
+                                          mso-line-height-alt: 16.8px;
+                                          color: #555;
+                                          line-height: 1.2;
+                                        "
+                                      >
+                                        <strong><span style="font-size: 20px">연도 별 당첨 정보</span></strong>
+                                      </div>
+                                      <span>(최근 2년간 최고 당첨 금액)</span>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 올해 당첨 정보 라벨 테이블 (row row-23) -->
+              <table
+                class="row row-23"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 20px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
+                                    <div
+                                      style="
+                                        color: #000;
+                                        direction: ltr;
+                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 16px;
+                                        font-weight: 900;
+                                        letter-spacing: 0;
+                                        line-height: 150%;
+                                        text-align: center;
+                                        mso-line-height-alt: 30px;
+                                      "
+                                    >
+                                      <p><strong>${thisYear}년</strong></p>
+                                      <p style="font-size: 15px">(${convertDateFormat(
+                                        lottoHighestPrizeInfo.thisYearDrwNoDate
+                                      )} 추첨)</p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 올해 당첨 정보 데이터 테이블 (row row-24) -->
+              <table
+                class="row row-24"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
+                                    <div
+                                      style="
+                                        color: #000;
+                                        direction: ltr;
+                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 14px;
+                                        font-weight: 400;
+                                        letter-spacing: 0;
+                                        line-height: 150%;
+                                        text-align: center;
+                                        mso-line-height-alt: 16.8px;
+                                      "
+                                    >
+                                      <p style="margin: 0">
+                                        <strong>
+                                          <span>
+                                            ${convertKRLocaleStringFormat(lottoHighestPrizeInfo.thisYearDrwNo)}회 / 
+                                          </span>
+                                          <span style="color: #c3421f">
+                                            ${convertKoreanStringFormat(lottoHighestPrizeInfo.thisYearFirstWinamnt)}원
+                                          </span>
+                                          <span>
+                                            (${convertKRLocaleStringFormat(
+                                              lottoHighestPrizeInfo.thisYearFirstPrzwnerCo
+                                            )}명) 
+                                          </span>
+                                        </strong>
+                                      </p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 작년 당첨 정보 라벨 테이블 (row row-25) -->
+              <table
+                class="row row-25"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 20px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
+                                    <div
+                                      style="
+                                        color: #000;
+                                        direction: ltr;
+                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 16px;
+                                        font-weight: 900;
+                                        letter-spacing: 0;
+                                        line-height: 150%;
+                                        text-align: center;
+                                        mso-line-height-alt: 30px;
+                                      "
+                                    >
+                                      <p><strong>${thisYear - 1}년</strong></p>
+                                      <p style="font-size: 15px">(${convertDateFormat(
+                                        lottoHighestPrizeInfo.lastYearDrwNoDate
+                                      )} 추첨)</p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 작년 당첨 정보 데이터 테이블 (row row-26) -->
+              <table
+                class="row row-26"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
+                                    <div
+                                      style="
+                                        color: #000;
+                                        direction: ltr;
+                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 14px;
+                                        font-weight: 400;
+                                        letter-spacing: 0;
+                                        line-height: 150%;
+                                        text-align: center;
+                                        mso-line-height-alt: 16.8px;
+                                      "
+                                    >
+                                      <p style="margin: 0">
+                                        <strong>
+                                          <span>
+                                            ${convertKRLocaleStringFormat(lottoHighestPrizeInfo.lastYearDrwNo)}회 / 
+                                          </span>
+                                          <span style="color: #c3421f">
+                                            ${convertKoreanStringFormat(lottoHighestPrizeInfo.lastYearFirstWinamnt)}원
+                                          </span>
+                                          <span>
+                                            (${convertKRLocaleStringFormat(
+                                              lottoHighestPrizeInfo.lastYearFirstPrzwnerCo
+                                            )}명) 
+                                          </span>
+                                        </strong>
+                                      </p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 빈 공간 테이블 (row row-27) -->
+              <table
+                class="row row-27"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                    >
+                                      &#8202;
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 구분선 테이블 (row row-28) -->
+              <table
+                class="row row-28"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="divider_inner"
+                                    style="font-size: 1px; line-height: 1px; border-top: 1px solid #bbb"
+                                  >
+                                    <span>&#8202;</span>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 빈 공간 테이블 (row row-29) -->
+              <table
+                class="row row-29"
+                align="center"
+                width="100%"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          mso-table-lspace: 0;
+                          mso-table-rspace: 0;
+                          background-color: #f5fff5;
+                          color: #000;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                        width="600"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                mso-table-lspace: 0;
+                                mso-table-rspace: 0;
+                                font-weight: 400;
+                                text-align: left;
+                                vertical-align: middle;
+                                border-top: 0;
+                                border-bottom: 0;
+                                border-left: 1px solid #1a7616;
+                                border-right: 1px solid #1a7616;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                    >
+                                      &#8202;
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 추가 정보 테이블 (row row-30) -->
+              <table
+                class="row row-30"
                 align="center"
                 width="100%"
                 border="0"
@@ -2402,9 +3206,9 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 버튼 테이블 (row row-22) -->
+              <!-- 버튼 테이블 (row row-31) -->
               <table
-                class="row row-22"
+                class="row row-31"
                 align="center"
                 width="100%"
                 border="0"
@@ -2520,9 +3324,9 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 안내사항 테이블 (row row-23) -->
+              <!-- 안내사항 테이블 (row row-32) -->
               <table
-                class="row row-23"
+                class="row row-32"
                 align="center"
                 width="100%"
                 border="0"
@@ -2691,9 +3495,9 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 수신거부 테이블 (row row-24) -->
+              <!-- 수신거부 테이블 (row row-33) -->
               <table
-                class="row row-24"
+                class="row row-33"
                 align="center"
                 width="100%"
                 border="0"
@@ -2795,9 +3599,9 @@ export const emailTemplate = (lottoInfo: LottoInfoInterface, lottoStatisticInfo:
                   </tr>
                 </tbody>
               </table>
-              <!-- 소셜 & 테이블 (row row-25) -->
+              <!-- 소셜 & 테이블 (row row-34) -->
               <table
-                class="row row-25"
+                class="row row-34"
                 align="center"
                 width="100%"
                 border="0"
