@@ -15,18 +15,11 @@ jobs:
         working-directory: '/'
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Build and push Docker image
-        run: |
-          docker compose build
-          docker compose push
 
       - name: Remote SSH
         uses: appleboy/ssh-action@v0.1.6
@@ -75,6 +68,10 @@ jobs:
             echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
             cat .env
 
-            echo "############# DOCKER SCRIPT #############"
+            echo "############# DOCKER BUILD SCRIPT #############"
             cd /home/ubuntu/LOTTERY
-            sh script.sh
+            sh build.script.sh
+
+            echo "############# DOCKER DEPLOY SCRIPT #############"
+            cd /home/ubuntu/LOTTERY
+            sh deploy.script.sh
