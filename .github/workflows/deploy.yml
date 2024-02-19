@@ -68,10 +68,6 @@ jobs:
             echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
             cat .env
 
-            echo "############# DOCKER BUILD SCRIPT #############"
-            cd /home/ubuntu/LOTTERY
-            sh build.script.sh
-
             echo "############# DOCKER DEPLOY SCRIPT #############"
             cd /home/ubuntu/LOTTERY
             sh deploy.script.sh
