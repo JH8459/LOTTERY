@@ -11,8 +11,8 @@ sleep 2s
 echo "=> Docker Network Prune..."
 docker network prune -f
 sleep 2s
-echo "=> Docker Compose Build..."
-docker compose build
+echo "=> Docker Compose Pull..."
+docker compose pull
 sleep 2s
 echo "=> Docker Compose Up..."
 docker compose up -d

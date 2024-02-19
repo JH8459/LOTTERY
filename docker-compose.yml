@@ -22,6 +22,7 @@ services:
       - lottery_net_default
 
   lottery_api_server:
+    image: jh8459/lottery_api_server:latest
     container_name: lottery_api_server
     build:
       context: ./api
@@ -56,6 +57,7 @@ services:
       - lottery_redis
 
   lottery_crawler_server:
+    image: jh8459/lottery_crawler_server:latest
     container_name: lottery_crawler_server
     build:
       context: ./crawler
