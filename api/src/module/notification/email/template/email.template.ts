@@ -24,19 +24,17 @@ export const emailTemplate = (
       <title></title>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="viewport" content="width=device-width,initial-scale=1" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700;900&amp;display=swap"
-        rel="stylesheet"
-        type="text/css"
-      />
       <!--<![endif]-->
       <style>
+        @font-face {
+          font-family: 'Nanum Gothic';
+          src: url('NanumGothic-Regular.ttf') format('truetype');
+        }
         * {
           box-sizing: border-box;
         }
         body {
-          margin: 0;
-          padding: 0;
+          font-family: 'Nanum Gothic', sans-serif;
         }
         a[x-apple-data-detectors] {
           color: inherit !important;
@@ -86,16 +84,13 @@ export const emailTemplate = (
       </style>
     </head>
     <body
-      style="margin: 0; background-color: #f5fff5; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none"
+      style="background-color: #f4f4f4; -webkit-text-size-adjust: none; text-size-adjust: none"
     >
       <table
         class="nl-container"
         width="100%"
-        border="0"
-        cellpadding="0"
-        cellspacing="0"
         role="presentation"
-        style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+        style="background-color: #f4f4f4"
       >
         <tbody>
           <tr>
@@ -105,11 +100,10 @@ export const emailTemplate = (
                 class="row row-1"
                 align="center"
                 width="100%"
-                border="0"
+                role="presentation"
                 cellpadding="0"
                 cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -117,62 +111,83 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
+                          background-color: #fff;
                           color: #000;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
-                              width="100%"
+                              width="50%"
+                              align="center"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 padding-bottom: 25px;
                                 padding-left: 10px;
                                 padding-right: 10px;
                                 padding-top: 25px;
-                                vertical-align: top;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
+                                vertical-align: bottom;
                               "
                             >
                               <table
                                 class="image_block block-1"
                                 width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0"
                               >
                                 <tr>
                                   <td class="pad" style="width: 100%">
-                                    <div class="alignment" align="center" style="line-height: 10px">
-                                      <div style="max-width: 500px">
-                                        <img
-                                          src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/0db9f180-d222-4b2b-9371-cf9393bf4764/0bd8b69e-4024-4f26-9010-6e2a146401fb/logo%201.png"
-                                          style="display: block; height: auto; border: 0; width: 100%"
-                                          width="500"
-                                          alt="enginemailer"
-                                          title="enginemailer"
-                                        />
-                                      </div>
+                                    <div>
+                                      <img
+                                        src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/0db9f180-d222-4b2b-9371-cf9393bf4764/0bd8b69e-4024-4f26-9010-6e2a146401fb/LOTTERY.png"
+                                        style="
+                                          display: block; 
+                                          height: auto; 
+                                          width: 100%
+                                        "
+                                        alt="logo"
+                                        title="logo"
+                                      />
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td
+                              class="column column-1"
+                              width="50%"
+                              style="
+                                padding-right: 30px;
+                                padding-bottom: 15px;
+                                vertical-align: bottom;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                role="presentation"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad" style="width: 100%">
+                                    <div>
+                                      <p
+                                        style="
+                                          font-weight: 400;
+                                          font-size: 14px;
+                                          text-align: right;
+                                          color: #555;
+                                        "
+                                      >
+                                        <strong>
+                                          <span>
+                                            ${convertDateFormat(lottoInfo.drwNoDate)} 추첨결과
+                                          </span>
+                                        </strong>
+                                      </p>
                                     </div>
                                   </td>
                                 </tr>
@@ -185,16 +200,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 상단 타이틀(추첨일자 & 회차) 테이블 (row row-2) -->
+              <!-- 상단 타이틀(추첨회차 & 당첨번호) 테이블 (row row-2) -->
               <table
                 class="row row-2"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -202,116 +216,47 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
                           background-color: #1a7616;
-                          color: #000;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
+                              align="center"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                padding-bottom: 15px;
-                                padding-left: 30px;
-                                padding-right: 30px;
-                                padding-top: 35px;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
+                                padding-bottom: 35px;
+                                padding-left: 50px;
+                                padding-right: 50px;
+                                padding-top: 50px;
+                                vertical-align: center;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
+                                  <td class="pad" style="width: 100%">
+                                    <strong>
+                                      <p
                                         style="
-                                          font-size: 12px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 14.399999999999999px;
                                           color: #fff;
-                                          line-height: 1.2;
+                                          font-size: 40px;
+                                          text-align: center;
+                                          font-weight: 400; 
+                                          word-break: break-word
                                         "
                                       >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
-                                        >
-                                          <span style="font-size: 18px"
-                                            >${convertDateFormat(lottoInfo.drwNoDate)} 추첨</span
-                                          >
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                              <table
-                                class="text_block block-2"
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
-                              >
-                                <tr>
-                                  <td class="pad" style="padding-bottom: 10px; padding-left: 20px; padding-right: 20px">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          font-size: 12px;
-                                          mso-line-height-alt: 14.399999999999999px;
-                                          color: #fff;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 16px;
-                                            text-align: center;
-                                            mso-line-height-alt: 19.2px;
-                                          "
-                                        >
-                                          <strong
-                                            ><span style="font-size: 40px">${lottoInfo.drwNo}회 당첨결과</span></strong
-                                          >
-                                        </p>
-                                      </div>
-                                    </div>
+                                        ${lottoInfo.drwNo}회 당첨결과 🍀
+                                      </p>
+                                    </strong>
                                   </td>
                                 </tr>
                               </table>
@@ -319,280 +264,6 @@ export const emailTemplate = (
                           </tr>
                         </tbody>
                       </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 이미지 삽화 테이블 (row row-3) -->
-              <table
-                class="row row-3"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #1a7616;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
-                              "
-                            >
-                              <table
-                                class="image_block block-1"
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0"
-                              >
-                                <tr>
-                                  <td
-                                    class="pad"
-                                    style="padding-bottom: 40px; padding-left: 20px; padding-right: 20px; width: 100%"
-                                  >
-                                    <div class="alignment" align="center" style="line-height: 10px">
-                                      <div class="fullWidth" style="max-width: 480px">
-                                        <img
-                                          src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/0db9f180-d222-4b2b-9371-cf9393bf4764/0bd8b69e-4024-4f26-9010-6e2a146401fb/7756309.jpg"
-                                          style="display: block; height: auto; border: 0; width: 100%"
-                                          width="480"
-                                          alt="Happy birthday to you!"
-                                          title="Happy birthday to you!"
-                                        />
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 빈 공간 테이블 (row row-4) -->
-              <table
-                class="row row-4"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
-                            >
-                              <table
-                                class="text_block block-1"
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
-                              >
-                                <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
-                                    <div
-                                      class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
-                                    >
-                                      &#8202;
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 당첨 번호 라벨 테이블 (row row-5) -->
-              <table
-                class="row row-5"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          border-radius: 0;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                                padding-bottom: 20px;
-                                padding-top: 20px;
-                                vertical-align: top;
-                                border-top: 0;
-                                border-bottom: 0;
-                              "
-                            >
-                              <table
-                                class="text_block block-1"
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
-                              >
-                                <tr>
-                                  <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            mso-line-height-alt: 16.8px;
-                                          "
-                                        >
-                                          <strong><span style="font-size: 20px">🍀 로또 당첨 번호</span></strong>
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 당첨 번호 테이블 (row row-6) -->
-              <table
-                class="row row-6"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
                       <table
                         class="row-content stack"
                         align="center"
@@ -600,22 +271,12 @@ export const emailTemplate = (
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          border-radius: 0;
-                          color: #000;
+                          background-color: #1a7616;
                           width: 600px;
                           height: 100px;
-                          margin: 0 auto;
                           padding: 10px;
-                          border-left: 1px solid #1a7616;
-                          border-top: 0;
-                          border-right: 1px solid #1a7616;
-                          border-bottom: 0;
+                          margin: 0 auto;
                         "
-                        width="600"
-                        height="100"
                       >
                         <tbody>
                           <tr>
@@ -625,11 +286,7 @@ export const emailTemplate = (
                               style="
                                 border-top-left-radius: 50%;
                                 border-bottom-left-radius: 50%;
-                                background-color: #E5E5E5;
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
+                                background-color: #fff;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
@@ -638,33 +295,31 @@ export const emailTemplate = (
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
-                                cellpadding="10"
-                                cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                      <div
+                                    <div
+                                      style="
+                                        word-break: break-word;
+                                        text-align: center;
+                                        height: 40px;
+                                        line-height: 40px;
+                                      "
+                                    >
+                                      <p
                                         style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          text-align: center;
-                                          vertical-align: middle;
-                                          height: 40px;
-                                          line-height: 40px
-                                        "
+                                          display: inline-block; 
+                                          border-radius: 100%; 
+                                          color: #fff; 
+                                          font-weight: 500; 
+                                          width: 40px; 
+                                          height: 40px; 
+                                          background: ${convertNumberToCSSBackground(lottoInfo.drwtNo1)}; 
+                                          text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo1)};"
                                       >
-                                        <p
-                                          style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
-                                            lottoInfo.drwtNo1
-                                          )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo1)};"
-                                        >
-                                          ${lottoInfo.drwtNo1}
-                                        </p>
-                                      </div>
+                                        ${lottoInfo.drwtNo1}
+                                      </p>
                                     </div>
                                   </td>
                                 </tr>
@@ -674,46 +329,41 @@ export const emailTemplate = (
                               class="column column-2"
                               width="14%"
                               style="
-                                background-color: #E5E5E5;
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
+                                background-color: #fff;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
-                                cellpadding="10"
-                                cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                    <div
-                                    style="
-                                      font-size: 14px;
-                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                      text-align: center;
-                                      vertical-align: middle;
-                                      height: 40px;
-                                      line-height: 40px
-                                    "
-                                  >
-                                    <p
-                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
-                                        lottoInfo.drwtNo2
-                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo2)};"
+                                    <div>
+                                      <div
+                                        style="
+                                          font-size: 15px;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
+                                        "
+                                      >
+                                        <p
+                                          style="
+                                            display: inline-block; 
+                                            border-radius: 100%; 
+                                            vertical-align: middle; 
+                                            color: #fff; 
+                                            font-weight: 500; 
+                                            width: 40px; 
+                                            height: 40px; 
+                                            background: ${convertNumberToCSSBackground(lottoInfo.drwtNo2)}; 
+                                            text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo2)};
+                                          "
                                         >
                                           ${lottoInfo.drwtNo2}
                                         </p>
@@ -727,46 +377,43 @@ export const emailTemplate = (
                               class="column column-3"
                               width="14%"
                               style="
-                                background-color: #E5E5E5;
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
+                                background-color: #fff;
                                 font-weight: 400;
-                                text-align: left;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                    <div
-                                    style="
-                                      font-size: 14px;
-                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                      text-align: center;
-                                      vertical-align: middle;
-                                      height: 40px;
-                                      line-height: 40px
-                                    "
-                                  >
-                                    <p
-                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
-                                        lottoInfo.drwtNo3
-                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo3)};"
+                                    <div>
+                                      <div
+                                        style="
+                                          font-size: 15px;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
+                                        "
+                                      >
+                                        <p
+                                          style="
+                                            display: inline-block; border-radius: 100%; vertical-align: middle; 
+                                            color: #fff; 
+                                            font-weight: 500; 
+                                            width: 40px; 
+                                            height: 40px; 
+                                            background: ${convertNumberToCSSBackground(lottoInfo.drwtNo3)}; 
+                                            text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo3)};
+                                          "
                                         >
                                           ${lottoInfo.drwtNo3}
                                         </p>
@@ -780,46 +427,43 @@ export const emailTemplate = (
                               class="column column-4"
                               width="14%"
                               style="
-                                background-color: #E5E5E5;
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
+                                background-color: #fff;
                                 font-weight: 400;
-                                text-align: left;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                    <div
-                                    style="
-                                      font-size: 14px;
-                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                      text-align: center;
-                                      vertical-align: middle;
-                                      height: 40px;
-                                      line-height: 40px
-                                    "
-                                  >
-                                    <p
-                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
-                                        lottoInfo.drwtNo4
-                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo4)};"
+                                    <div>
+                                      <div
+                                        style="
+                                          font-size: 15px;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
+                                        "
+                                      >
+                                        <p
+                                          style="
+                                            display: inline-block; border-radius: 100%; vertical-align: middle; 
+                                            color: #fff; 
+                                            font-weight: 500; 
+                                            width: 40px; 
+                                            height: 40px; 
+                                            background: ${convertNumberToCSSBackground(lottoInfo.drwtNo4)}; 
+                                            text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo4)};
+                                          "
                                         >
                                           ${lottoInfo.drwtNo4}
                                         </p>
@@ -833,46 +477,45 @@ export const emailTemplate = (
                               class="column column-5"
                               width="14%"
                               style="
-                                background-color: #E5E5E5;
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
+                                background-color: #fff;
                                 font-weight: 400;
-                                text-align: left;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                    <div
-                                    style="
-                                      font-size: 14px;
-                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                      text-align: center;
-                                      vertical-align: middle;
-                                      height: 40px;
-                                      line-height: 40px
-                                    "
-                                  >
-                                    <p
-                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
-                                        lottoInfo.drwtNo5
-                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo5)};"
+                                    <div>
+                                      <div
+                                        style="
+                                          font-size: 15px;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
+                                        "
+                                      >
+                                        <p
+                                          style="
+                                            display: inline-block; 
+                                            border-radius: 100%; 
+                                            vertical-align: middle; 
+                                            color: #fff; 
+                                            font-weight: 500; 
+                                            width: 40px; 
+                                            height: 40px; 
+                                            background: ${convertNumberToCSSBackground(lottoInfo.drwtNo5)}; 
+                                            text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo5)};
+                                          "
                                         >
                                           ${lottoInfo.drwtNo5}
                                         </p>
@@ -888,11 +531,8 @@ export const emailTemplate = (
                               style="
                                 border-top-right-radius: 50%;
                                 border-bottom-right-radius: 50%;
-                                background-color: #E5E5E5;
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
+                                background-color: #fff;
                                 font-weight: 400;
-                                text-align: left;
                                 vertical-align: middle;
                                 margin-right: 5px;
                                 margin-bottom: 20px;
@@ -902,29 +542,33 @@ export const emailTemplate = (
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                    <div
-                                    style="
-                                      font-size: 14px;
-                                      font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                      text-align: center;
-                                      vertical-align: middle;
-                                      height: 40px;
-                                      line-height: 40px
-                                    "
-                                  >
-                                    <p
-                                      style="display: inline-block; border-radius: 100%; vertical-align: middle; color: #fff; font-weight: 500; width: 40px; height: 40px; background: ${convertNumberToCSSBackground(
-                                        lottoInfo.drwtNo6
-                                      )}; text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo6)};"
+                                    <div>
+                                      <div
+                                        style="
+                                          font-size: 15px;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
+                                        "
+                                      >
+                                        <p
+                                          style="
+                                            display: inline-block; border-radius: 100%; vertical-align: middle; 
+                                            color: #fff; 
+                                            font-weight: 500; 
+                                            width: 40px; 
+                                            height: 40px; 
+                                            background: ${convertNumberToCSSBackground(lottoInfo.drwtNo6)}; 
+                                            text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo6)};
+                                          "
                                         >
                                           ${lottoInfo.drwtNo6}
                                         </p>
@@ -938,8 +582,6 @@ export const emailTemplate = (
                               class="column column-7"
                               width="16%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
                                 font-weight: 400;
                                 text-align: center;
                                 vertical-align: middle;
@@ -950,36 +592,34 @@ export const emailTemplate = (
                               <table
                                 class="text_block block-7"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="font-family: Tahoma, Verdana, sans-serif">
-                                    <div
-                                      style="
-                                        font-size: 14px;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        text-align: center;
-                                        vertical-align: middle;
-                                        height: 40px;
-                                        line-height: 40px
-                                      "
-                                    >
-                                      <p
+                                    <div>
+                                      <div
                                         style="
-                                          display: inline-block; border-radius: 100%; vertical-align: middle; 
-                                          color: #fff; 
-                                          font-weight: 500; 
-                                          width: 40px; 
-                                          height: 40px; 
-                                          background: ${convertNumberToCSSBackground(lottoInfo.bnusNo)}; 
-                                          text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.bnusNo)};
+                                          font-size: 15px;
+                                          text-align: center;
+                                          vertical-align: middle;
+                                          height: 40px;
+                                          line-height: 40px
                                         "
                                       >
+                                        <p
+                                          style="
+                                            display: inline-block; border-radius: 100%; vertical-align: middle; 
+                                            color: #fff; 
+                                            font-weight: 500; 
+                                            width: 40px; 
+                                            height: 40px; 
+                                            background: ${convertNumberToCSSBackground(lottoInfo.bnusNo)}; 
+                                            text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.bnusNo)};
+                                          "
+                                        >
                                           ${lottoInfo.bnusNo}
                                         </p>
                                       </div>
@@ -995,16 +635,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-7) -->
+              <!-- 빈 공간 테이블 (row row-3) -->
               <table
-                class="row row-7"
+                class="row row-3"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1012,51 +651,33 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #1a7616;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                  <td class="pad">
                                     <div
                                       class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                      style="height: 60px; line-height: 60px;"
                                     >
                                       &#8202;
                                     </div>
@@ -1071,16 +692,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 구분선 테이블 (row row-8) -->
+              <!-- 구분선 테이블 (row row-4) -->
               <table
-                class="row row-8"
+                class="row row-4"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1088,45 +708,31 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          padding-top: 20px; 
+                          padding-bottom: 20px; 
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              align="center"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1145,16 +751,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 1등 당첨자 라벨 테이블 (row row-9) -->
+              <!-- 라벨 안내 테이블 (row row-5) -->
               <table
-                class="row row-9"
+                class="row row-5"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1162,65 +767,46 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
                                     class="pad"
-                                    style="padding-top: 20px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                    style="padding-top: 2.5px;"
                                   >
                                     <div
                                       style="
-                                        color: #000;
-                                        direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        font-size: 15px;
-                                        font-weight: 900;
+                                        color: #bbb;
+                                        font-weight: 400;
+                                        font-size: 12px;
                                         letter-spacing: 0;
-                                        line-height: 200%;
-                                        text-align: center;
-                                        mso-line-height-alt: 30px;
+                                        line-height: 100%;
+                                        text-align: right;
                                       "
                                     >
-                                      <p style="margin: 0"><strong>🥇 1등 당첨자 (인원수 / 당첨금)</strong></p>
+                                      <p><strong>* (인원 / 금액)</strong></p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1233,16 +819,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 1등 당첨자 데이터 테이블 (row row-10) -->
+              <!-- 1등 당첨자 라벨 테이블 (row row-6) -->
               <table
-                class="row row-10"
+                class="row row-6"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1250,19 +835,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -1270,25 +850,89 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
                                 font-weight: 400;
-                                text-align: left;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
+                                    <div
+                                      style="
+                                        color: #000;
+                                        direction: ltr;
+                                        font-size: 16px;
+                                        font-weight: 900;
+                                        letter-spacing: 0;
+                                        line-height: 200%;
+                                        text-align: center;
+                                        mso-line-height-alt: 30px;
+                                      "
+                                    >
+                                      <p><strong>🥇 1등 당첨자</strong></p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 1등 당첨자 데이터 테이블 (row row-6) -->
+              <table
+                class="row row-6"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                vertical-align: middle;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1299,16 +943,14 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                         font-size: 14px;
                                         font-weight: 400;
                                         letter-spacing: 0;
                                         line-height: 120%;
                                         text-align: center;
-                                        mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0">
+                                      <p>
                                         <strong>
                                           <span>
                                             ${convertKRLocaleStringFormat(lottoInfo.firstPrzwnerCo)}명 / 
@@ -1330,16 +972,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 2등 당첨자 라벨 테이블 (row row-11) -->
+              <!-- 2등 당첨자 라벨 테이블 (row row-7) -->
               <table
-                class="row row-11"
+                class="row row-7"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1347,19 +988,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -1367,25 +1003,16 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1396,8 +1023,7 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        font-size: 15px;
+                                        font-size: 16px;
                                         font-weight: 900;
                                         letter-spacing: 0;
                                         line-height: 200%;
@@ -1405,7 +1031,7 @@ export const emailTemplate = (
                                         mso-line-height-alt: 30px;
                                       "
                                     >
-                                      <p style="margin: 0"><strong>🥈 2등 당첨자 (인원수 / 당첨금)</strong></p>
+                                      <p><strong>🥈 2등 당첨자</strong></p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1418,16 +1044,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 2등 당첨자 데이터 테이블 (row row-12) -->
+              <!-- 2등 당첨자 데이터 테이블 (row row-8) -->
               <table
-                class="row row-12"
+                class="row row-8"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1435,19 +1060,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -1455,25 +1075,16 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1484,16 +1095,14 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                         font-size: 14px;
                                         font-weight: 400;
                                         letter-spacing: 0;
                                         line-height: 120%;
                                         text-align: center;
-                                        mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0">
+                                      <p>
                                         <strong>
                                           <span>
                                             ${convertKRLocaleStringFormat(lottoInfo.secondPrzwnerCo)}명 / 
@@ -1515,16 +1124,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 3등 당첨자 라벨 테이블 (row row-13) -->
+              <!-- 3등 당첨자 라벨 테이블 (row row-9) -->
               <table
-                class="row row-13"
+                class="row row-9"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1532,19 +1140,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -1552,25 +1155,16 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1581,8 +1175,7 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        font-size: 15px;
+                                        font-size: 16px;
                                         font-weight: 900;
                                         letter-spacing: 0;
                                         line-height: 200%;
@@ -1590,7 +1183,7 @@ export const emailTemplate = (
                                         mso-line-height-alt: 30px;
                                       "
                                     >
-                                      <p style="margin: 0"><strong>🥉 3등 당첨자 (인원수 / 당첨금)</strong></p>
+                                      <p><strong>🥉 3등 당첨자</strong></p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1608,11 +1201,10 @@ export const emailTemplate = (
                 class="row row-14"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1620,19 +1212,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -1640,25 +1227,16 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1669,7 +1247,6 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                         font-size: 14px;
                                         font-weight: 400;
                                         letter-spacing: 0;
@@ -1678,7 +1255,7 @@ export const emailTemplate = (
                                         mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0">
+                                      <p>
                                         <strong>
                                           <span>
                                             ${convertKRLocaleStringFormat(lottoInfo.thirdPrzwnerCo)}명 / 
@@ -1705,11 +1282,10 @@ export const emailTemplate = (
                 class="row row-15"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1717,45 +1293,31 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          padding-top: 20px; 
+                          padding-bottom: 20px; 
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              align="center"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -1774,16 +1336,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-16) -->
+              <!-- 라벨 안내 테이블 (row row-5) -->
               <table
-                class="row row-16"
+                class="row row-5"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1791,53 +1352,46 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 2.5px;"
+                                  >
                                     <div
-                                      class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                      style="
+                                        color: #bbb;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        letter-spacing: 0;
+                                        line-height: 100%;
+                                        text-align: right;
+                                      "
                                     >
-                                      &#8202;
+                                      <p><strong>* (보너스 번호 포함)</strong></p>
                                     </div>
                                   </td>
                                 </tr>
@@ -1855,11 +1409,10 @@ export const emailTemplate = (
                 class="row row-17"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1867,20 +1420,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          border-radius: 0;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -1888,52 +1435,77 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                                padding-bottom: 20px;
-                                vertical-align: top;
-                                border-top: 0;
-                                border-bottom: 0;
+                                padding-top: 20px;
+                                vertical-align: middle;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad" style="text-align: center; color: #555;">
+                                    <strong><p style="font-size: 20px;">역대 최다 당첨 번호</p></strong>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 빈 공간 테이블 (row row-16) -->
+              <table
+                class="row row-16"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="
-                                        font-size: 14px;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        text-align: center;
-                                        mso-line-height-alt: 16.8px;
-                                        color: #555;
-                                        line-height: 1.2;
-                                      "
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px;"
                                     >
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          text-align: center;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <strong><span style="font-size: 20px">역대 최다 당첨 번호</span></strong>
-                                      </div>
-                                      <span>(보너스 번호 포함)</span>
+                                      &#8202;
                                     </div>
                                   </td>
                                 </tr>
@@ -1951,11 +1523,10 @@ export const emailTemplate = (
                 class="row row-18"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -1967,23 +1538,13 @@ export const emailTemplate = (
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          border-radius: 0;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           height: 100px;
                           margin: 0 auto;
                           padding-left: 60px;
                           padding-right: 60px;
-                          border-left: 1px solid #1a7616;
-                          border-top: 0;
-                          border-right: 1px solid #1a7616;
-                          border-bottom: 0;
                         "
-                        width="600"
-                        height="100"
                       >
                         <tbody>
                           <tr>
@@ -1991,10 +1552,6 @@ export const emailTemplate = (
                               class="column column-1"
                               width="33.3%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
@@ -2003,30 +1560,27 @@ export const emailTemplate = (
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad">
+                                  <td 
+                                    class="pad"
+                                    style="padding-top: 5px;"
+                                  >
                                     <div 
                                       style="
-                                        font-size: 14px;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 13px;
                                         text-align: center;
-                                        vertical-align: middle;
                                         height: 40px;
                                         line-height: 30px
                                       "
                                     >
                                       <div
                                         style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          text-align: center;
-                                          vertical-align: middle;
+                                          font-size: 15px;
                                           height: 40px;
                                           line-height: 40px
                                         "
@@ -2041,9 +1595,11 @@ export const emailTemplate = (
                                           ${lottoStatisticInfo.secondLottoNo}
                                         </p>
                                       </div>
-                                      <p>
-                                        🥈 2등 (${lottoStatisticInfo.secondLottoNoCnt}회)
-                                      </p>
+                                      <strong>
+                                        <p style="font-size: 16px">
+                                          🥈 2등 (${lottoStatisticInfo.secondLottoNoCnt}회)
+                                        </p>
+                                      </strong>
                                     </div>
                                   </td>
                                 </tr>
@@ -2053,46 +1609,35 @@ export const emailTemplate = (
                               class="column column-2"
                               width="33.3%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad">
+                                  <td 
+                                    class="pad"
+                                    style="padding-top: 5px;"
+                                  >
                                     <div 
                                       style="
-                                        font-size: 14px;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 13px;
                                         text-align: center;
-                                        vertical-align: middle;
                                         height: 40px;
                                         line-height: 30px
                                       "
                                     >
                                       <div
                                         style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          text-align: center;
-                                          vertical-align: middle;
+                                          font-size: 15px;
                                           height: 40px;
                                           line-height: 40px
                                         "
@@ -2107,9 +1652,11 @@ export const emailTemplate = (
                                           ${lottoStatisticInfo.firstLottoNo}
                                         </p>
                                       </div>
-                                      <p>
-                                        🥇 1등 (${lottoStatisticInfo.firstLottoNoCnt}회)
-                                      </p>
+                                      <strong>
+                                        <p style="font-size: 16px">
+                                          🥇 1등 (${lottoStatisticInfo.firstLottoNoCnt}회)
+                                        </p>
+                                      </strong>
                                     </div>
                                   </td>
                                 </tr>
@@ -2119,46 +1666,35 @@ export const emailTemplate = (
                               class="column column-3"
                               width="33.3%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 margin-bottom: 20px;
                                 margin-top: 20px;
                                 vertical-align: middle;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad">
+                                  <td 
+                                    class="pad"
+                                    style="padding-top: 5px;"
+                                  >
                                     <div 
                                       style="
-                                        font-size: 14px;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
+                                        font-size: 13px;
                                         text-align: center;
-                                        vertical-align: middle;
                                         height: 40px;
                                         line-height: 30px
                                       "
                                     >
                                       <div
                                         style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          text-align: center;
-                                          vertical-align: middle;
+                                          font-size: 15px;
                                           height: 40px;
                                           line-height: 40px
                                         "
@@ -2175,9 +1711,11 @@ export const emailTemplate = (
                                           ${lottoStatisticInfo.thirdLottoNo}
                                         </p>
                                       </div>
-                                      <p>
-                                        🥉 3등 (${lottoStatisticInfo.thirdLottoNoCnt}회)
-                                      </p>
+                                      <strong>
+                                        <p style="font-size: 16px">
+                                          🥉 3등 (${lottoStatisticInfo.thirdLottoNoCnt}회)
+                                        </p>
+                                      </strong>
                                     </div>
                                   </td>
                                 </tr>
@@ -2195,11 +1733,10 @@ export const emailTemplate = (
                 class="row row-19"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2207,51 +1744,33 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                  <td class="pad">
                                     <div
                                       class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                      style="height: 60px; line-height: 60px;"
                                     >
                                       &#8202;
                                     </div>
@@ -2271,11 +1790,10 @@ export const emailTemplate = (
                 class="row row-20"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2283,45 +1801,31 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          padding-top: 20px; 
+                          padding-bottom: 20px; 
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              align="center"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -2340,16 +1844,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-21) -->
+              <!-- 라벨 안내 테이블 (row row-5) -->
               <table
-                class="row row-21"
+                class="row row-5"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2357,53 +1860,46 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 2.5px;"
+                                  >
                                     <div
-                                      class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                      style="
+                                        color: #bbb;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        letter-spacing: 0;
+                                        line-height: 100%;
+                                        text-align: right;
+                                      "
                                     >
-                                      &#8202;
+                                      <p><strong>* (최근 2년간 최고 당첨 금액)</strong></p>
                                     </div>
                                   </td>
                                 </tr>
@@ -2421,11 +1917,11 @@ export const emailTemplate = (
                 class="row row-2"
                 align="center"
                 width="100%"
-                border="0"
+                
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2433,20 +1929,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          border-radius: 0;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -2454,52 +1944,77 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                                padding-bottom: 20px;
+                                padding-top: 20px;
                                 vertical-align: top;
-                                border-top: 0;
-                                border-bottom: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad" style="text-align: center; color: #555;">
+                                    <strong><p style="font-size: 20px;">최고 당첨 금액 정보</p></strong>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 빈 공간 테이블 (row row-21) -->
+              <table
+                class="row row-21"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
                               >
                                 <tr>
                                   <td class="pad">
-                                    <div style="
-                                        font-size: 14px;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        text-align: center;
-                                        mso-line-height-alt: 16.8px;
-                                        color: #555;
-                                        line-height: 1.2;
-                                      "
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px;"
                                     >
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 14px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                          text-align: center;
-                                          mso-line-height-alt: 16.8px;
-                                          color: #555;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <strong><span style="font-size: 20px">연도 별 당첨 정보</span></strong>
-                                      </div>
-                                      <span>(최근 2년간 최고 당첨 금액)</span>
+                                      &#8202;
                                     </div>
                                   </td>
                                 </tr>
@@ -2512,16 +2027,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 올해 당첨 정보 라벨 테이블 (row row-23) -->
+              <!-- 연도별 당첨 정보 라벨 테이블 (row row-23) -->
               <table
                 class="row row-23"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2529,45 +2043,66 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              width="50%"
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 20px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                  >
+                                    <div
+                                      style="
+                                        direction: ltr;
+                                        font-size: 16px;
+                                        font-weight: 900;
+                                        letter-spacing: 0;
+                                        line-height: 150%;
+                                        text-align: center;
+                                        mso-line-height-alt: 30px;
+                                      "
+                                    >
+                                      <p style="font-size: 15px">${convertDateFormat(
+                                        lottoHighestPrizeInfo.thisYearDrwNoDate
+                                      )} 추첨</p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td
+                              class="column column-2"
+                              width="50%"
+                              style="vertical-align: middle"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -2578,7 +2113,6 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                         font-size: 16px;
                                         font-weight: 900;
                                         letter-spacing: 0;
@@ -2587,10 +2121,9 @@ export const emailTemplate = (
                                         mso-line-height-alt: 30px;
                                       "
                                     >
-                                      <p><strong>${thisYear}년</strong></p>
-                                      <p style="font-size: 15px">(${convertDateFormat(
-                                        lottoHighestPrizeInfo.thisYearDrwNoDate
-                                      )} 추첨)</p>
+                                      <p style="font-size: 15px">${convertDateFormat(
+                                        lottoHighestPrizeInfo.lastYearDrwNoDate
+                                      )} 추첨</p>
                                     </div>
                                   </td>
                                 </tr>
@@ -2603,16 +2136,15 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 올해 당첨 정보 데이터 테이블 (row row-24) -->
+              <!-- 연도별 당첨 정보 데이터 테이블 (row row-24) -->
               <table
                 class="row row-24"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2620,45 +2152,29 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              width="50%"
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -2669,7 +2185,6 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                         font-size: 14px;
                                         font-weight: 400;
                                         letter-spacing: 0;
@@ -2678,7 +2193,7 @@ export const emailTemplate = (
                                         mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0">
+                                      <p>
                                         <strong>
                                           <span>
                                             ${convertKRLocaleStringFormat(lottoHighestPrizeInfo.thisYearDrwNo)}회 / 
@@ -2698,160 +2213,18 @@ export const emailTemplate = (
                                 </tr>
                               </table>
                             </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 작년 당첨 정보 라벨 테이블 (row row-25) -->
-              <table
-                class="row row-25"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
                             <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              class="column column-2"
+                              width="50%"
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
-                              >
-                                <tr>
-                                  <td
-                                    class="pad"
-                                    style="padding-top: 20px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
-                                  >
-                                    <div
-                                      style="
-                                        color: #000;
-                                        direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
-                                        font-size: 16px;
-                                        font-weight: 900;
-                                        letter-spacing: 0;
-                                        line-height: 150%;
-                                        text-align: center;
-                                        mso-line-height-alt: 30px;
-                                      "
-                                    >
-                                      <p><strong>${thisYear - 1}년</strong></p>
-                                      <p style="font-size: 15px">(${convertDateFormat(
-                                        lottoHighestPrizeInfo.lastYearDrwNoDate
-                                      )} 추첨)</p>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 작년 당첨 정보 데이터 테이블 (row row-26) -->
-              <table
-                class="row row-26"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
-                            >
-                              <table
-                                class="text_block block-1"
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -2862,7 +2235,6 @@ export const emailTemplate = (
                                       style="
                                         color: #000;
                                         direction: ltr;
-                                        font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                         font-size: 14px;
                                         font-weight: 400;
                                         letter-spacing: 0;
@@ -2871,7 +2243,7 @@ export const emailTemplate = (
                                         mso-line-height-alt: 16.8px;
                                       "
                                     >
-                                      <p style="margin: 0">
+                                      <p>
                                         <strong>
                                           <span>
                                             ${convertKRLocaleStringFormat(lottoHighestPrizeInfo.lastYearDrwNo)}회 / 
@@ -2903,11 +2275,10 @@ export const emailTemplate = (
                 class="row row-27"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2915,51 +2286,33 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
                               >
                                 <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
+                                  <td class="pad">
                                     <div
                                       class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                      style="height: 60px; line-height: 60px;"
                                     >
                                       &#8202;
                                     </div>
@@ -2979,11 +2332,10 @@ export const emailTemplate = (
                 class="row row-28"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -2991,45 +2343,31 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
+                          padding-top: 20px; 
+                          padding-bottom: 20px; 
+                          background-color: #fff;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              align="center"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
-                                border="0"
+                                width="95%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -3048,92 +2386,16 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-29) -->
-              <table
-                class="row row-29"
-                align="center"
-                width="100%"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                        width="600"
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
-                            >
-                              <table
-                                class="text_block block-1"
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
-                              >
-                                <tr>
-                                  <td class="pad" style="padding-bottom: 5px; padding-left: 5px; padding-right: 5px">
-                                    <div
-                                      class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
-                                    >
-                                      &#8202;
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
               <!-- 추가 정보 테이블 (row row-30) -->
               <table
                 class="row row-30"
                 align="center"
                 width="100%"
-                border="0"
+                
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -3141,45 +2403,30 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
+                          background-color: #fff;
                           color: #000;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                vertical-align: middle;
-                                border-top: 0;
-                                border-bottom: 0;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
-                              "
+                              style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -3188,7 +2435,7 @@ export const emailTemplate = (
                                   >
                                     <div
                                       class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px"
+                                      style="height: 60px; line-height: 60px; font-size: 1px; font-weight: 400;"
                                     >
                                       &#8202;
                                     </div>
@@ -3211,11 +2458,10 @@ export const emailTemplate = (
                 class="row row-31"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -3223,19 +2469,15 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
+                          background-color: #fff;
                           color: #000;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -3243,27 +2485,18 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
-                                border-bottom: 1px solid #1a7616;
-                                border-left: 1px solid #1a7616;
-                                border-right: 1px solid #1a7616;
                                 padding-bottom: 25px;
                                 padding-top: 25px;
                                 vertical-align: top;
-                                border-top: 0;
                               "
                             >
                               <table
                                 class="button_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0"
+                                style=" mso-table-rspace: 0"
                               >
                                 <tr>
                                   <td class="pad" style="text-align: center">
@@ -3277,13 +2510,12 @@ export const emailTemplate = (
                                           border-radius: 4px;
                                           width: auto;
                                           border-top: 0 solid transparent;
-                                          font-weight: undefined;
+                                          font-weight: 400;
                                           border-right: 0 solid transparent;
                                           border-bottom: 0 solid transparent;
                                           border-left: 0 solid transparent;
                                           padding-top: 5px;
                                           padding-bottom: 5px;
-                                          font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif;
                                           font-size: 16px;
                                           text-align: center;
                                           mso-border-alt: none;
@@ -3329,11 +2561,10 @@ export const emailTemplate = (
                 class="row row-32"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -3341,19 +2572,14 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
                           background-color: #1a7616;
-                          color: #000;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -3361,39 +2587,29 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
                                 font-weight: 400;
-                                text-align: left;
                                 padding-bottom: 30px;
                                 padding-left: 30px;
                                 padding-right: 30px;
                                 padding-top: 30px;
                                 vertical-align: top;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td class="pad" style="padding-left: 10px; padding-right: 10px; padding-top: 10px">
-                                    <div style="font-family: sans-serif">
+                                    <div>
                                       <div
                                         class
                                         style="
                                           font-size: 12px;
-                                          font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-                                          mso-line-height-alt: 14.399999999999999px;
                                           color: #fff;
                                           line-height: 1.2;
                                         "
@@ -3406,9 +2622,7 @@ export const emailTemplate = (
                                             mso-line-height-alt: 16.8px;
                                           "
                                         >
-                                          <span style="font-size: 22px"
-                                            ><strong><span style="font-size: 22px">궁금하신 사항이 있으신가요? 🍀</span></strong></span
-                                          >
+                                          <span style="font-size: 22px"><strong><span style="font-size: 22px">궁금하신 사항이 있으신가요? 🍀</span></strong></span>
                                         </p>
                                       </div>
                                     </div>
@@ -3418,11 +2632,10 @@ export const emailTemplate = (
                               <table
                                 class="text_block block-2"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -3434,12 +2647,11 @@ export const emailTemplate = (
                                       padding-top: 10px;
                                     "
                                   >
-                                    <div style="font-family: sans-serif">
+                                    <div>
                                       <div
                                         class
                                         style="
                                           font-size: 12px;
-                                          font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
                                           mso-line-height-alt: 21.6px;
                                           color: #fff;
                                           line-height: 1.8;
@@ -3500,11 +2712,10 @@ export const emailTemplate = (
                 class="row row-33"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -3512,19 +2723,15 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
+                          background-color: #fff;
                           color: #000;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -3532,26 +2739,17 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 padding-top: 40px;
                                 vertical-align: top;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="text_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0; word-break: break-word"
+                                style="word-break: break-word"
                               >
                                 <tr>
                                   <td
@@ -3563,12 +2761,11 @@ export const emailTemplate = (
                                       padding-top: 20px;
                                     "
                                   >
-                                    <div style="font-family: sans-serif">
+                                    <div>
                                       <div
                                         class
                                         style="
                                           font-size: 12px;
-                                          font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
                                           mso-line-height-alt: 14.399999999999999px;
                                           color: #61626f;
                                           line-height: 1.2;
@@ -3579,12 +2776,11 @@ export const emailTemplate = (
                                             margin: 0;
                                             font-size: 14px;
                                             text-align: center;
+                                            font-weight: 400;
                                             mso-line-height-alt: 16.8px;
                                           "
                                         >
-                                          <span style="font-size: 12px"
-                                            ><strong>구독을 취소하시고 싶으시다면 Github Repository를 방문해주세요.</strong></span
-                                          >
+                                          <span style="font-size: 12px"><strong>구독을 취소하시고 싶으시다면 Github Repository를 방문해주세요.</strong></span>
                                         </p>
                                       </div>
                                     </div>
@@ -3604,11 +2800,10 @@ export const emailTemplate = (
                 class="row row-34"
                 align="center"
                 width="100%"
-                border="0"
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
-                style="mso-table-lspace: 0; mso-table-rspace: 0; background-color: #f5fff5"
+                style="background-color: #f4f4f4"
               >
                 <tbody>
                   <tr>
@@ -3616,19 +2811,15 @@ export const emailTemplate = (
                       <table
                         class="row-content stack"
                         align="center"
-                        border="0"
                         cellpadding="0"
                         cellspacing="0"
                         role="presentation"
                         style="
-                          mso-table-lspace: 0;
-                          mso-table-rspace: 0;
-                          background-color: #f5fff5;
+                          background-color: #fff;
                           color: #333;
                           width: 600px;
                           margin: 0 auto;
                         "
-                        width="600"
                       >
                         <tbody>
                           <tr>
@@ -3636,27 +2827,18 @@ export const emailTemplate = (
                               class="column column-1"
                               width="100%"
                               style="
-                                mso-table-lspace: 0;
-                                mso-table-rspace: 0;
-                                font-weight: 400;
-                                text-align: left;
                                 padding-bottom: 45px;
                                 padding-top: 30px;
                                 vertical-align: top;
-                                border-top: 0;
-                                border-right: 0;
-                                border-bottom: 0;
-                                border-left: 0;
                               "
                             >
                               <table
                                 class="social_block block-1"
                                 width="100%"
-                                border="0"
                                 cellpadding="10"
                                 cellspacing="0"
                                 role="presentation"
-                                style="mso-table-lspace: 0; mso-table-rspace: 0"
+                                style=" mso-table-rspace: 0"
                               >
                                 <tr>
                                   <td class="pad">
@@ -3664,11 +2846,10 @@ export const emailTemplate = (
                                       <table
                                         class="social-table"
                                         width="84px"
-                                        border="0"
                                         cellpadding="0"
                                         cellspacing="0"
                                         role="presentation"
-                                        style="mso-table-lspace: 0; mso-table-rspace: 0; display: inline-block"
+                                        style="display: inline-block"
                                       >
                                         <tr>
                                           <td style="padding: 0 10px 0 0">
