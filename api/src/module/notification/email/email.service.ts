@@ -11,7 +11,7 @@ import {
   LottoInfoInterface,
   LottoStatisticInfoInterface,
 } from './interface/mailInfo.interface';
-import { PublicSubscriberInfoInterface } from './interface/subscriber.interface';
+import { PublicSubscriberInfoInterface, SubscriberInfoInterface } from './interface/subscriber.interface';
 
 @Injectable()
 export class EmailService {
@@ -80,7 +80,6 @@ export class EmailService {
 
       const axiosReqConfig: AxiosRequestConfig = {
         headers: {
-          Accept: 'application/vnd.github+json',
           Authorization: `Bearer ${GITHUB_TOKEN}`,
         },
       };
@@ -91,15 +90,15 @@ export class EmailService {
       );
 
       await Promise.all(
-        subscriberList.data.map(async (subscriber: PublicSubscriberInfoInterface) => {
+        subscriberList.data.map(async (subscriber: PublicSubscriberInfoInterface): Promise<void> => {
           const subscriberInfo: AxiosResponse = await axios.get(subscriber.url, axiosReqConfig);
 
-          const emailInfo: string = subscriberInfo.data.email;
-
-          await this.sendLottoEmail(emailInfo);
+          if (subscriberInfo.data.email !== null && subscriberInfo.data.email !== '') {
+            await this.sendLottoEmail(subscriberInfo.data.email);
+          }
         })
       );
-    } catch {
+    } catch (err) {
       throw new BadRequestException('구독자 목록을 불러오는데 실패했습니다.');
     }
   }

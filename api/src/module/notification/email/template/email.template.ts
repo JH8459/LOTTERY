@@ -16,8 +16,6 @@ export const emailTemplate = (
   lottoStatisticInfo: LottoStatisticInfoInterface,
   lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface
 ) => {
-  const thisYear = new Date().getFullYear();
-
   return `<!DOCTYPE html>
   <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
     <head>
@@ -315,6 +313,7 @@ export const emailTemplate = (
                                           font-weight: 500; 
                                           width: 40px; 
                                           height: 40px; 
+                                          margin: 0;
                                           background: ${convertNumberToCSSBackground(lottoInfo.drwtNo1)}; 
                                           text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo1)};"
                                       >
@@ -361,6 +360,7 @@ export const emailTemplate = (
                                             font-weight: 500; 
                                             width: 40px; 
                                             height: 40px; 
+                                            margin: 0;
                                             background: ${convertNumberToCSSBackground(lottoInfo.drwtNo2)}; 
                                             text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo2)};
                                           "
@@ -411,6 +411,7 @@ export const emailTemplate = (
                                             font-weight: 500; 
                                             width: 40px; 
                                             height: 40px; 
+                                            margin: 0;
                                             background: ${convertNumberToCSSBackground(lottoInfo.drwtNo3)}; 
                                             text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo3)};
                                           "
@@ -460,7 +461,8 @@ export const emailTemplate = (
                                             color: #fff; 
                                             font-weight: 500; 
                                             width: 40px; 
-                                            height: 40px; 
+                                            height: 40px;
+                                            margin: 0;
                                             background: ${convertNumberToCSSBackground(lottoInfo.drwtNo4)}; 
                                             text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo4)};
                                           "
@@ -513,6 +515,7 @@ export const emailTemplate = (
                                             font-weight: 500; 
                                             width: 40px; 
                                             height: 40px; 
+                                            margin: 0;
                                             background: ${convertNumberToCSSBackground(lottoInfo.drwtNo5)}; 
                                             text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo5)};
                                           "
@@ -566,6 +569,7 @@ export const emailTemplate = (
                                             font-weight: 500; 
                                             width: 40px; 
                                             height: 40px; 
+                                            margin: 0;
                                             background: ${convertNumberToCSSBackground(lottoInfo.drwtNo6)}; 
                                             text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.drwtNo6)};
                                           "
@@ -616,6 +620,7 @@ export const emailTemplate = (
                                             font-weight: 500; 
                                             width: 40px; 
                                             height: 40px; 
+                                            margin: 0;
                                             background: ${convertNumberToCSSBackground(lottoInfo.bnusNo)}; 
                                             text-shadow: ${convertNumberToCSSTextShadow(lottoInfo.bnusNo)};
                                           "
@@ -892,9 +897,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 1등 당첨자 데이터 테이블 (row row-6) -->
+              <!-- 1등 당첨자 데이터 테이블 (row row-7) -->
               <table
-                class="row row-6"
+                class="row row-7"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -972,9 +977,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 2등 당첨자 라벨 테이블 (row row-7) -->
+              <!-- 2등 당첨자 라벨 테이블 (row row-8) -->
               <table
-                class="row row-7"
+                class="row row-8"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1044,9 +1049,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 2등 당첨자 데이터 테이블 (row row-8) -->
+              <!-- 2등 당첨자 데이터 테이블 (row row-9) -->
               <table
-                class="row row-8"
+                class="row row-9"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1124,9 +1129,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 3등 당첨자 라벨 테이블 (row row-9) -->
+              <!-- 3등 당첨자 라벨 테이블 (row row-10) -->
               <table
-                class="row row-9"
+                class="row row-10"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1196,9 +1201,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 3등 당첨자 데이터 테이블 (row row-14) -->
+              <!-- 3등 당첨자 데이터 테이블 (row row-11) -->
               <table
-                class="row row-14"
+                class="row row-11"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1277,9 +1282,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 구분선 테이블 (row row-15) -->
+              <!-- 구분선 테이블 (row row-12) -->
               <table
-                class="row row-15"
+                class="row row-12"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1336,9 +1341,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 라벨 안내 테이블 (row row-5) -->
+              <!-- 라벨 안내 테이블 (row row-13) -->
               <table
-                class="row row-5"
+                class="row row-13"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1404,9 +1409,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 역대 통계 라벨 테이블 (row row-17) -->
+              <!-- 역대 통계 라벨 테이블 (row row-14) -->
               <table
-                class="row row-17"
+                class="row row-14"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1461,9 +1466,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-16) -->
+              <!-- 빈 공간 테이블 (row row-15) -->
               <table
-                class="row row-16"
+                class="row row-15"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1518,9 +1523,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 통계 번호 테이블 (row row-18) -->
+              <!-- 통계 번호 테이블 (row row-16) -->
               <table
-                class="row row-18"
+                class="row row-16"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1728,9 +1733,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-19) -->
+              <!-- 빈 공간 테이블 (row row-17) -->
               <table
-                class="row row-19"
+                class="row row-17"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1785,9 +1790,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 구분선 테이블 (row row-20) -->
+              <!-- 구분선 테이블 (row row-18) -->
               <table
-                class="row row-20"
+                class="row row-18"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1844,9 +1849,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 라벨 안내 테이블 (row row-5) -->
+              <!-- 라벨 안내 테이블 (row row-19) -->
               <table
-                class="row row-5"
+                class="row row-19"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -1912,12 +1917,11 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 연도 통계 라벨 테이블 (row row-22) -->
+              <!-- 연도 통계 라벨 테이블 (row row-20) -->
               <table
-                class="row row-2"
+                class="row row-20"
                 align="center"
                 width="100%"
-                
                 cellpadding="0"
                 cellspacing="0"
                 role="presentation"
@@ -2027,9 +2031,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 연도별 당첨 정보 라벨 테이블 (row row-23) -->
+              <!-- 연도별 당첨 정보 라벨 테이블 (row row-22) -->
               <table
-                class="row row-23"
+                class="row row-22"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2136,9 +2140,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 연도별 당첨 정보 데이터 테이블 (row row-24) -->
+              <!-- 연도별 당첨 정보 데이터 테이블 (row row-23) -->
               <table
-                class="row row-24"
+                class="row row-23"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2270,9 +2274,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-27) -->
+              <!-- 빈 공간 테이블 (row row-24) -->
               <table
-                class="row row-27"
+                class="row row-24"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2327,9 +2331,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 구분선 테이블 (row row-28) -->
+              <!-- 구분선 테이블 (row row-25) -->
               <table
-                class="row row-28"
+                class="row row-25"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2386,9 +2390,191 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 추가 정보 테이블 (row row-30) -->
+              <!-- 라벨 안내 테이블 (row row-26) -->
               <table
-                class="row row-30"
+                class="row row-26"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="vertical-align: middle"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="95%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="pad"
+                                    style="padding-top: 2.5px;"
+                                  >
+                                    <div
+                                      style="
+                                        color: #bbb;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                        letter-spacing: 0;
+                                        line-height: 100%;
+                                        text-align: right;
+                                      "
+                                    >
+                                      <p><strong>* (23년 1월 1일부터)</strong></p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 연도 통계 라벨 테이블 (row row-27) -->
+              <table
+                class="row row-27"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              style="
+                                padding-top: 20px;
+                                vertical-align: top;
+                              "
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td class="pad" style="text-align: center; color: #555;">
+                                    <strong><p style="font-size: 20px;"> 로또 세금 정보</p></strong>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 빈 공간 테이블 (row row-28) -->
+              <table
+                class="row row-28"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                              >
+                                <tr>
+                                  <td class="pad">
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px;"
+                                    >
+                                      &#8202;
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 세금 정보 테이블 (row row-29) -->
+              <table
+                class="row row-29"
                 align="center"
                 width="100%"
                 
@@ -2418,11 +2604,12 @@ export const emailTemplate = (
                             <td
                               class="column column-1"
                               width="100%"
+                              align="center"
                               style="vertical-align: middle"
                             >
                               <table
                                 class="text_block block-1"
-                                width="100%"
+                                width="90%"
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
@@ -2431,16 +2618,21 @@ export const emailTemplate = (
                                 <tr>
                                   <td
                                     class="pad"
-                                    style="text-align: center; padding-bottom: 5px; padding-left: 5px; padding-right: 5px"
+                                    style="
+                                      text-align: left; 
+                                      font-size: 15px;
+                                      font-weight: 900;
+                                      padding-bottom: 5px;
+                                      padding-right: 5px"
                                   >
-                                    <div
-                                      class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px; font-size: 1px; font-weight: 400;"
-                                    >
-                                      &#8202;
-                                    </div>
-                                    <p style="margin-bottom: 20px">
-                                      <strong>더 많은 정보를 담기 위해 준비중입니다 :)</strong>
+                                    <p style="margin-bottom: 15px">
+                                      <strong>📌 3억 이상: 세금 33% (소득세 30% + 주민세 3%)</strong>
+                                    </p>
+                                    <p style="margin-bottom: 15px">
+                                      <strong>📌 3억 미만 200만원 초과: 세금 22% (소득세 20% + 주민세 2%)</strong>
+                                    </p>
+                                    <p>
+                                      <strong>📌 200만원 이하: 세금 없음</strong>
                                     </p>
                                   </td>
                                 </tr>
@@ -2453,9 +2645,125 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 버튼 테이블 (row row-31) -->
+              <!-- 빈 공간 테이블 (row row-30) -->
+              <table
+                class="row row-30"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                              >
+                                <tr>
+                                  <td class="pad">
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px;"
+                                    >
+                                      &#8202;
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 구분선 테이블 (row row-31) -->
               <table
                 class="row row-31"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          padding-top: 20px; 
+                          padding-bottom: 20px; 
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                              align="center"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="95%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="word-break: break-word"
+                              >
+                                <tr>
+                                  <td
+                                    class="divider_inner"
+                                    style="font-size: 1px; line-height: 1px; border-top: 1px solid #bbb"
+                                  >
+                                    <span>&#8202;</span>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 버튼 테이블 (row row-32) -->
+              <table
+                class="row row-32"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2484,11 +2792,6 @@ export const emailTemplate = (
                             <td
                               class="column column-1"
                               width="100%"
-                              style="
-                                padding-bottom: 25px;
-                                padding-top: 25px;
-                                vertical-align: top;
-                              "
                             >
                               <table
                                 class="button_block block-1"
@@ -2496,7 +2799,10 @@ export const emailTemplate = (
                                 cellpadding="0"
                                 cellspacing="0"
                                 role="presentation"
-                                style=" mso-table-rspace: 0"
+                                style="
+                                  vertical-align: middle; 
+                                  padding-bottom: 20px;
+                                "
                               >
                                 <tr>
                                   <td class="pad" style="text-align: center">
@@ -2510,12 +2816,12 @@ export const emailTemplate = (
                                           border-radius: 4px;
                                           width: auto;
                                           border-top: 0 solid transparent;
-                                          font-weight: 400;
                                           border-right: 0 solid transparent;
                                           border-bottom: 0 solid transparent;
                                           border-left: 0 solid transparent;
                                           padding-top: 5px;
                                           padding-bottom: 5px;
+                                          font-weight: 900;
                                           font-size: 16px;
                                           text-align: center;
                                           mso-border-alt: none;
@@ -2527,7 +2833,6 @@ export const emailTemplate = (
                                             cursor: pointer;
                                             padding-left: 20px;
                                             padding-right: 20px;
-                                            font-size: 16px;
                                             display: inline-block;
                                             letter-spacing: normal;
                                             word-break: break-word;
@@ -2535,7 +2840,7 @@ export const emailTemplate = (
                                           "
                                         >
                                           <a
-                                            style="text-decoration: none; color: #fff"
+                                            style="text-decoration: none; color: #fff;"
                                             href="https://dhlottery.co.kr/"
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -2556,9 +2861,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 안내사항 테이블 (row row-32) -->
+              <!-- 안내사항 테이블 (row row-33) -->
               <table
-                class="row row-32"
+                class="row row-33"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2707,9 +3012,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 수신거부 테이블 (row row-33) -->
+              <!-- 수신거부 테이블 (row row-34) -->
               <table
-                class="row row-33"
+                class="row row-34"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -2795,9 +3100,9 @@ export const emailTemplate = (
                   </tr>
                 </tbody>
               </table>
-              <!-- 소셜 & 테이블 (row row-34) -->
+              <!-- 소셜 & 테이블 (row row-35) -->
               <table
-                class="row row-34"
+                class="row row-35"
                 align="center"
                 width="100%"
                 cellpadding="0"
