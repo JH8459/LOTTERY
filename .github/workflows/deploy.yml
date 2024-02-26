@@ -34,6 +34,14 @@ jobs:
             echo "############# GIT PULL #############"
             sudo git pull origin master
 
+            echo "############# CREATE COMPOSE .ENV #############"
+            cd /home/ubuntu/LOTTERY
+            [ -f .env ] && rm .env
+            touch .env
+            echo "API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}" >> .env
+            echo "CRAWLER_SERVER_PORT=${{ secrets.CRAWLER_SERVER_PORT }}" >> .env
+            cat .env
+
             echo "############# CREATE CRAWLER .ENV #############"
             cd /home/ubuntu/LOTTERY/crawler
             [ -f .env ] && rm .env

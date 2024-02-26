@@ -6,14 +6,14 @@ services:
     container_name: lottery_net
     command:
       - --log.level=ERROR
-      - '--api.insecure=true'
+      - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.api.address=:3000
-      - --entrypoints.crawler.address=:4000
+      - --entrypoints.api.address=:${API_SERVER_PORT}
+      - --entrypoints.crawler.address=:${CRAWLER_SERVER_PORT}
     ports:
-      - '3000:3000'
-      - '4000:4000'
+      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
+      - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
       - '8080:8080'
     restart: always
     volumes:
@@ -45,7 +45,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_api_server.rule=Host(`localhost`)
       - traefik.http.routers.lottery_api_server.service=lottery_api_server
-      - traefik.http.services.lottery_api_server.loadbalancer.server.port=3000
+      - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
       - traefik.http.routers.lottery_api_server.entrypoints=api
       - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.path=/health
       - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.interval=11s
@@ -81,7 +81,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_crawler_server.rule=Host(`localhost`)
       - traefik.http.routers.lottery_crawler_server.service=lottery_crawler_server
-      - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=4000
+      - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
       - traefik.http.routers.lottery_crawler_server.entrypoints=crawler
       - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.path=/health
       - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.interval=11s
