@@ -43,7 +43,7 @@ services:
         delay: 3s
     labels:
       - traefik.enable=true
-      - traefik.http.routers.lottery_api_server.rule=Host(`localhost`)
+      - traefik.http.routers.lottery_api_server.rule=Host(`lottery-api.jh8459.com`) || Host(`localhost`)
       - traefik.http.routers.lottery_api_server.service=lottery_api_server
       - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
       - traefik.http.routers.lottery_api_server.entrypoints=api
