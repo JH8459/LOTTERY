@@ -26,7 +26,7 @@
 - 이메일 주소를 LOTTERY🍀가 알 수 있도록 Public으로 변경해주세요. (이메일 주소 공개 권한 수정이 어려우시다면 서비스 이용이 어렵습니다. 😭)
 
   <p align="center">
-    <img src="https://https://github.com/JH8459/LOTTERY/assets/83164003/fc23db60-11de-4038-9668-03f4a307c5f1"/>
+    <img src="https://github.com/JH8459/LOTTERY/assets/83164003/fc23db60-11de-4038-9668-03f4a307c5f1"/>
   </p>
 
 </details>
