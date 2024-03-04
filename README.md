@@ -54,3 +54,56 @@
 
 - 매주 토요일 시행되는 동행복권 로또 정보를 크롤링합니다 :)
 - 구독자들에게 매주 일요일 09시에 회차별 당첨 번호 정보 당첨금액에 대한 통계 정보를 이메일로 발송합니다.
+
+<br/>
+<br/>
+
+
+## ℹ️ 로또 메일링 구독 서비스 LOTTERY 아키텍쳐 소개
+
+<p align="center">
+  <img src="https://github.com/JH8459/LOTTERY/assets/83164003/16d3ea31-b8f1-4ca4-b9ba-8845be091904"/>
+</p>
+
+<p align="center">
+  <img alt="TypeScript" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/> 
+  <img alt="NestJS" src ="https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white"/> 
+  <img alt="Express" src ="https://img.shields.io/badge/Express-000000.svg?&style=for-the-badge&logo=Express&logoColor=white"/> 
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"/>
+  <img alt="MariaDB" src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"/>
+  <img alt="Redis" src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white"/>
+  <img alt="Amazon AWS" src ="https://img.shields.io/badge/Amazon AWS-232F3E.svg?&style=for-the-badge&logo=Amazon AWS&logoColor=white"/>
+</p>
+
+<br/>
+<br/>
+
+- AWS EC2는 주요 서비스를 담당하며, 개인 NAS는 DB 저장을 담당합니다.
+- 모든 인프라는 Docker 컨테이너 환경으로 구축되어 있으며 EC2 내부에서는 각 서비스 컨테이너들은 **Traefik**을 통하여 요청을 전달받습니다.
+- 주요 서비스 컨테이너로는 **크롤러 서버(express)**, **API 서버(nestjs)** 2개로 구성되어 있습니다.
+- Docker Hub와 Github Action을 통해 CI/CD를 구축하였습니다.
+
+<br/>
+<br/>
+
+<details>
+<summary><strong>크롤러 서버</strong></summary>
+  
+#### 1️⃣ 크롤러 서버(express)
+
+- 매주 토요일 시행되는 로또 추첨결과를 크롤링하는 기능을 담당합니다.
+- 크롤링한 정보를 정규화하여 DB에 저장합니다.
+- 메일링에 담을 여러가지 정보들을 추가로 가공하여 Redis에 캐싱합니다.
+
+</details>
+
+<details>
+<summary><strong>API 서버(nestjs)</strong></summary>
+  
+#### 1️⃣ API 서버(nestjs)
+
+- Redis에 캐싱되어 있는 정보를 토대로 메일을 발송하는 서비스를 담당합니다.
+- 구독자 이메일 주소 정보를 가져오는 Github API를 통해 구독자 정보를 가져옵니다.
+- HTML 기반의 이메일 템플릿으로 구독자에게 로또 당첨 정보를 전달합니다.
+
+</details>
