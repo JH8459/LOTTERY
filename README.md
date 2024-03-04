@@ -98,7 +98,7 @@
 </details>
 
 <details>
-<summary><strong>API 서버(nestjs)</strong></summary>
+<summary><strong>API 서버</strong></summary>
   
 #### 1️⃣ API 서버(nestjs)
 
