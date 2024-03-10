@@ -78,10 +78,10 @@
 <br/>
 <br/>
 
-- AWS EC2는 주요 서비스를 담당하며, 개인 NAS는 DB 저장을 담당합니다.
-- 모든 인프라는 Docker 컨테이너 환경으로 구축되어 있으며 EC2 내부에서는 각 서비스 컨테이너들은 **Traefik**을 통하여 요청을 전달받습니다.
-- 주요 서비스 컨테이너로는 **크롤러 서버(express)**, **API 서버(nestjs)** 2개로 구성되어 있습니다.
-- Docker Hub와 Github Action을 통해 CI/CD를 구축하였습니다.
+- AWS EC2에는 주요 서비스를 담당하는 웹 서버가 구축되어있며, 개인 NAS에는 MariaDB를 구축하여 DB 서버로 활용하였습니다.
+- 모든 인프라는 Docker 컨테이너 환경으로 구축되어 있으며 EC2 내부에서는 각 컨테이너들은 <strong>역방향 프록시 서버(traefik)</strong>를 거쳐 요청을 전달 받습니다.
+- 주요 서비스 컨테이너로는 **크롤러 서버(express)**, **API 서버(nestjs)** 그리고 **캐싱(redis)** 컨테이너들로 구성되어 있습니다.
+- **Docker Hub**와 **Github Action**을 통해 CI/CD를 구축하였습니다.
 
 <br/>
 <br/>
