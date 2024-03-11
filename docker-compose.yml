@@ -10,13 +10,20 @@ services:
       - --providers.docker.exposedbydefault=false
       - --entrypoints.api.address=:${API_SERVER_PORT}
       - --entrypoints.crawler.address=:${CRAWLER_SERVER_PORT}
+      # - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      # - --certificatesresolvers.myresolver.acme.email=kk_ong2233@naver.com
+      # - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
     ports:
       - '${API_SERVER_PORT}:${API_SERVER_PORT}'
       - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
       - '8080:8080'
     restart: always
     volumes:
+      # - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - traefik.http.routers.api.rule=Host(`traefik.docker.local`)
+      - traefik.http.routers.api.service=api@internal
     networks:
       - lottery_net_default
 
@@ -44,8 +51,9 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_api_server.rule=Host(`lottery-api.jh8459.com`) || Host(`localhost`)
       - traefik.http.routers.lottery_api_server.service=lottery_api_server
-      - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
       - traefik.http.routers.lottery_api_server.entrypoints=api
+      # - traefik.http.routers.lottery_api_server.tls.certresolver=myresolver
+      - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
       - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.path=/health
       - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.interval=11s
       - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.timeout=1s
@@ -80,8 +88,9 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_crawler_server.rule=Host(`lottery-crawler.jh8459.com`) || Host(`localhost`)
       - traefik.http.routers.lottery_crawler_server.service=lottery_crawler_server
-      - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
       - traefik.http.routers.lottery_crawler_server.entrypoints=crawler
+      # - traefik.http.routers.lottery_crawler_server.tls.certresolver=myresolver
+      - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
       - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.path=/health
       - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.interval=11s
       - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.timeout=1s

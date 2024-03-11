@@ -1,6 +1,9 @@
 # root
 **/.vscode/*
 
+# letsencrypt
+/letsencrypt
+
 # redis
 /redis-data
 
