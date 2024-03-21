@@ -5,29 +5,30 @@ services:
     image: traefik:v2.10
     container_name: lottery_reverse_proxy
     command:
+      - --api.dashboard=true
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
-
       - --certificatesresolvers.myresolver.acme.httpchallenge=true
       - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
       - --certificatesresolvers.myresolver.acme.email=kk_ong2233@naver.com
       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
-      # - --entrypoints.api.address=:${API_SERVER_PORT}
-      # - --entrypoints.crawler.address=:${CRAWLER_SERVER_PORT}
     ports:
       - '80:80'
       - '443:443'
-      # - '${API_SERVER_PORT}:${API_SERVER_PORT}'
-      # - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
       - '8080:8080'
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./letsencrypt:/letsencrypt
     labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`lottery-dashboard.jh8459.com`)
+      - traefik.http.routers.traefik.entrypoints=websecure
+      - traefik.http.routers.traefik.tls.certresolver=myresolver
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.http-catchall.entrypoints=web
       - traefik.http.routers.http-catchall.middlewares=redirect-to-https
       - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
@@ -58,7 +59,6 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.lottery_api_server.rule=Host(`lottery-api.jh8459.com`)
-      # - traefik.http.routers.lottery_api_server.service=lottery_api_server
       - traefik.http.routers.lottery_api_server.entrypoints=websecure
       - traefik.http.routers.lottery_api_server.tls.certresolver=myresolver
       - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
@@ -95,7 +95,6 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.lottery_crawler_server.rule=Host(`lottery-crawler.jh8459.com`)
-      # - traefik.http.routers.lottery_crawler_server.service=lottery_crawler_server
       - traefik.http.routers.lottery_crawler_server.entrypoints=websecure
       - traefik.http.routers.lottery_crawler_server.tls.certresolver=myresolver
       - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
