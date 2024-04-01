@@ -33,7 +33,7 @@ services:
       - traefik.http.routers.http-catchall.middlewares=redirect-to-https
       - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
       - traefik.http.services.traefik.loadbalancer.server.port=8080
-      - traefik.http.middlewares.auth.basicauth.users=${DASHBOARD_AUTH}
+      - traefik.http.middlewares.auth.basicauth.users=wjd5588:$$apr1$$amZ86RcA$$DURWl.NAMBnRStmi1I69q0
       - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
     networks:
       - lottery_net_default
