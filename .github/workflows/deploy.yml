@@ -75,6 +75,7 @@ jobs:
             echo "API_EMAIL_FROM=${{ secrets.API_EMAIL_FROM }}" >> .env
             echo "API_REDIS_HOST=${{ secrets.API_REDIS_HOST }}" >> .env
             echo "API_REDIS_PORT=${{ secrets.API_REDIS_PORT }}" >> .env
+            echo "API_SLACK_SIGNING_SECRET=${{ secrets.API_SLACK_SIGNING_SECRET }}" >> .env
             echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
             cat .env
 
