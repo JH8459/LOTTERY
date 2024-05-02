@@ -1,4 +1,4 @@
-import { utilities } from 'nest-winston';
+import { WinstonModuleOptions, utilities } from 'nest-winston';
 import * as winston from 'winston';
 import * as winstonDaily from 'winston-daily-rotate-file';
 
@@ -19,7 +19,7 @@ const dailyOptions = (level: string) => {
   };
 };
 
-export const WINSTON_CONFIG = {
+export const WINSTON_CONFIG: WinstonModuleOptions = {
   transports: [
     new winston.transports.Console({
       level: 'info',
