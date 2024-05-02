@@ -10,21 +10,16 @@ import { WINSTON_CONFIG } from 'src/config/logger.config';
 import { EMAIL_CONFIG } from 'src/config/email.config';
 import { REDIS_CONFIG } from 'src/config/redis.config';
 import { SchedulerModule } from './scheduler/scheduler.module';
-import * as NestJSSlack from 'nestjs-slack';
-import { SLACK_CONFIG } from 'src/config/slack.config';
-import { SlackModule } from './slack/slack.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MailerModule.forRootAsync(EMAIL_CONFIG),
     RedisModule.forRootAsync(REDIS_CONFIG),
-    NestJSSlack.SlackModule.forRootAsync(SLACK_CONFIG),
     WinstonModule.forRoot(WINSTON_CONFIG),
     HealthModule,
     NotificationsModule,
     SchedulerModule,
-    SlackModule,
   ],
 })
 export class AppModule implements NestModule {
