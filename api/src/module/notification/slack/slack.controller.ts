@@ -11,7 +11,12 @@ export class SlackController {
 
   @ApiOperation(SLACK.POST.API_OPERATION)
   @Post('/events')
-  async slack(@Body('challenge') challenge: string): Promise<string> {
-    return challenge;
+  async slack(@Body('challenge') challenge: string): Promise<ResponseDto> {
+    const result: ResponseDto = {
+      message: 'success',
+      data: challenge,
+    };
+
+    return result;
   }
 }

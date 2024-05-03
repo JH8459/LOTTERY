@@ -8,5 +8,5 @@ export class ResponseDto {
 
   @ApiProperty({ type: Object, description: '응답 데이터 객체' })
   @IsOptional()
-  data?: object;
+  data?: object | string;
 }
