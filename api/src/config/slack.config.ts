@@ -1,11 +1,6 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SlackAsyncConfig, SlackConfig } from 'nestjs-slack/dist/types';
+import { AppOptions } from '@slack/bolt';
 
-export const SLACK_CONFIG: SlackAsyncConfig = {
-  imports: [ConfigModule],
-  inject: [ConfigService],
-  useFactory: async (configService: ConfigService): Promise<SlackConfig> => ({
-    type: 'api',
-    token: configService.get<string>('API_SLACK_SIGNING_SECRET'),
-  }),
+export const SLACK_CONFIG: AppOptions = {
+  token: process.env.API_SLACK_BOT_TOKEN,
+  signingSecret: process.env.API_SLACK_SIGNING_SECRET,
 };

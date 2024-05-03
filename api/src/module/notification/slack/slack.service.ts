@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import * as NestJSSlack from 'nestjs-slack';
+import { BoltService } from './bolt.service';
 
 @Injectable()
 export class SlackService {
-  constructor(private readonly nestJSSlackService: NestJSSlack.SlackService) {}
+  constructor(private readonly boltService: BoltService) {}
 }
