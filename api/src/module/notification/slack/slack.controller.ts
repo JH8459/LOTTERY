@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { SLACK } from './swagger/slack.swagger';
@@ -21,12 +22,10 @@ export class SlackController {
   }
 
   @Post('/commands')
-  async slackCommandHandler(@Body('challenge') challenge: string): Promise<ResponseDto> {
-    const result: ResponseDto = {
-      message: 'success',
-      data: challenge,
-    };
+  async slackCommandHandler(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const receiver = this.slackService.getReceiver();
 
-    return result;
+    // receiver를 사용하여 요청을 처리합니다.
+    receiver.router(req, res, () => {});
   }
 }
