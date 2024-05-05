@@ -19,13 +19,13 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
+
   // CORS Setting, 옵션 처리
   app.enableCors({
     origin: true,
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
     credentials: true,
   });
-
   // Proxy Setting, 실제 IP 분별 처리
   app.set('trust proxy', true);
   // Swagger Options Setting, API DOCS 처리
