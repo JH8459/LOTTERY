@@ -30,7 +30,11 @@ export class SlackController {
   }
 
   @Post('/actions')
-  async slackActionsHandler(@Body() body: any): Promise<void> {
+  async slackActionsHandler(@Body('payload') body: any): Promise<void> {
+    console.log('✅ body: ', body);
+    console.log('✅ bodyType: ', typeof body);
+    console.log('✅ body.actions: ', body.actions);
+    console.log('✅ body.actions[0]: ', body.actions[0]);
     const actionId = body.actions[0].action_id;
 
     await this.slackService.slackActionsHandler(actionId, body);
