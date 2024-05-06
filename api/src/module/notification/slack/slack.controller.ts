@@ -30,13 +30,11 @@ export class SlackController {
   }
 
   @Post('/actions')
-  async slackActionsHandler(@Body('payload') body: any): Promise<void> {
-    console.log('✅ body: ', body);
-    console.log('✅ bodyType: ', typeof body);
-    console.log('✅ body.actions: ', body.actions);
-    console.log('✅ body.actions[0]: ', body.actions[0]);
-    const actionId = body.actions[0].action_id;
+  async slackActionsHandler(@Body('payload') body: string): Promise<void> {
+    const bodyToJson = JSON.parse(body);
+    const actionId: string = bodyToJson.actions[0].action_id;
+    const value: string = bodyToJson.actions[0].value;
 
-    await this.slackService.slackActionsHandler(actionId, body);
+    await this.slackService.slackActionsHandler(actionId, value, bodyToJson);
   }
 }

@@ -9,7 +9,7 @@ import {
   LottoHighestPrizeInfoInterface,
   LottoInfoInterface,
   LottoStatisticInfoInterface,
-} from '../interface/mailInfo.interface';
+} from '../../interface/lotto.interface';
 
 export const emailTemplate = (
   lottoInfo: LottoInfoInterface,

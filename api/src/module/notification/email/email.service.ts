@@ -10,7 +10,7 @@ import {
   LottoHighestPrizeInfoInterface,
   LottoInfoInterface,
   LottoStatisticInfoInterface,
-} from './interface/mailInfo.interface';
+} from '../interface/lotto.interface';
 import { PublicSubscriberInfoInterface, SubscriberInfoInterface } from './interface/subscriber.interface';
 
 @Injectable()

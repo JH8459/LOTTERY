@@ -7,7 +7,7 @@ import { SlackRepository } from '../../repository/slack.repository';
 import { SlackActionIDEnum } from '../../constant/slack.enum';
 
 @Injectable()
-export class PrizeInfoService {
+export class CommandsService {
   constructor(@InjectRedis() private readonly redis: Redis, private slackRepository: SlackRepository) {}
 
   async getPrizeInfoModal(): Promise<View> {
@@ -75,7 +75,7 @@ export class PrizeInfoService {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: `*🍀 이번 주 당첨 결과 조회*\n${convertKRLocaleStringFormat(
+            text: `*🍀 최신 당첨 결과 조회*\n${convertKRLocaleStringFormat(
               recentlyDrwNo
             )}회 당첨 결과 정보를 가져옵니다.`,
           },
@@ -113,12 +113,10 @@ export class PrizeInfoService {
       close: {
         type: 'plain_text',
         text: '닫기',
-        emoji: true,
       },
       submit: {
         type: 'plain_text',
         text: '조회',
-        emoji: true,
       },
     };
 
