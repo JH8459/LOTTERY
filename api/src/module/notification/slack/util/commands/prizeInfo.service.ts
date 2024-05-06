@@ -4,6 +4,7 @@ import { View } from '@slack/bolt';
 import Redis from 'ioredis';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { SlackRepository } from '../../repository/slack.repository';
+import { SlackActionIDEnum } from '../../constant/slack.enum';
 
 @Injectable()
 export class PrizeInfoService {
@@ -85,7 +86,8 @@ export class PrizeInfoService {
               emoji: true,
               text: '선택',
             },
-            value: 'recently',
+            value: `${recentlyDrwNo}`,
+            action_id: SlackActionIDEnum.RECENTLY_PRIZE_INFO,
           },
         },
         {

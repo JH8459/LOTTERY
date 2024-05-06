@@ -28,4 +28,11 @@ export class SlackController {
     // receiver를 사용하여 요청을 처리합니다.
     await receiver.requestHandler(req, res);
   }
+
+  @Post('/actions')
+  async slackActionsHandler(@Body() body: any): Promise<void> {
+    const actionId = body.actions[0].action_id;
+
+    await this.slackService.slackActionsHandler(actionId, body);
+  }
 }
