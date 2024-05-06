@@ -20,6 +20,17 @@ export class SlackService implements OnModuleInit {
       token: this.configService.get<string>('API_SLACK_BOT_TOKEN'),
       receiver: this.receiver,
     });
+
+    // '/당첨정보' command를 처리하는 이벤트 핸들러를 등록합니다.
+    this.app.command('/당첨정보', async ({ command, ack, say }) => {
+      console.log('✅ command:', command);
+
+      // Command 요청을 확인합니다.
+      await ack();
+
+      // Command에 대한 응답을 보냅니다.
+      await say(`Hello, <@${command.user_id}>!`);
+    });
   }
 
   getSlackApp() {
@@ -30,11 +41,11 @@ export class SlackService implements OnModuleInit {
     return this.receiver;
   }
 
-  async getCommandsLotteryInfo() {
-    this.app.command('/당첨정보', async ({ command, ack, say }) => {
-      await ack();
+  // async getCommandsLotteryInfo() {
+  //   this.app.command('/당첨정보', async ({ command, ack, say }) => {
+  //     await ack();
 
-      await say(`Hello, <@${command.user_id}>!`);
-    });
-  }
+  //     await say(`Hello, <@${command.user_id}>!`);
+  //   });
+  // }
 }
