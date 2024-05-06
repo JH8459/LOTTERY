@@ -26,6 +26,9 @@ export class SlackController {
     const receiver = this.slackService.getReceiver();
 
     // receiver를 사용하여 요청을 처리합니다.
-    receiver.router(req, res, () => {});
+    receiver.router.post('/commands', (req, res) => {
+      // Slash command를 처리하는 로직을 등록합니다.
+      this.slackService.getCommandsLotteryInfo();
+    });
   }
 }
