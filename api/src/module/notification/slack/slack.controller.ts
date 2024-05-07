@@ -4,6 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { SLACK } from './swagger/slack.swagger';
 import { SlackService } from './slack.service';
+import { SlackActionTypeEnum } from './constant/slack.enum';
 
 @ApiTags('Slack API')
 @Controller('/slack')
@@ -25,16 +26,28 @@ export class SlackController {
   async slackCommandHandler(@Req() req: Request, @Res() res: Response): Promise<void> {
     const receiver = this.slackService.getReceiver();
 
-    // receiver를 사용하여 요청을 처리합니다.
+    // receiver를 사용하여 command 요청을 처리합니다.
     await receiver.requestHandler(req, res);
   }
 
   @Post('/actions')
-  async slackActionsHandler(@Body('payload') body: string): Promise<void> {
-    const bodyToJson = JSON.parse(body);
-    const actionId: string = bodyToJson.actions[0].action_id;
-    const value: string = bodyToJson.actions[0].value;
+  async slackActionsHandler(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const bodyToJson = JSON.parse(req.body.payload);
+    const ack = res.send.bind(res);
+    const type: string = bodyToJson.type;
 
-    await this.slackService.slackActionsHandler(actionId, value, bodyToJson);
+    switch (type) {
+      // Block Actions 이벤트를 처리합니다.
+      case SlackActionTypeEnum.BLOCK_ACTIONS:
+        await this.slackService.slackBlockActionsHandler(bodyToJson);
+        break;
+      // View Submission 이벤트를 처리합니다.
+      case SlackActionTypeEnum.VIEW_SUBMISSION:
+        await this.slackService.slackViewSubMissionHandler(ack, bodyToJson);
+        break;
+      // 기타 이벤트는 무시합니다.
+      default:
+        break;
+    }
   }
 }

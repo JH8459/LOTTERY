@@ -13,6 +13,10 @@ export const convertKRLocaleStringFormat = (number: number): string => {
 };
 
 export const convertKoreanStringFormat = (number: number): string => {
+  if (!number) {
+    return '-';
+  }
+
   const koreanUnits = ['조', '억', '만', ''];
   const unit = 10000;
   let answer = '';

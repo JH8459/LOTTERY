@@ -1,35 +1,53 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-import { Block, KnownBlock } from '@slack/bolt';
 import Redis from 'ioredis';
 import { SlackRepository } from '../../repository/slack.repository';
+import { Block, KnownBlock } from '@slack/bolt';
 import { LottoInfoInterface } from 'src/module/notification/interface/lotto.interface';
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
+import { SlackActionIDEnum, SlackBlockIDEnum } from '../../constant/slack.enum';
 
 @Injectable()
-export class ActionsService {
+export class BuilderService {
   constructor(@InjectRedis() private readonly redis: Redis, private slackRepository: SlackRepository) {}
 
-  async getPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
-    const lottoInfo: LottoInfoInterface = {
-      drwNo: Number(await this.redis.get('drwNo')),
-      drwtNo1: Number(await this.redis.get('drwtNo1')),
-      drwtNo2: Number(await this.redis.get('drwtNo2')),
-      drwtNo3: Number(await this.redis.get('drwtNo3')),
-      drwtNo4: Number(await this.redis.get('drwtNo4')),
-      drwtNo5: Number(await this.redis.get('drwtNo5')),
-      drwtNo6: Number(await this.redis.get('drwtNo6')),
-      bnusNo: Number(await this.redis.get('bnusNo')),
-      firstWinamnt: Number(await this.redis.get('firstWinamnt')),
-      firstPrzwnerCo: Number(await this.redis.get('firstPrzwnerCo')),
-      secondWinamnt: Number(await this.redis.get('secondWinamnt')),
-      secondPrzwnerCo: Number(await this.redis.get('secondPrzwnerCo')),
-      thirdWinamnt: Number(await this.redis.get('thirdWinamnt')),
-      thirdPrzwnerCo: Number(await this.redis.get('thirdPrzwnerCo')),
-      drwNoDate: new Date(await this.redis.get('drwNoDate')),
-    };
+  async getDrwnoPrizeInfoBlock(lottoInfo?: LottoInfoInterface): Promise<(Block | KnownBlock)[]> {
+    if (!lottoInfo) {
+      lottoInfo = {
+        drwNo: Number(await this.redis.get('drwNo')),
+        drwtNo1: Number(await this.redis.get('drwtNo1')),
+        drwtNo2: Number(await this.redis.get('drwtNo2')),
+        drwtNo3: Number(await this.redis.get('drwtNo3')),
+        drwtNo4: Number(await this.redis.get('drwtNo4')),
+        drwtNo5: Number(await this.redis.get('drwtNo5')),
+        drwtNo6: Number(await this.redis.get('drwtNo6')),
+        bnusNo: Number(await this.redis.get('bnusNo')),
+        firstWinamnt: Number(await this.redis.get('firstWinamnt')),
+        firstPrzwnerCo: Number(await this.redis.get('firstPrzwnerCo')),
+        secondWinamnt: Number(await this.redis.get('secondWinamnt')),
+        secondPrzwnerCo: Number(await this.redis.get('secondPrzwnerCo')),
+        thirdWinamnt: Number(await this.redis.get('thirdWinamnt')),
+        thirdPrzwnerCo: Number(await this.redis.get('thirdPrzwnerCo')),
+        drwNoDate: new Date(await this.redis.get('drwNoDate')),
+      };
+    }
 
     const block: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '뒤로가기',
+          },
+          action_id: SlackActionIDEnum.PRIZE_INFO,
+        },
+      },
       {
         type: 'header',
         text: {
@@ -181,5 +199,97 @@ export class ActionsService {
     ];
 
     return block;
+  }
+
+  async getPrizeInfoBlock(recentlyDrwNo: number): Promise<(Block | KnownBlock)[]> {
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'plain_text',
+          emoji: true,
+          text: '로또 당첨 정보 조회를 위해 회차 정보를 선택해주세요.',
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*<https://dhlottery.co.kr/|동행복권 바로가기>*\n로또 6/45의 추첨방송은 *매주 토요일 오후 8시 35분경* MBC방송국 스튜디오에서 생방송으로 진행되며, 추첨을 통해 당첨번호가 결정되고 그 결과를 확인하실 수 있습니다.',
+        },
+        accessory: {
+          type: 'image',
+          image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/bef55dc9-7eaf-4143-b778-1072d84151dd',
+          alt_text: 'lotto thumbnail',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*LOTTERY는 매주 일요일 새벽 3시에 당첨 정보를 수집합니다.*',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*당첨 정보를 조회할 회차를 선택해주세요.*',
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*🍀 최신 당첨 결과 조회*\n${convertKRLocaleStringFormat(
+            recentlyDrwNo
+          )}회 당첨 결과 정보를 가져옵니다.`,
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            emoji: true,
+            text: '선택',
+          },
+          value: `${recentlyDrwNo}`,
+          action_id: SlackActionIDEnum.RECENTLY_PRIZE_INFO,
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*☘️ 다른 회차 당첨 결과 조회*',
+        },
+      },
+      {
+        type: 'input',
+        block_id: SlackBlockIDEnum.ORDER_INPUT,
+        element: {
+          type: 'plain_text_input',
+          action_id: SlackActionIDEnum.ORDER_INPUT,
+        },
+        label: {
+          type: 'plain_text',
+          text: '조회 버튼을 눌러 입력한 회차의 당첨 결과 정보를 가져옵니다.',
+        },
+      },
+    ];
+
+    return blocks;
   }
 }
