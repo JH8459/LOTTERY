@@ -1,8 +1,7 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
-import { SLACK } from './swagger/slack.swagger';
 import { SlackService } from './slack.service';
 import { SlackActionTypeEnum } from './constant/slack.enum';
 
@@ -11,7 +10,6 @@ import { SlackActionTypeEnum } from './constant/slack.enum';
 export class SlackController {
   constructor(private slackService: SlackService) {}
 
-  @ApiOperation(SLACK.POST.API_OPERATION)
   @Post('/events')
   async slackEventHandler(@Body('challenge') challenge: string): Promise<ResponseDto> {
     const result: ResponseDto = {
