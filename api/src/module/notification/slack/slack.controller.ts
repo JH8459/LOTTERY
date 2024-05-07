@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { SlackService } from './slack.service';
 import { SlackActionTypeEnum } from './constant/slack.enum';
@@ -18,6 +18,13 @@ export class SlackController {
     };
 
     return result;
+  }
+
+  @Get('auth/callback')
+  async slackOAuthCallback(@Query('code') code: string, @Res() res: Response): Promise<void> {
+    await this.slackService.getAccessToken(code);
+
+    res.status(200).send('Authentication successful');
   }
 
   @Post('/commands')
