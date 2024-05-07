@@ -23,12 +23,20 @@ export const convertKoreanStringFormat = (number: number): string => {
 
   while (number > 0) {
     const mod = number % unit;
-    const modToString = mod.toString().replace(/(\d)(\d{3})/, '$1,$2');
+
+    if (mod === 0 && number !== 1) {
+      koreanUnits.pop();
+    }
+
+    const modToString = mod ? mod.toLocaleString('ko-KR') : '';
     number = Math.floor(number / unit);
-    answer = `${modToString}${koreanUnits.pop()} ${answer}`;
+
+    if (modToString) {
+      answer = `${modToString}${koreanUnits.pop()} ${answer}`;
+    }
   }
 
-  return answer.slice(0, -1);
+  return answer.trim();
 };
 
 export const convertNumberToCSSBackground = (number: number): string => {
