@@ -90,7 +90,11 @@ export class SlackService implements OnModuleInit {
       }
     );
 
-    return response.data.app_id;
+    if (response.data.ok) {
+      return `https://slack.com/app_redirect?app=${response.data.app_id}`;
+    } else {
+      return `https://slack.com`;
+    }
   }
 
   async slackBlockActionsHandler(body: any): Promise<void> {

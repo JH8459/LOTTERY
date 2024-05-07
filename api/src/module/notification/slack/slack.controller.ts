@@ -22,9 +22,9 @@ export class SlackController {
 
   @Get('auth')
   async slackOAuthCallback(@Query('code') code: string, @Res() res: Response): Promise<void> {
-    const appId: string = await this.slackService.getAccessToken(code);
+    const url: string = await this.slackService.getAccessToken(code);
 
-    res.redirect(`https://slack.com/app_redirect?app=${appId}`);
+    res.redirect(url);
   }
 
   @Post('/commands')
