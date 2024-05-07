@@ -79,27 +79,27 @@ export class BuilderService {
                 elements: [
                   {
                     type: 'text',
-                    text: `1️⃣: ${lottoInfo.drwtNo1}번 `,
+                    text: `1️⃣ ${lottoInfo.drwtNo1}번 `,
                   },
                   {
                     type: 'text',
-                    text: `/ 2️⃣: ${lottoInfo.drwtNo2}번 `,
+                    text: `/ 2️⃣ ${lottoInfo.drwtNo2}번 `,
                   },
                   {
                     type: 'text',
-                    text: `/ 3️⃣: ${lottoInfo.drwtNo3}번 `,
+                    text: `/ 3️⃣ ${lottoInfo.drwtNo3}번 `,
                   },
                   {
                     type: 'text',
-                    text: `/ 4️⃣: ${lottoInfo.drwtNo4}번 `,
+                    text: `/ 4️⃣ ${lottoInfo.drwtNo4}번 `,
                   },
                   {
                     type: 'text',
-                    text: `/ 5️⃣: ${lottoInfo.drwtNo5}번 `,
+                    text: `/ 5️⃣ ${lottoInfo.drwtNo5}번 `,
                   },
                   {
                     type: 'text',
-                    text: `/ 6️⃣: ${lottoInfo.drwtNo6}번`,
+                    text: `/ 6️⃣ ${lottoInfo.drwtNo6}번`,
                   },
                 ],
               },
@@ -108,7 +108,7 @@ export class BuilderService {
                 elements: [
                   {
                     type: 'text',
-                    text: '보너스 번호 ☘️: ',
+                    text: '보너스 번호 ☘️ ',
                   },
                   {
                     type: 'text',
