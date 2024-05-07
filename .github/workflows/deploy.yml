@@ -77,6 +77,8 @@ jobs:
             echo "API_REDIS_PORT=${{ secrets.API_REDIS_PORT }}" >> .env
             echo "API_SLACK_SIGNING_SECRET=${{ secrets.API_SLACK_SIGNING_SECRET }}" >> .env
             echo "API_SLACK_BOT_TOKEN=${{ secrets.API_SLACK_BOT_TOKEN }}" >> .env
+            echo "API_SLACK_CLIENT_ID=${{ secrets.API_SLACK_CLIENT_ID }}" >> .env
+            echo "API_SLACK_CLIENT_SECRET=${{ secrets.API_SLACK_CLIENT_SECRET }}" >> .env 
             echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
             cat .env
 
