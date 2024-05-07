@@ -76,7 +76,7 @@ export class SlackService implements OnModuleInit {
   }
 
   async getAccessToken(code: string): Promise<string> {
-    const response = await axios.post(
+    const oauthResponse = await axios.post(
       'https://slack.com/api/oauth.v2.access',
       querystring.stringify({
         client_id: this.configService.get<string>('API_SLACK_CLIENT_ID'),
@@ -90,8 +90,14 @@ export class SlackService implements OnModuleInit {
       }
     );
 
-    if (response.data.ok) {
-      return `https://slack.com/app_redirect?app=${response.data.app_id}`;
+    if (oauthResponse.data.ok) {
+      const teamInfoResponse = await axios.get('https://slack.com/api/team.info', {
+        headers: {
+          Authorization: `Bearer ${oauthResponse.data.access_token}`,
+        },
+      });
+
+      return `https://${teamInfoResponse.data.team.domain}.slack.com/app_redirect?app=${oauthResponse.data.app_id}`;
     } else {
       return `https://slack.com`;
     }
