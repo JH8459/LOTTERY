@@ -8,7 +8,8 @@ import Redis from 'ioredis';
 import { SlackRepository } from './repository/slack.repository';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { LottoInfoInterface } from '../interface/lotto.interface';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import * as querystring from 'querystring';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -74,14 +75,22 @@ export class SlackService implements OnModuleInit {
     return this.receiver;
   }
 
-  async getAccessToken(code: string): Promise<void> {
-    await axios.post('https://slack.com/api/oauth.v2.access', {
-      client_id: this.configService.get<string>('API_SLACK_CLIENT_ID'),
-      client_secret: this.configService.get<string>('API_SLACK_CLIENT_SECRET'),
-      code,
-    });
+  async getAccessToken(code: string): Promise<string> {
+    const response = await axios.post(
+      'https://slack.com/api/oauth.v2.access',
+      querystring.stringify({
+        client_id: this.configService.get<string>('API_SLACK_CLIENT_ID'),
+        client_secret: this.configService.get<string>('API_SLACK_CLIENT_SECRET'),
+        code,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
 
-    // 액세스 토큰을 저장하거나 사용하는 코드
+    return response.data.app_id;
   }
 
   async slackBlockActionsHandler(body: any): Promise<void> {
