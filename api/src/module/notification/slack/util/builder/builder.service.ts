@@ -247,7 +247,23 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*당첨 정보를 조회할 회차를 선택해주세요.*',
+          text: '*당첨 정보를 조회할 카테고리를 선택해주세요.*',
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*📊 당첨 결과 통계 조회*\n최다 당첨 번호와 최대 당첨 금액 정보를 조회합니다.',
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            emoji: true,
+            text: '선택',
+          },
+          action_id: SlackActionIDEnum.STATISTIC_PRIZE_INFO,
         },
       },
       {

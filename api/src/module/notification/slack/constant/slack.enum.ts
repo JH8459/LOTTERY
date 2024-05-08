@@ -5,6 +5,7 @@ export enum SlackActionTypeEnum {
 
 export enum SlackActionIDEnum {
   PRIZE_INFO = 'prize_info',
+  STATISTIC_PRIZE_INFO = 'statistic_prize_info',
   RECENTLY_PRIZE_INFO = 'recently_prize_info',
   ORDER_INPUT = 'order_input',
 }
