@@ -76,7 +76,7 @@ export class SlackService implements OnModuleInit {
   }
 
   async getAccessToken(code: string): Promise<string> {
-    const oauthResponse = await axios.post(
+    const oauthResponse: AxiosResponse = await axios.post(
       'https://slack.com/api/oauth.v2.access',
       querystring.stringify({
         client_id: this.configService.get<string>('API_SLACK_CLIENT_ID'),
@@ -91,7 +91,7 @@ export class SlackService implements OnModuleInit {
     );
 
     if (oauthResponse.data.ok) {
-      const teamInfoResponse = await axios.get('https://slack.com/api/team.info', {
+      const teamInfoResponse: AxiosResponse = await axios.get('https://slack.com/api/team.info', {
         headers: {
           Authorization: `Bearer ${oauthResponse.data.access_token}`,
         },
@@ -147,6 +147,23 @@ export class SlackService implements OnModuleInit {
               text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(recentlyDrwNo)}회`,
             },
             blocks: await this.builderService.getDrwnoPrizeInfoBlock(),
+            close: {
+              type: 'plain_text',
+              text: '닫기',
+            },
+          },
+        });
+        break;
+      case SlackActionIDEnum.STATISTIC_PRIZE_INFO:
+        await app.client.views.update({
+          view_id: body.view.id,
+          view: {
+            type: 'modal',
+            title: {
+              type: 'plain_text',
+              text: `당첨 정보 조회 / 통계 조회`,
+            },
+            blocks: await this.builderService.getStatisticPrizeInfoBlock(),
             close: {
               type: 'plain_text',
               text: '닫기',

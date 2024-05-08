@@ -3,7 +3,11 @@ import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { SlackRepository } from '../../repository/slack.repository';
 import { Block, KnownBlock } from '@slack/bolt';
-import { LottoInfoInterface } from 'src/module/notification/interface/lotto.interface';
+import {
+  LottoHighestPrizeInfoInterface,
+  LottoInfoInterface,
+  LottoStatisticInfoInterface,
+} from 'src/module/notification/interface/lotto.interface';
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../../constant/slack.enum';
 
@@ -185,6 +189,15 @@ export class BuilderService {
         ],
       },
       {
+        type: 'context',
+        elements: [
+          {
+            text: '*당첨 결과는 3등까지의 정보만 제공합니다.*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
         type: 'divider',
       },
       {
@@ -303,6 +316,274 @@ export class BuilderService {
           type: 'plain_text',
           text: '조회 버튼을 눌러 입력한 회차의 당첨 결과 정보를 가져옵니다.',
         },
+      },
+    ];
+
+    return blocks;
+  }
+
+  async getStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
+    const lottoStatisticInfo: LottoStatisticInfoInterface = {
+      firstLottoNo: Number(await this.redis.get('firstLottoNo')),
+      firstLottoNoCnt: Number(await this.redis.get('firstLottoNoCnt')),
+      secondLottoNo: Number(await this.redis.get('secondLottoNo')),
+      secondLottoNoCnt: Number(await this.redis.get('secondLottoNoCnt')),
+      thirdLottoNo: Number(await this.redis.get('thirdLottoNo')),
+      thirdLottoNoCnt: Number(await this.redis.get('thirdLottoNoCnt')),
+    };
+
+    const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface = {
+      thisYearDrwNo: Number(await this.redis.get('thisYearDrwNo')),
+      thisYearFirstWinamnt: Number(await this.redis.get('thisYearFirstWinamnt')),
+      thisYearFirstPrzwnerCo: Number(await this.redis.get('thisYearFirstPrzwnerCo')),
+      thisYearDrwNoDate: new Date(await this.redis.get('thisYearDrwNoDate')),
+      lastYearDrwNo: Number(await this.redis.get('lastYearDrwNo')),
+      lastYearFirstWinamnt: Number(await this.redis.get('lastYearFirstWinamnt')),
+      lastYearFirstPrzwnerCo: Number(await this.redis.get('lastYearFirstPrzwnerCo')),
+      lastYearDrwNoDate: new Date(await this.redis.get('lastYearDrwNoDate')),
+    };
+
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '뒤로가기',
+          },
+          action_id: SlackActionIDEnum.PRIZE_INFO,
+        },
+      },
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '📊 당첨 결과 통계 정보',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*최다 당첨 번호와 최대 당첨 금액 정보를 조회합니다.*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '🔢 최다 당첨 번호 정보',
+          emoji: true,
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*(당첨 번호 / 당첨 횟수)*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_list',
+            style: 'ordered',
+            elements: [
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `🥇 ${lottoStatisticInfo.firstLottoNo}번 `,
+                    style: {
+                      bold: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: `(${convertKRLocaleStringFormat(lottoStatisticInfo.firstLottoNoCnt)}회)`,
+                  },
+                ],
+              },
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `🥈 ${lottoStatisticInfo.secondLottoNo}번 `,
+                    style: {
+                      bold: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: `(${convertKRLocaleStringFormat(lottoStatisticInfo.secondLottoNoCnt)}회)`,
+                  },
+                ],
+              },
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `🥉 ${lottoStatisticInfo.thirdLottoNo}번 `,
+                    style: {
+                      bold: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: `(${convertKRLocaleStringFormat(lottoStatisticInfo.thirdLottoNoCnt)}회)`,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*당첨 번호 순위는 참고 자료로만 활용해주세요. :)*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '👑 최대 당첨 금액 정보',
+          emoji: true,
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*(회차 / 당첨 금액 / 당첨 인원)*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_section',
+            elements: [
+              {
+                type: 'text',
+                text: `📅 ${convertDateFormat(lottoHighestPrizeInfo.thisYearDrwNoDate)} 추첨`,
+                style: {
+                  bold: true,
+                },
+              },
+            ],
+          },
+          {
+            type: 'rich_text_list',
+            style: 'bullet',
+            elements: [
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `${convertKRLocaleStringFormat(lottoHighestPrizeInfo.thisYearDrwNo)}회 / `,
+                  },
+                  {
+                    type: 'text',
+                    text: `${convertKoreanStringFormat(lottoHighestPrizeInfo.thisYearFirstWinamnt)}원 / `,
+                    style: {
+                      bold: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: `${convertKRLocaleStringFormat(lottoHighestPrizeInfo.thisYearFirstPrzwnerCo)}명`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'rich_text_section',
+            elements: [
+              {
+                type: 'text',
+                text: `📅 ${convertDateFormat(lottoHighestPrizeInfo.lastYearDrwNoDate)} 추첨`,
+                style: {
+                  bold: true,
+                },
+              },
+            ],
+          },
+          {
+            type: 'rich_text_list',
+            style: 'bullet',
+            elements: [
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `${convertKRLocaleStringFormat(lottoHighestPrizeInfo.lastYearDrwNo)}회 / `,
+                  },
+                  {
+                    type: 'text',
+                    text: `${convertKoreanStringFormat(lottoHighestPrizeInfo.lastYearFirstWinamnt)}원 / `,
+                    style: {
+                      bold: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: `${convertKRLocaleStringFormat(lottoHighestPrizeInfo.lastYearFirstPrzwnerCo)}명`,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*최근 2년간 최대 당첨 금액 정보만 제공합니다.*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
+          },
+        ],
       },
     ];
 
