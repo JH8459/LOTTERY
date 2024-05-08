@@ -478,7 +478,7 @@ export class BuilderService {
         type: 'context',
         elements: [
           {
-            text: '*(회차 / 당첨 금액 / 당첨 인원)*',
+            text: '*최근 2년간 최대 당첨 금액 정보만 제공합니다.*',
             type: 'mrkdwn',
           },
         ],
@@ -561,15 +561,6 @@ export class BuilderService {
                 ],
               },
             ],
-          },
-        ],
-      },
-      {
-        type: 'context',
-        elements: [
-          {
-            text: '*최근 2년간 최대 당첨 금액 정보만 제공합니다.*',
-            type: 'mrkdwn',
           },
         ],
       },
