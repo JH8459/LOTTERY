@@ -1,7 +1,7 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { SlackRepository } from '../../repository/slack.repository';
+import { SlackRepository } from './repository/slack.repository';
 import { Block, KnownBlock } from '@slack/bolt';
 import {
   LottoHighestPrizeInfoInterface,
@@ -9,7 +9,7 @@ import {
   LottoStatisticInfoInterface,
 } from 'src/module/notification/interface/lotto.interface';
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
-import { SlackActionIDEnum, SlackBlockIDEnum } from '../../constant/slack.enum';
+import { SlackActionIDEnum, SlackBlockIDEnum } from './constant/slack.enum';
 
 @Injectable()
 export class BuilderService {
@@ -387,15 +387,6 @@ export class BuilderService {
         },
       },
       {
-        type: 'context',
-        elements: [
-          {
-            text: '*(당첨 번호 / 당첨 횟수)*',
-            type: 'mrkdwn',
-          },
-        ],
-      },
-      {
         type: 'rich_text',
         elements: [
           {
@@ -458,7 +449,7 @@ export class BuilderService {
         type: 'context',
         elements: [
           {
-            text: '*당첨 번호 순위는 참고 자료로만 활용해주세요. :)*',
+            text: '*☘️ 보너스 번호를 포함한 통계입니다.*',
             type: 'mrkdwn',
           },
         ],

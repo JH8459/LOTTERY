@@ -44,7 +44,7 @@ export class SlackController {
     switch (type) {
       // Block Actions 이벤트를 처리합니다.
       case SlackActionTypeEnum.BLOCK_ACTIONS:
-        await this.slackService.slackBlockActionsHandler(bodyToJson);
+        await this.slackService.slackBlockActionsHandler(ack, bodyToJson);
         break;
       // View Submission 이벤트를 처리합니다.
       case SlackActionTypeEnum.VIEW_SUBMISSION:
