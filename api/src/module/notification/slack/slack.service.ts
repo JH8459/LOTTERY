@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { App, Block, ExpressReceiver, View } from '@slack/bolt';
+import { App, Block, ExpressReceiver } from '@slack/bolt';
+import { WebClient } from '@slack/web-api';
 import { SlackActionIDEnum, SlackBlockIDEnum, SlackSubMitButtonNameEnum } from './constant/slack.enum';
 import { BuilderService } from './builder.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
@@ -63,27 +64,25 @@ export class SlackService implements OnModuleInit {
       });
     });
     // '/구독' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.app.command('/구독', async ({ command, ack, client }) => {
+    this.app.command('/구독', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
-      console.log('✅ command: ', command);
+
+      const token = await this.slackRepository.getAccessToken(command.team_id); // 저장된 토큰을 가져옴
+      const client = new WebClient(token);
+
       // 명령어를 실행한 유저의 정보를 조회합니다.
       const userId = command.user_id;
       try {
-        const usersList = await client.users.list();
-        console.log(usersList.members);
-
         const userInfo = await client.users.info({ user: userId });
-        console.log('✅ userInfo: ', userInfo);
         // 유저와 앱 간의 개인 채널을 엽니다.
         const response = await client.conversations.open({
           users: userId,
         });
-        console.log('✅ response: ', response);
-        // // 유저의 앱 채널에서 메시지를 발송합니다.
+        // 유저의 앱 채널에서 메시지를 발송합니다.
         await client.chat.postMessage({
           channel: response.channel.id,
-          text: `안녕하세요, 구독 명령어를 실행해주셔서 감사합니다. 아직 준비중인 기능이라서 구독은 불가능합니다. 🍀`,
+          text: `안녕하세요. <@${userId}>님, 구독 명령어를 실행해주셔서 감사합니다. 아직 준비중인 기능이라서 구독은 불가능합니다. 🍀`,
         });
       } catch (error) {
         console.error('❌ Error2: ', error.data);
