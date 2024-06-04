@@ -13,13 +13,26 @@ export class SlackRepository {
   ) {}
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
-    await this.slackModel
+    const workspace = await this.slackModel
       .createQueryBuilder('slackEntity')
-      .insert()
-      .into(SlackEntity)
-      .values({ workspaceName, workspaceId, accessToken })
-      .orUpdate(['workspaceName', 'workspaceId', 'accessToken'], ['workspace_idx'])
-      .execute();
+      .where('slackEntity.workspaceId = :workspaceId', { workspaceId })
+      .getRawOne();
+
+    if (workspace) {
+      await this.slackModel
+        .createQueryBuilder('slackEntity')
+        .update(SlackEntity)
+        .set({ workspaceName: workspaceName, accessToken: accessToken })
+        .where('workspaceId = :workspaceId', { workspaceId })
+        .execute();
+    } else {
+      await this.slackModel
+        .createQueryBuilder('slackEntity')
+        .insert()
+        .into(SlackEntity)
+        .values({ workspaceName, workspaceId, accessToken })
+        .execute();
+    }
   }
 
   async getAccessToken(workspaceId: string): Promise<string> {
