@@ -3,10 +3,34 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { Repository } from 'typeorm';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
+import { SlackEntity } from 'src/entity/slack.entity';
 
 @Injectable()
 export class SlackRepository {
-  constructor(@InjectRepository(LottoEntity) private readonly lottoModel: Repository<LottoEntity>) {}
+  constructor(
+    @InjectRepository(LottoEntity) private readonly lottoModel: Repository<LottoEntity>,
+    @InjectRepository(SlackEntity) private readonly slackModel: Repository<SlackEntity>
+  ) {}
+
+  async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
+    await this.slackModel
+      .createQueryBuilder('slackEntity')
+      .insert()
+      .into(SlackEntity)
+      .values({ workspaceName, workspaceId, accessToken })
+      .orUpdate(['workspaceName', 'workspaceId', 'accessToken'], ['workspace_idx'])
+      .execute();
+  }
+
+  async getAccessToken(workspaceId: string): Promise<string> {
+    const { accessToken }: SlackEntity = await this.slackModel
+      .createQueryBuilder('slackEntity')
+      .select('slackEntity.accessToken AS accessToken')
+      .where('slackEntity.workspaceId = :workspaceId', { workspaceId })
+      .getRawOne();
+
+    return accessToken;
+  }
 
   async getRecentlyDrwNo(): Promise<number> {
     const { drwNo }: LottoEntity = await this.lottoModel

@@ -70,6 +70,9 @@ export class SlackService implements OnModuleInit {
       // 명령어를 실행한 유저의 정보를 조회합니다.
       const userId = command.user_id;
       try {
+        const usersList = await client.users.list();
+        console.log(usersList.members);
+
         const userInfo = await client.users.info({ user: userId });
         console.log('✅ userInfo: ', userInfo);
         // 유저와 앱 간의 개인 채널을 엽니다.
@@ -117,6 +120,12 @@ export class SlackService implements OnModuleInit {
           Authorization: `Bearer ${oauthResponse.data.access_token}`,
         },
       });
+
+      const workspaceName: string = teamInfoResponse.data.team.name;
+      const workspaceId: string = teamInfoResponse.data.team.id;
+      const accessToken: string = oauthResponse.data.access_token;
+
+      await this.slackRepository.saveAccessToken(workspaceName, workspaceId, accessToken);
 
       return `https://${teamInfoResponse.data.team.domain}.slack.com/app_redirect?app=${oauthResponse.data.app_id}`;
     } else {
