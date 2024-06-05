@@ -5,10 +5,10 @@ import { LottoEntity } from 'src/entity/lotto.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SlackRepository } from './repository/slack.repository';
 import { BuilderService } from './builder.service';
-import { SlackEntity } from 'src/entity/slack.entity';
+import { WorkspaceEntity } from 'src/entity/workspace.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LottoEntity, SlackEntity])],
+  imports: [TypeOrmModule.forFeature([LottoEntity, WorkspaceEntity])],
   providers: [SlackService, SlackRepository, BuilderService],
   controllers: [SlackController],
 })

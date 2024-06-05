@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'slack' })
-export class SlackEntity {
+@Entity({ name: 'workspace' })
+export class WorkspaceEntity {
   @PrimaryGeneratedColumn({ name: 'workspace_idx', type: 'int' })
   workspaceIdx: number;
 

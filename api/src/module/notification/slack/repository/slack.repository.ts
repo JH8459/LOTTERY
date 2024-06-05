@@ -3,43 +3,43 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { Repository } from 'typeorm';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
-import { SlackEntity } from 'src/entity/slack.entity';
+import { WorkspaceEntity } from 'src/entity/workspace.entity';
 
 @Injectable()
 export class SlackRepository {
   constructor(
     @InjectRepository(LottoEntity) private readonly lottoModel: Repository<LottoEntity>,
-    @InjectRepository(SlackEntity) private readonly slackModel: Repository<SlackEntity>
+    @InjectRepository(WorkspaceEntity) private readonly slackModel: Repository<WorkspaceEntity>
   ) {}
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
     const workspace = await this.slackModel
-      .createQueryBuilder('slackEntity')
-      .where('slackEntity.workspaceId = :workspaceId', { workspaceId })
+      .createQueryBuilder('WorkspaceEntity')
+      .where('WorkspaceEntity.workspaceId = :workspaceId', { workspaceId })
       .getRawOne();
 
     if (workspace) {
       await this.slackModel
-        .createQueryBuilder('slackEntity')
-        .update(SlackEntity)
+        .createQueryBuilder('WorkspaceEntity')
+        .update(WorkspaceEntity)
         .set({ workspaceName: workspaceName, accessToken: accessToken })
         .where('workspaceId = :workspaceId', { workspaceId })
         .execute();
     } else {
       await this.slackModel
-        .createQueryBuilder('slackEntity')
+        .createQueryBuilder('WorkspaceEntity')
         .insert()
-        .into(SlackEntity)
+        .into(WorkspaceEntity)
         .values({ workspaceName, workspaceId, accessToken })
         .execute();
     }
   }
 
   async getAccessToken(workspaceId: string): Promise<string> {
-    const { accessToken }: SlackEntity = await this.slackModel
-      .createQueryBuilder('slackEntity')
-      .select('slackEntity.accessToken AS accessToken')
-      .where('slackEntity.workspaceId = :workspaceId', { workspaceId })
+    const { accessToken }: WorkspaceEntity = await this.slackModel
+      .createQueryBuilder('WorkspaceEntity')
+      .select('WorkspaceEntity.accessToken AS accessToken')
+      .where('WorkspaceEntity.workspaceId = :workspaceId', { workspaceId })
       .getRawOne();
 
     return accessToken;

@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { SlackEntity } from 'src/entity/slack.entity';
+import { WorkspaceEntity } from 'src/entity/workspace.entity';
 
 export const TYPE_ORM_CONFIG: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -15,7 +15,7 @@ export const TYPE_ORM_CONFIG: TypeOrmModuleAsyncOptions = {
     database: configService.get<string>('DB_DATABASE'),
     charset: 'utf8mb4',
     // entities: ['dist/**/*.entity.js'],
-    entities: [LottoEntity, SlackEntity],
+    entities: [LottoEntity, WorkspaceEntity],
     synchronize: false,
     logging: configService.get<string>('API_NODE_ENV') === 'dev',
   }),
