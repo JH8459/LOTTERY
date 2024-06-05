@@ -1,5 +1,6 @@
 import { IsString } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from './user.entity';
 
 @Entity({ name: 'workspace' })
 export class WorkspaceEntity {
@@ -17,4 +18,7 @@ export class WorkspaceEntity {
   @IsString()
   @Column({ name: 'access_token', length: 500 })
   accessToken: string;
+
+  @OneToMany(() => UserEntity, (user) => user.workspaceIdxRelation)
+  userRelation: UserEntity[];
 }
