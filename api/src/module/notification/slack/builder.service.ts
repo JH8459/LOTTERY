@@ -588,14 +588,14 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*1️⃣ 구독 신청과 취소 모두 `/구독` 명령어를 입력하여 실행합니다*.',
+          text: '*1️⃣ 구독 신청과 취소 모두 `/구독` 명령어를 입력하여 실행합니다*. 당첨 결과 알림을 더이상 그만받고 싶으시다면 다시 한번 `/구독` 명령어를 호출해주세요. 구독 해제 안내를 도와드릴께요.',
         },
       },
       {
         type: 'image',
         title: {
           type: 'plain_text',
-          text: '구독 신청 안내 이미지',
+          text: '/구독 명령어 안내 이미지',
           emoji: true,
         },
         image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/df833331-43b3-4f01-8f72-f7ceda0c4b90',
@@ -605,7 +605,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 매주 월요일 AM 09:00에 수신됩니다*.',
+          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 안내해드려요*. 매주 월요일 한국표준시 기준 AM 09:00에 확인하실 수 있습니다.',
         },
       },
       {
@@ -621,8 +621,8 @@ export class BuilderService {
             text: '구독하기',
             emoji: true,
           },
-          value: 'click_me_123',
-          action_id: 'button-action',
+          style: 'primary',
+          action_id: SlackActionIDEnum.SUBSCRIBE,
         },
       },
       {
