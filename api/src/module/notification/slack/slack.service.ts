@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { App, Block, ExpressReceiver } from '@slack/bolt';
-import { WebClient } from '@slack/web-api';
+import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
 import { SlackActionIDEnum, SlackBlockIDEnum, SlackSubMitButtonNameEnum } from './constant/slack.enum';
 import { BuilderService } from './builder.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
@@ -11,6 +11,7 @@ import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { LottoInfoInterface } from '../interface/lotto.interface';
 import axios, { AxiosResponse } from 'axios';
 import * as querystring from 'querystring';
+import { UserInfoDto } from './dto/user.dto';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -67,23 +68,30 @@ export class SlackService implements OnModuleInit {
     this.app.command('/구독', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
-
-      const token = await this.slackRepository.getAccessToken(command.team_id); // 저장된 토큰을 가져옴
-      const client = new WebClient(token);
-
+      // 저장된 토큰을 가져와 클라이언트를 생성합니다.
+      const token: string = await this.slackRepository.getAccessToken(command.team_id);
+      const client: WebClient = new WebClient(token);
       // 명령어를 실행한 유저의 정보를 조회합니다.
-      const userId = command.user_id;
+      const userId: string = command.user_id;
+      const teamId: string = command.team_id;
+
       try {
-        const userInfo = await client.users.info({ user: userId });
         // 유저와 앱 간의 개인 채널을 엽니다.
-        const response = await client.conversations.open({
+        const response: ConversationsOpenResponse = await client.conversations.open({
           users: userId,
         });
-        // 유저의 앱 채널에서 메시지를 발송합니다.
-        await client.chat.postMessage({
-          channel: response.channel.id,
-          text: `안녕하세요. <@${userId}>님, 구독 명령어를 실행해주셔서 감사합니다. 아직 준비중인 기능이라서 구독은 불가능합니다. 🍀`,
-        });
+        // 유저의 정보를 조회합니다.
+        const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+
+        if (userInfo && userInfo.isSubscribe) {
+          // 유저의 앱 채널에서 구독 취소 메시지를 발송합니다.
+        } else {
+          // 유저의 앱 채널에서 구독 신청 메시지를 발송합니다.
+          await client.chat.postMessage({
+            channel: response.channel.id,
+            blocks: await this.builderService.getSubscribeInfoBlock(userId),
+          });
+        }
       } catch (error) {
         console.error('❌ Error2: ', error.data);
       }

@@ -4,13 +4,34 @@ import { LottoEntity } from 'src/entity/lotto.entity';
 import { Repository } from 'typeorm';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
+import { UserEntity } from 'src/entity/user.entity';
+import { UserInfoDto } from '../dto/user.dto';
 
 @Injectable()
 export class SlackRepository {
   constructor(
     @InjectRepository(LottoEntity) private readonly lottoModel: Repository<LottoEntity>,
-    @InjectRepository(WorkspaceEntity) private readonly workspaceModel: Repository<WorkspaceEntity>
+    @InjectRepository(WorkspaceEntity) private readonly workspaceModel: Repository<WorkspaceEntity>,
+    @InjectRepository(UserEntity) private readonly userModel: Repository<UserEntity>
   ) {}
+
+  async getUserInfo(workspaceId: string, userId: string): Promise<UserInfoDto> {
+    const userInfo: UserInfoDto = await this.userModel
+      .createQueryBuilder('userEntity')
+      .select([
+        'userEntity.userIdx AS userIdx',
+        'userEntity.workspaceIdx AS workspaceIdx',
+        'workspaceEntity.workspaceId AS workspaceId',
+        'userEntity.userId AS userId',
+        'userEntity.isSubscribe AS isSubscribe',
+      ])
+      .innerJoin(WorkspaceEntity, 'workspaceEntity', 'workspaceEntity.workspaceIdx = userEntity.workspaceIdx')
+      .where('workspaceEntity.workspaceId = :workspaceId', { workspaceId })
+      .andWhere('userEntity.userId = :userId', { userId })
+      .getRawOne();
+
+    return userInfo;
+  }
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
     const workspace = await this.workspaceModel
