@@ -9,6 +9,7 @@ export enum SlackActionIDEnum {
   RECENTLY_PRIZE_INFO = 'recently_prize_info',
   ORDER_INPUT = 'order_input',
   SUBSCRIBE = 'subscribe',
+  UN_SUBSCRIBE = 'un_subscribe',
 }
 
 export enum SlackBlockIDEnum {

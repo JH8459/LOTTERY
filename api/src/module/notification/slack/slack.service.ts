@@ -85,6 +85,10 @@ export class SlackService implements OnModuleInit {
 
         if (userInfo && userInfo.isSubscribe) {
           // 유저의 앱 채널에서 구독 취소 메시지를 발송합니다.
+          await client.chat.postMessage({
+            channel: response.channel.id,
+            blocks: await this.builderService.getUnSubscribeInfoBlock(userId),
+          });
         } else {
           // 유저의 앱 채널에서 구독 신청 메시지를 발송합니다.
           await client.chat.postMessage({

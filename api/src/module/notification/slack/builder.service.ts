@@ -675,7 +675,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 안내해드려요*. 매주 월요일 AM 09:00에 확인하실 수 있습니다.',
+          text: '*2️⃣ 구독을 위해 저장된 데이터는 해제 후 7일 뒤 자동 삭제됩니다*. 🍀LOTTERY는 구독 신청을한 유저들의 슬랙 ID 정보를 저장합니다.',
         },
       },
       {
@@ -688,11 +688,11 @@ export class BuilderService {
           type: 'button',
           text: {
             type: 'plain_text',
-            text: '구독하기',
+            text: '구독해제',
             emoji: true,
           },
-          style: 'primary',
-          action_id: SlackActionIDEnum.SUBSCRIBE,
+          style: 'danger',
+          action_id: SlackActionIDEnum.UN_SUBSCRIBE,
         },
       },
       {
