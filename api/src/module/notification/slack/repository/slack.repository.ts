@@ -33,6 +33,22 @@ export class SlackRepository {
     return userInfo;
   }
 
+  async updateSubscribeStatus(userId: string, workspaceId: string, isSubscribe: boolean): Promise<void> {
+    const { workspaceIdx } = await this.workspaceModel
+      .createQueryBuilder('workspaceEntity')
+      .select('workspaceEntity.workspaceIdx AS workspaceIdx')
+      .where('workspaceEntity.workspaceId = :workspaceId', { workspaceId })
+      .getRawOne();
+
+    await this.userModel
+      .createQueryBuilder('userEntity')
+      .insert()
+      .into(UserEntity)
+      .values({ workspaceIdx, userId, isSubscribe })
+      .orUpdate({ overwrite: ['is_subscribe'] })
+      .execute();
+  }
+
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
     const workspace = await this.workspaceModel
       .createQueryBuilder('workspaceEntity')

@@ -210,6 +210,30 @@ export class SlackService implements OnModuleInit {
           },
         });
         break;
+      case SlackActionIDEnum.SUBSCRIBE:
+        // Action을 실행한 유저의 정보를 조회합니다.
+        const userId: string = body.user.id;
+        const teamId: string = body.user.team_id;
+        // 저장된 토큰을 가져와 클라이언트를 생성합니다.
+        const token: string = await this.slackRepository.getAccessToken(body.user.team_id);
+        const client: WebClient = new WebClient(token);
+        // 유저의 정보를 조회합니다.
+        const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+
+        let text: string;
+
+        if (userInfo && userInfo.isSubscribe) {
+          text = `<@${userId}>님은 이미 구독중입니다. 구독 취소를 원하시면 '/구독' 명령어를 입력해주세요.`;
+        } else {
+          await this.slackRepository.updateSubscribeStatus(userId, teamId, true);
+
+          text = `<@${userId}>님, 구독해주셔서 감사합니다. 매주 월요일 09시에 당첨 결과 정보를 알려드릴게요. 🍀`;
+        }
+
+        await client.chat.postMessage({
+          channel: body.channel.id,
+          text,
+        });
       default:
         break;
     }

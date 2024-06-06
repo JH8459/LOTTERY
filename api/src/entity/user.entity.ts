@@ -8,20 +8,20 @@ export class UserEntity {
   userIdx: number;
 
   @IsNumber()
-  @Column('int', { name: 'workspace_idx' })
+  @Column({ name: 'workspace_idx', type: 'int' })
   workspaceIdx: number;
 
   @IsString()
-  @Column({ name: 'user_id', length: 500 })
+  @Column({ name: 'user_id', type: 'varchar', length: 500 })
   userId: string;
 
   @IsBoolean()
-  @Column({ name: 'is_subscribe', default: false })
+  @Column({ name: 'is_subscribe', type: 'boolean', nullable: true })
   isSubscribe: boolean;
 
   @IsDate()
-  @DeleteDateColumn({ name: 'user_avail', precision: null, type: 'datetime' })
-  userAvail: Date | null;
+  @Column({ name: 'user_avail', type: 'datetime', nullable: true })
+  userAvail: Date;
 
   @ManyToOne(() => WorkspaceEntity, (workspace) => workspace.userRelation, {
     onDelete: 'CASCADE',

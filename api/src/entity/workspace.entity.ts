@@ -8,15 +8,15 @@ export class WorkspaceEntity {
   workspaceIdx: number;
 
   @IsString()
-  @Column({ name: 'workspace_name', length: 1000 })
+  @Column({ name: 'workspace_name', type: 'varchar', length: 1000 })
   workspaceName: string;
 
   @IsString()
-  @Column({ name: 'workspace_id', length: 500 })
+  @Column({ name: 'workspace_id', type: 'varchar', length: 500 })
   workspaceId: string;
 
   @IsString()
-  @Column({ name: 'access_token', length: 500 })
+  @Column({ name: 'access_token', type: 'varchar', length: 500 })
   accessToken: string;
 
   @OneToMany(() => UserEntity, (user) => user.workspaceIdxRelation)

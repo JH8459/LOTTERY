@@ -605,7 +605,77 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 안내해드려요*. 매주 월요일 한국표준시 기준 AM 09:00에 확인하실 수 있습니다.',
+          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 안내해드려요*. 매주 월요일 AM 09:00에 확인하실 수 있습니다.',
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '구독하기',
+            emoji: true,
+          },
+          style: 'primary',
+          action_id: SlackActionIDEnum.SUBSCRIBE,
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
+          },
+        ],
+      },
+    ];
+
+    return blocks;
+  }
+
+  async getUnSubscribeInfoBlock(userId: string): Promise<(Block | KnownBlock)[]> {
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `안녕하세요 <@${userId}>님, 구독 해제를 원하시면 아래의 구독 해제 버튼을 눌러주세요. 🍀`,
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*1️⃣ 구독 신청과 취소 모두 `/구독` 명령어를 입력하여 실행합니다*. 당첨 결과 알림을 다시 받고 싶으시다면 다시 한번 `/구독` 명령어를 호출해주세요. 구독 안내 방법을 도와드릴께요.',
+        },
+      },
+      {
+        type: 'image',
+        title: {
+          type: 'plain_text',
+          text: '/구독 명령어 안내 이미지',
+          emoji: true,
+        },
+        image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/df833331-43b3-4f01-8f72-f7ceda0c4b90',
+        alt_text: 'example',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 안내해드려요*. 매주 월요일 AM 09:00에 확인하실 수 있습니다.',
         },
       },
       {
