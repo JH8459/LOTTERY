@@ -113,7 +113,6 @@ export class ActionService {
   }
 
   async unSubscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    const userId: string = body.user.id;
     // 모달을 출력합니다.
     await client.views.open({
       trigger_id: body.trigger_id,
@@ -123,7 +122,7 @@ export class ActionService {
           type: 'plain_text',
           text: '구독 취소 확인',
         },
-        blocks: await this.builderService.getUnSubscribeConfirmedBlock(userId),
+        blocks: await this.builderService.getUnSubscribeConfirmedBlock(body.user.name),
         close: {
           type: 'plain_text',
           text: '닫기',

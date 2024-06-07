@@ -711,15 +711,29 @@ export class BuilderService {
     return blocks;
   }
 
-  async getUnSubscribeConfirmedBlock(userId: string): Promise<(Block | KnownBlock)[]> {
+  async getUnSubscribeConfirmedBlock(userName: string): Promise<(Block | KnownBlock)[]> {
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'section',
         text: {
           type: 'plain_text',
           emoji: true,
-          text: `<@${userId}>님, 구독 해제를 원하시면 확인 버튼을 눌러주세요. 🥲`,
+          text: '불편하신 점이 있으셨나요? 혹시 불편하신 점이 있었다면 소중한 피드백을 남겨주시면 큰 힘이 됩니다.',
         },
+      },
+      {
+        type: 'input',
+        block_id: SlackBlockIDEnum.FEEDBACK_INPUT,
+        element: {
+          type: 'plain_text_input',
+          action_id: SlackActionIDEnum.FEEDBACK_INPUT,
+          multiline: true,
+        },
+        label: {
+          type: 'plain_text',
+          text: '불편 사항을 입력해주세요. (선택사항)',
+        },
+        optional: true,
       },
       {
         type: 'context',
@@ -731,7 +745,7 @@ export class BuilderService {
           },
           {
             type: 'mrkdwn',
-            text: '*구독 해제를 하시더라도 언제든지 다시 구독이 가능합니다.*',
+            text: '*구독 해제를 원하시면 확인 버튼을 눌러주세요. 🥲*',
           },
         ],
       },

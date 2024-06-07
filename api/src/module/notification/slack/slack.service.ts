@@ -130,17 +130,18 @@ export class SlackService implements OnModuleInit {
   }
 
   async slackViewSubMissionHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
+    console.log('✅ body: ', body);
+
     const teamId: string = body.team.id;
     const viewId: string = body.view.id;
     const viewValue: string = body.view.state.values;
+    console.log('✅ viewValue: ', viewValue);
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(teamId);
     const client: WebClient = new WebClient(token);
 
     const recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
     const drwNo: number = Number(viewValue[SlackBlockIDEnum.ORDER_INPUT][SlackActionIDEnum.ORDER_INPUT].value);
-
-    console.log('✅ body: ', body);
 
     if (drwNo > recentlyDrwNo || drwNo <= 0 || !drwNo) {
       const originalBlocks = body.view.blocks;
