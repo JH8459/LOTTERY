@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { App, ExpressReceiver } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import { SlackActionIDEnum } from './constant/slack.enum';
+import { SlackActionIDEnum, SlackBlockIDEnum } from './constant/slack.enum';
 import { SlackRepository } from './repository/slack.repository';
 import axios, { AxiosResponse } from 'axios';
 import * as querystring from 'querystring';
@@ -129,15 +129,11 @@ export class SlackService implements OnModuleInit {
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(teamId);
     const client: WebClient = new WebClient(token);
-
-    switch (viewValue) {
-      case SlackActionIDEnum.ORDER_INPUT:
-        await this.viewSubMissionService.prizeInfoViewSubmissionHandler(ack, client, body);
-        break;
-      case SlackActionIDEnum.FEEDBACK_INPUT:
-        break;
-      default:
-        break;
+    // View input Value 값을 구분하여 View Submission을 처리합니다.
+    if (SlackBlockIDEnum.ORDER_INPUT in viewValue) {
+      await this.viewSubMissionService.prizeInfoViewSubmissionHandler(ack, client, body);
+    } else if (SlackBlockIDEnum.FEEDBACK_INPUT in viewValue) {
+      await this.viewSubMissionService.feedbackViewSubmissionHandler(ack, client, body);
     }
   }
 }
