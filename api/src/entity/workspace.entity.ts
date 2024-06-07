@@ -1,9 +1,10 @@
 import { IsString } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { CommonEntity } from 'src/common/entity/common.entity';
 
 @Entity({ name: 'workspace' })
-export class WorkspaceEntity {
+export class WorkspaceEntity extends CommonEntity {
   @PrimaryGeneratedColumn({ name: 'workspace_idx', type: 'int' })
   workspaceIdx: number;
 

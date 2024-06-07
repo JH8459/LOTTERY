@@ -1,9 +1,11 @@
 import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
-import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { WorkspaceEntity } from './workspace.entity';
+import { FeedbackEntity } from './feedback.entity';
+import { CommonEntity } from 'src/common/entity/common.entity';
 
 @Entity({ name: 'user' })
-export class UserEntity {
+export class UserEntity extends CommonEntity {
   @PrimaryGeneratedColumn({ name: 'user_idx', type: 'int' })
   userIdx: number;
 
@@ -29,4 +31,7 @@ export class UserEntity {
   })
   @JoinColumn([{ name: 'workspace_idx', referencedColumnName: 'workspaceIdx' }])
   workspaceIdxRelation: WorkspaceEntity;
+
+  @OneToMany(() => FeedbackEntity, (feedback) => feedback.userIdxRelation)
+  feedbackRelation: FeedbackEntity[];
 }

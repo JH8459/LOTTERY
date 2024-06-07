@@ -120,4 +120,20 @@ export class ViewSubmissionService {
       });
     }
   }
+
+  async feedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    // 유저 정보를 가져옵니다.
+    const teamId: string = body.team.id;
+    const userId: string = body.user.id;
+    const userInfo = await this.slackRepository.getUserInfo(teamId, userId);
+    // 피드백을 저장합니다.
+    const feedback: string =
+      body.view.state.values[SlackBlockIDEnum.FEEDBACK_INPUT][SlackActionIDEnum.FEEDBACK_INPUT].value;
+
+    console.log('✅ feedback', feedback);
+
+    // await this.slackRepository.saveFeedback(body.team.id, body.user.id, feedback);
+
+    await ack();
+  }
 }
