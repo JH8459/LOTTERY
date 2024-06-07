@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { Repository } from 'typeorm';
+import { InsertResult, Repository } from 'typeorm';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
@@ -33,20 +33,41 @@ export class SlackRepository {
     return userInfo;
   }
 
-  async updateSubscribeStatus(userId: string, workspaceId: string, isSubscribe: boolean): Promise<void> {
+  async upsertSubscribeStatus(
+    userId: string,
+    workspaceId: string,
+    isSubscribe: boolean,
+    userAvail: Date
+  ): Promise<void> {
     const { workspaceIdx } = await this.workspaceModel
       .createQueryBuilder('workspaceEntity')
       .select('workspaceEntity.workspaceIdx AS workspaceIdx')
       .where('workspaceEntity.workspaceId = :workspaceId', { workspaceId })
       .getRawOne();
 
-    await this.userModel
+    const userInfo: UserEntity = await this.userModel
       .createQueryBuilder('userEntity')
-      .insert()
-      .into(UserEntity)
-      .values({ workspaceIdx, userId, isSubscribe })
-      .orUpdate({ overwrite: ['is_subscribe'] })
-      .execute();
+      .select('userEntity.userIdx AS userIdx')
+      .where('userEntity.userId = :userId', { userId })
+      .andWhere('userEntity.workspaceIdx = :workspaceIdx', { workspaceIdx })
+      .getRawOne();
+
+    if (userInfo) {
+      await this.userModel
+        .createQueryBuilder('userEntity')
+        .update(UserEntity)
+        .set({ isSubscribe, userAvail })
+        .where('userEntity.userId = :userId', { userId })
+        .andWhere('userEntity.workspaceIdx = :workspaceIdx', { workspaceIdx })
+        .execute();
+    } else {
+      await this.userModel
+        .createQueryBuilder('userEntity')
+        .insert()
+        .into(UserEntity)
+        .values({ workspaceIdx, userId, isSubscribe, userAvail })
+        .execute();
+    }
   }
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {

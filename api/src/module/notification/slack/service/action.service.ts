@@ -101,7 +101,7 @@ export class ActionService {
     if (userInfo && userInfo.isSubscribe) {
       text = `<@${userId}>님은 이미 구독중입니다. 구독 취소를 원하시면 '/구독' 명령어를 입력해주세요.`;
     } else {
-      await this.slackRepository.updateSubscribeStatus(userId, teamId, true);
+      await this.slackRepository.upsertSubscribeStatus(userId, teamId, true, null);
 
       text = `<@${userId}>님, 구독해주셔서 감사합니다. 매주 월요일 09시에 당첨 결과 정보를 알려드릴게요. 🍀`;
     }
