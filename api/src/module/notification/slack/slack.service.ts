@@ -1,30 +1,24 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { App, Block, ExpressReceiver } from '@slack/bolt';
+import { App, ExpressReceiver } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import { SlackActionIDEnum, SlackBlockIDEnum, SlackSubMitButtonNameEnum } from './constant/slack.enum';
-import { BuilderService } from './service/builder.service';
-import { InjectRedis } from '@nestjs-modules/ioredis';
-import Redis from 'ioredis';
+import { SlackActionIDEnum } from './constant/slack.enum';
 import { SlackRepository } from './repository/slack.repository';
-import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
-import { LottoInfoInterface } from '../interface/lotto.interface';
 import axios, { AxiosResponse } from 'axios';
 import * as querystring from 'querystring';
-import { UserInfoDto } from './dto/user.dto';
 import { CommandService } from './service/command.service';
 import { SlackInteractionPayload } from './interface/payload.interface';
 import { ActionService } from './service/action.service';
+import { ViewSubmissionService } from './service/viewSubmission.service';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
   constructor(
     public readonly configService: ConfigService,
-    @InjectRedis() private readonly redis: Redis,
     private slackRepository: SlackRepository,
-    private readonly builderService: BuilderService,
     private readonly commandService: CommandService,
-    private readonly actionService: ActionService
+    private readonly actionService: ActionService,
+    private readonly viewSubMissionService: ViewSubmissionService
   ) {}
 
   private app: App;
@@ -130,110 +124,20 @@ export class SlackService implements OnModuleInit {
   }
 
   async slackViewSubMissionHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
-    console.log('✅ body: ', body);
-
     const teamId: string = body.team.id;
-    const viewId: string = body.view.id;
-    const viewValue: string = body.view.state.values;
-    console.log('✅ viewValue: ', viewValue);
+    const viewValue = body.view.state.values;
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(teamId);
     const client: WebClient = new WebClient(token);
 
-    const recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
-    const drwNo: number = Number(viewValue[SlackBlockIDEnum.ORDER_INPUT][SlackActionIDEnum.ORDER_INPUT].value);
-
-    if (drwNo > recentlyDrwNo || drwNo <= 0 || !drwNo) {
-      const originalBlocks = body.view.blocks;
-      let errorMessage: string;
-
-      if (drwNo > recentlyDrwNo) {
-        errorMessage = `⚠️ 가장 최신 회차(${convertKRLocaleStringFormat(recentlyDrwNo)}회)까지 조회가 가능합니다.`;
-      } else if (drwNo <= 0) {
-        errorMessage = '⚠️ 1회차보다 작은 회차 정보는 조회가 불가능합니다.';
-      } else {
-        errorMessage = '⚠️ 숫자 외의 정보는 조회가 불가능합니다.';
-      }
-
-      const blockIndex: number = originalBlocks.findIndex(
-        (block: Block) => block.block_id === SlackBlockIDEnum.INPUT_ERROR_MESSAGE
-      );
-
-      if (blockIndex !== -1) {
-        originalBlocks[blockIndex] = {
-          type: 'section',
-          block_id: SlackBlockIDEnum.INPUT_ERROR_MESSAGE,
-          text: {
-            type: 'mrkdwn',
-            text: errorMessage,
-          },
-        };
-      } else {
-        originalBlocks.push({
-          type: 'section',
-          block_id: SlackBlockIDEnum.INPUT_ERROR_MESSAGE,
-          text: {
-            type: 'mrkdwn',
-            text: errorMessage,
-          },
-        });
-      }
-
-      await client.views.update({
-        view_id: viewId,
-        view: {
-          type: 'modal',
-          title: body.view.title,
-          blocks: originalBlocks,
-          close: body.view.close,
-          submit: body.view.submit,
-        },
-      });
-
-      await ack({
-        response_action: 'update',
-        view: {
-          type: 'modal',
-          title: body.view.title,
-          blocks: originalBlocks,
-          close: body.view.close,
-          submit: body.view.submit,
-        },
-      });
-    } else {
-      const lottoInfo: LottoInfoInterface = await this.slackRepository.getLottoInfo(drwNo);
-
-      await client.views.open({
-        trigger_id: body.trigger_id,
-        view: {
-          type: 'modal',
-          title: {
-            type: 'plain_text',
-            text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(lottoInfo.drwNo)}회`,
-          },
-          blocks: await this.builderService.getDrwnoPrizeInfoBlock(lottoInfo),
-          close: {
-            type: 'plain_text',
-            text: '닫기',
-          },
-        },
-      });
-
-      await ack({
-        response_action: 'update',
-        view: {
-          type: 'modal',
-          title: {
-            type: 'plain_text',
-            text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(lottoInfo.drwNo)}회`,
-          },
-          blocks: await this.builderService.getDrwnoPrizeInfoBlock(lottoInfo),
-          close: {
-            type: 'plain_text',
-            text: '닫기',
-          },
-        },
-      });
+    switch (viewValue) {
+      case SlackActionIDEnum.ORDER_INPUT:
+        await this.viewSubMissionService.prizeInfoViewSubmissionHandler(ack, client, body);
+        break;
+      case SlackActionIDEnum.FEEDBACK_INPUT:
+        break;
+      default:
+        break;
     }
   }
 }
