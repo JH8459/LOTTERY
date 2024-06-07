@@ -674,7 +674,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*2️⃣ 구독을 위해 저장된 데이터는 해제 후 7일 뒤 자동 삭제됩니다*. 🍀LOTTERY 앱은 구독 신청한 유저들의 슬랙 ID 정보를 저장합니다.',
+          text: '*2️⃣ 구독 서비스 사용 중 불편사항이 있으셨다면 피드백을 남겨주세요*. 🍀LOTTERY 앱을 개선하는데 큰 도움이 됩니다!',
         },
       },
       {
