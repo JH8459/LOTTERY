@@ -1,7 +1,6 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { SlackRepository } from './repository/slack.repository';
 import { Block, KnownBlock } from '@slack/bolt';
 import {
   LottoHighestPrizeInfoInterface,
@@ -9,11 +8,11 @@ import {
   LottoStatisticInfoInterface,
 } from 'src/module/notification/interface/lotto.interface';
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
-import { SlackActionIDEnum, SlackBlockIDEnum } from './constant/slack.enum';
+import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 
 @Injectable()
 export class BuilderService {
-  constructor(@InjectRedis() private readonly redis: Redis, private slackRepository: SlackRepository) {}
+  constructor(@InjectRedis() private readonly redis: Redis) {}
 
   async getDrwnoPrizeInfoBlock(lottoInfo?: LottoInfoInterface): Promise<(Block | KnownBlock)[]> {
     if (!lottoInfo) {
@@ -675,7 +674,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*2️⃣ 구독을 위해 저장된 데이터는 해제 후 7일 뒤 자동 삭제됩니다*. 🍀LOTTERY는 구독 신청을한 유저들의 슬랙 ID 정보를 저장합니다.',
+          text: '*2️⃣ 구독을 위해 저장된 데이터는 해제 후 7일 뒤 자동 삭제됩니다*. 🍀LOTTERY 앱은 구독 신청한 유저들의 슬랙 ID 정보를 저장합니다.',
         },
       },
       {
@@ -704,6 +703,35 @@ export class BuilderService {
           {
             type: 'mrkdwn',
             text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
+          },
+        ],
+      },
+    ];
+
+    return blocks;
+  }
+
+  async getUnSubscribeConfirmedBlock(userId: string): Promise<(Block | KnownBlock)[]> {
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'plain_text',
+          emoji: true,
+          text: `<@${userId}>님, 구독 해제를 원하시면 확인 버튼을 눌러주세요. 🥲`,
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*구독 해제를 하시더라도 언제든지 다시 구독이 가능합니다.*',
           },
         ],
       },

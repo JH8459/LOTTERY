@@ -1,9 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { App, Block, ExpressReceiver } from '@slack/bolt';
-import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
+import { WebClient } from '@slack/web-api';
 import { SlackActionIDEnum, SlackBlockIDEnum, SlackSubMitButtonNameEnum } from './constant/slack.enum';
-import { BuilderService } from './builder.service';
+import { BuilderService } from './service/builder.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import { SlackRepository } from './repository/slack.repository';
@@ -12,6 +12,9 @@ import { LottoInfoInterface } from '../interface/lotto.interface';
 import axios, { AxiosResponse } from 'axios';
 import * as querystring from 'querystring';
 import { UserInfoDto } from './dto/user.dto';
+import { CommandService } from './service/command.service';
+import { SlackInteractionPayload } from './interface/payload.interface';
+import { ActionService } from './service/action.service';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -19,7 +22,9 @@ export class SlackService implements OnModuleInit {
     public readonly configService: ConfigService,
     @InjectRedis() private readonly redis: Redis,
     private slackRepository: SlackRepository,
-    private readonly builderService: BuilderService
+    private readonly builderService: BuilderService,
+    private readonly commandService: CommandService,
+    private readonly actionService: ActionService
   ) {}
 
   private app: App;
@@ -36,69 +41,19 @@ export class SlackService implements OnModuleInit {
     });
 
     // '/당첨정보' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.app.command('/당첨정보', async ({ command, ack, client }) => {
+    this.app.command('/당첨정보', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
-      let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
-      if (!recentlyDrwNo) {
-        recentlyDrwNo = await this.slackRepository.getRecentlyDrwNo();
-      }
-      // 모달을 출력합니다.
-      await client.views.open({
-        trigger_id: command.trigger_id,
-        view: {
-          type: 'modal',
-          title: {
-            type: 'plain_text',
-            text: '당첨 정보 조회',
-          },
-          blocks: await this.builderService.getPrizeInfoBlock(recentlyDrwNo),
-          close: {
-            type: 'plain_text',
-            text: '닫기',
-          },
-          submit: {
-            type: 'plain_text',
-            text: '조회',
-          },
-        },
-      });
+      // 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
+      await this.commandService.prizeInfoCommandHandler(command);
     });
+
     // '/구독' command를 처리하는 이벤트 핸들러를 등록합니다.
     this.app.command('/구독', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
-      // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-      const token: string = await this.slackRepository.getAccessToken(command.team_id);
-      const client: WebClient = new WebClient(token);
-      // 명령어를 실행한 유저의 정보를 조회합니다.
-      const userId: string = command.user_id;
-      const teamId: string = command.team_id;
-
-      try {
-        // 유저와 앱 간의 개인 채널을 엽니다.
-        const response: ConversationsOpenResponse = await client.conversations.open({
-          users: userId,
-        });
-        // 유저의 정보를 조회합니다.
-        const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
-
-        if (userInfo && userInfo.isSubscribe) {
-          // 유저의 앱 채널에서 구독 취소 메시지를 발송합니다.
-          await client.chat.postMessage({
-            channel: response.channel.id,
-            blocks: await this.builderService.getUnSubscribeInfoBlock(userId),
-          });
-        } else {
-          // 유저의 앱 채널에서 구독 신청 메시지를 발송합니다.
-          await client.chat.postMessage({
-            channel: response.channel.id,
-            blocks: await this.builderService.getSubscribeInfoBlock(userId),
-          });
-        }
-      } catch (error) {
-        console.error('❌ Error2: ', error.data);
-      }
+      // 구독 Command를 처리하는 메서드를 호출합니다.
+      await this.commandService.subscribeCommandHandler(command);
     });
   }
 
@@ -144,113 +99,48 @@ export class SlackService implements OnModuleInit {
     }
   }
 
-  async slackBlockActionsHandler(ack: any, body: any): Promise<void> {
+  async slackBlockActionsHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
     await ack();
-
-    const app = this.getSlackApp();
 
     const actionId: string = body.actions[0].action_id;
     const value: string = body.actions[0].value;
-
-    let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
-
-    if (!recentlyDrwNo) {
-      recentlyDrwNo = await this.slackRepository.getRecentlyDrwNo();
-    }
+    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
+    const token: string = await this.slackRepository.getAccessToken(body.user.team_id);
+    const client: WebClient = new WebClient(token);
 
     switch (actionId) {
       case SlackActionIDEnum.PRIZE_INFO:
-        await app.client.views.update({
-          view_id: body.view.id,
-          view: {
-            type: 'modal',
-            title: {
-              type: 'plain_text',
-              text: '당첨 정보 조회',
-            },
-            blocks: await this.builderService.getPrizeInfoBlock(recentlyDrwNo),
-            close: {
-              type: 'plain_text',
-              text: '닫기',
-            },
-            submit: {
-              type: 'plain_text',
-              text: SlackSubMitButtonNameEnum.SEARCH,
-            },
-          },
-        });
+        await this.actionService.prizeInfoActionHandler(client, body);
         break;
       case SlackActionIDEnum.RECENTLY_PRIZE_INFO:
-        await app.client.views.update({
-          view_id: body.view.id,
-          view: {
-            type: 'modal',
-            title: {
-              type: 'plain_text',
-              text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(recentlyDrwNo)}회`,
-            },
-            blocks: await this.builderService.getDrwnoPrizeInfoBlock(),
-            close: {
-              type: 'plain_text',
-              text: '닫기',
-            },
-          },
-        });
+        await this.actionService.recentlyPrizeInfoActionHandler(client, body);
         break;
       case SlackActionIDEnum.STATISTIC_PRIZE_INFO:
-        await app.client.views.update({
-          view_id: body.view.id,
-          view: {
-            type: 'modal',
-            title: {
-              type: 'plain_text',
-              text: `당첨 정보 조회 / 통계 조회`,
-            },
-            blocks: await this.builderService.getStatisticPrizeInfoBlock(),
-            close: {
-              type: 'plain_text',
-              text: '닫기',
-            },
-          },
-        });
+        await this.actionService.statisticPrizeInfoActionHandler(client, body);
         break;
       case SlackActionIDEnum.SUBSCRIBE:
-        // Action을 실행한 유저의 정보를 조회합니다.
-        const userId: string = body.user.id;
-        const teamId: string = body.user.team_id;
-        // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-        const token: string = await this.slackRepository.getAccessToken(body.user.team_id);
-        const client: WebClient = new WebClient(token);
-        // 유저의 정보를 조회합니다.
-        const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
-
-        let text: string;
-
-        if (userInfo && userInfo.isSubscribe) {
-          text = `<@${userId}>님은 이미 구독중입니다. 구독 취소를 원하시면 '/구독' 명령어를 입력해주세요.`;
-        } else {
-          await this.slackRepository.updateSubscribeStatus(userId, teamId, true);
-
-          text = `<@${userId}>님, 구독해주셔서 감사합니다. 매주 월요일 09시에 당첨 결과 정보를 알려드릴게요. 🍀`;
-        }
-
-        await client.chat.postMessage({
-          channel: body.channel.id,
-          text,
-        });
+        await this.actionService.subscribeActionHandler(client, body);
+        break;
+      case SlackActionIDEnum.UN_SUBSCRIBE:
+        await this.actionService.unSubscribeActionHandler(client, body);
+        break;
       default:
         break;
     }
   }
 
-  async slackViewSubMissionHandler(ack: any, body: any): Promise<void> {
-    const app = this.getSlackApp();
-
+  async slackViewSubMissionHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
+    const teamId: string = body.team.id;
     const viewId: string = body.view.id;
     const viewValue: string = body.view.state.values;
+    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
+    const token: string = await this.slackRepository.getAccessToken(teamId);
+    const client: WebClient = new WebClient(token);
 
     const recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
     const drwNo: number = Number(viewValue[SlackBlockIDEnum.ORDER_INPUT][SlackActionIDEnum.ORDER_INPUT].value);
+
+    console.log('✅ body: ', body);
 
     if (drwNo > recentlyDrwNo || drwNo <= 0 || !drwNo) {
       const originalBlocks = body.view.blocks;
@@ -288,7 +178,7 @@ export class SlackService implements OnModuleInit {
         });
       }
 
-      await app.client.views.update({
+      await client.views.update({
         view_id: viewId,
         view: {
           type: 'modal',
@@ -312,7 +202,7 @@ export class SlackService implements OnModuleInit {
     } else {
       const lottoInfo: LottoInfoInterface = await this.slackRepository.getLottoInfo(drwNo);
 
-      await app.client.views.open({
+      await client.views.open({
         trigger_id: body.trigger_id,
         view: {
           type: 'modal',

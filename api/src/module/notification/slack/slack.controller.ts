@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { SlackService } from './slack.service';
 import { SlackActionTypeEnum } from './constant/slack.enum';
+import { SlackInteractionPayload } from './interface/payload.interface';
 
 @ApiTags('Slack API')
 @Controller('/slack')
@@ -37,7 +38,7 @@ export class SlackController {
 
   @Post('/actions')
   async slackActionsHandler(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const bodyToJson = JSON.parse(req.body.payload);
+    const bodyToJson: SlackInteractionPayload = JSON.parse(req.body.payload);
     const ack = res.send.bind(res);
     const type: string = bodyToJson.type;
 
