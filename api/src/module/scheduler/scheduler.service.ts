@@ -33,7 +33,6 @@ export class SchedulerService {
   }
 
   @Cron('0 9 * * 1', { timeZone: 'Asia/Seoul' })
-  // @Cron('* * * * *', { timeZone: 'Asia/Seoul' })
   async sendSlackMessageToSubscriberListScheduler(): Promise<void> {
     const lockKey: SchedulerLockKeyEnum = SchedulerLockKeyEnum.SLACK_MESSAGE_SEND_LOCK;
     const lock: string = await this.redisService.setLock(lockKey);

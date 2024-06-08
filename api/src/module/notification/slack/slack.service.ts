@@ -97,7 +97,6 @@ export class SlackService implements OnModuleInit {
     await ack();
 
     const actionId: string = body.actions[0].action_id;
-    const value: string = body.actions[0].value;
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(body.user.team_id);
     const client: WebClient = new WebClient(token);

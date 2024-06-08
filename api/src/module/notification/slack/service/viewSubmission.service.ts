@@ -1,7 +1,7 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { WebClient, ConversationsOpenResponse, ChatPostMessageResponse } from '@slack/web-api';
+import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
 import Redis from 'ioredis';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
