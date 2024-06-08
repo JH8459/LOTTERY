@@ -127,18 +127,19 @@ export class ViewSubmissionService {
     const teamId: string = body.team.id;
     // 구독 해제 상태를 저장합니다.
     const userIdx = await this.slackRepository.upsertSubscribeStatus(teamId, userId, false, new Date());
-    // 피드백을 저장합니다.
+    // 구독 해제 메시지를 작성합니다.
+    let text: string = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
+    // 피드백이 있을 경우 저장합니다.
     const feedback: string =
       body.view.state.values[SlackBlockIDEnum.FEEDBACK_INPUT][SlackActionIDEnum.FEEDBACK_INPUT].value;
-
-    let text: string = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
 
     if (feedback) {
       await this.slackRepository.insertFeedback(userIdx, feedback);
 
       text += ' (소중한 피드백 감사합니다. 👍)';
     }
-
+    // View를 업데이트합니다. (모달 창 닫기)
+    await ack();
     // 유저와 앱 간의 개인 채널을 엽니다.
     const response: ConversationsOpenResponse = await client.conversations.open({
       users: userId,

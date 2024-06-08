@@ -23,6 +23,7 @@ import { TYPE_ORM_CONFIG } from 'src/config/typeorm.config';
     HealthModule,
     NotificationsModule,
     SchedulerModule,
+    RedisModule,
   ],
 })
 export class AppModule implements NestModule {
