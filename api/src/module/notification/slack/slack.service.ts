@@ -136,4 +136,29 @@ export class SlackService implements OnModuleInit {
       await this.viewSubMissionService.feedbackViewSubmissionHandler(ack, client, body);
     }
   }
+
+  async sendSlackMessageToSubscriberList(userIdx: number): Promise<void> {
+    // const userInfo: any = await this.slackRepository.getUserInfoByUserIdx(userIdx);
+    // // 저장된 토큰을 가져와 클라이언트를 생성합니다.
+    // const token: string = await this.slackRepository.getAccessToken(userInfo.team_id);
+    // const client: WebClient = new WebClient(token);
+    // // 유저와 앱 간의 개인 채널을 엽니다.
+    // const response: any = await client.conversations.open({
+    //   users: userInfo.user_id,
+    // });
+    // // 채널에 메시지를 발송합니다.
+    // const postMessageResult: ChatPostMessageResponse = await client.chat.postMessage({
+    //   channel: response.channel.id,
+    //   // text,
+    //   blocks: [...(await this.builderService.getDrwnoPrizeInfoBlock())],
+    // });
+    // // 메시지의 thread를 생성합니다.
+    // const threadTs: string = postMessageResult.ts;
+    // await client.chat.postMessage({
+    //   channel: response.channel.id,
+    //   // text: 'This is a reply to the previous message.',
+    //   blocks: [...(await this.builderService.getStatisticPrizeInfoBlock())],
+    //   thread_ts: threadTs,
+    // });
+  }
 }

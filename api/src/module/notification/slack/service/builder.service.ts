@@ -37,21 +37,6 @@ export class BuilderService {
 
     const block: (Block | KnownBlock)[] = [
       {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: ' ',
-        },
-        accessory: {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: '뒤로가기',
-          },
-          action_id: SlackActionIDEnum.PRIZE_INFO,
-        },
-      },
-      {
         type: 'header',
         text: {
           type: 'plain_text',
@@ -196,18 +181,6 @@ export class BuilderService {
           },
         ],
       },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'context',
-        elements: [
-          {
-            type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
-          },
-        ],
-      },
     ];
 
     return block;
@@ -343,21 +316,6 @@ export class BuilderService {
     };
 
     const blocks: (Block | KnownBlock)[] = [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: ' ',
-        },
-        accessory: {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: '뒤로가기',
-          },
-          action_id: SlackActionIDEnum.PRIZE_INFO,
-        },
-      },
       {
         type: 'header',
         text: {
@@ -551,18 +509,6 @@ export class BuilderService {
                 ],
               },
             ],
-          },
-        ],
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'context',
-        elements: [
-          {
-            type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
           },
         ],
       },

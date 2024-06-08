@@ -1,7 +1,7 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
+import { WebClient, ConversationsOpenResponse, ChatPostMessageResponse } from '@slack/web-api';
 import Redis from 'ioredis';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
@@ -144,7 +144,7 @@ export class ViewSubmissionService {
     const response: ConversationsOpenResponse = await client.conversations.open({
       users: userId,
     });
-
+    // 채널에 메시지를 발송합니다.
     await client.chat.postMessage({
       channel: response.channel.id,
       text,
