@@ -1,18 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { InsertResult, Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
 import { UserInfoDto } from '../dto/user.dto';
+import { FeedbackEntity } from 'src/entity/feedback.entity';
 
 @Injectable()
 export class SlackRepository {
   constructor(
     @InjectRepository(LottoEntity) private readonly lottoModel: Repository<LottoEntity>,
     @InjectRepository(WorkspaceEntity) private readonly workspaceModel: Repository<WorkspaceEntity>,
-    @InjectRepository(UserEntity) private readonly userModel: Repository<UserEntity>
+    @InjectRepository(UserEntity) private readonly userModel: Repository<UserEntity>,
+    @InjectRepository(FeedbackEntity) private readonly feedbackModel: Repository<FeedbackEntity>
   ) {}
 
   async getUserInfo(workspaceId: string, userId: string): Promise<UserInfoDto> {
@@ -77,7 +79,16 @@ export class SlackRepository {
     }
   }
 
-  async insertFeedback(userIdx: number, feedback: string): Promise<void> {}
+  async insertFeedback(userIdx: number, feedbackContent: string): Promise<void> {
+    await this.feedbackModel.manager.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager
+        .createQueryBuilder()
+        .insert()
+        .into(FeedbackEntity)
+        .values({ userIdx, feedbackContent })
+        .execute();
+    });
+  }
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
     const workspace = await this.workspaceModel

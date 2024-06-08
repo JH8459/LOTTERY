@@ -131,10 +131,17 @@ export class ViewSubmissionService {
     const feedback: string =
       body.view.state.values[SlackBlockIDEnum.FEEDBACK_INPUT][SlackActionIDEnum.FEEDBACK_INPUT].value;
 
-    console.log('✅ feedback', feedback);
+    let text: string = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
 
-    // await this.slackRepository.saveFeedback(body.team.id, body.user.id, feedback);
+    if (feedback) {
+      await this.slackRepository.insertFeedback(userIdx, feedback);
 
-    await ack();
+      text += ' (소중한 피드백 감사합니다. 👍)';
+    }
+
+    await client.chat.postMessage({
+      channel: body.channel.id,
+      text,
+    });
   }
 }
