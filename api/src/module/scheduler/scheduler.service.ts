@@ -36,9 +36,7 @@ export class SchedulerService {
     if (lock) {
       const userList: UserEntity[] = await this.schedulerRepository.getSubscribeUsers();
 
-      console.log('✅ userList', userList);
-
-      if (!userList.length) {
+      if (userList.length) {
         await Promise.all(
           userList.map(
             async (user: UserEntity) => await this.slackMessageService.sendSlackMessageToSubscriberList(user.userIdx)

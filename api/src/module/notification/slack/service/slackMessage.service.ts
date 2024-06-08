@@ -18,15 +18,15 @@ export class SlackMessageService {
     // 채널에 메시지를 발송합니다.
     const postMessageResult: ChatPostMessageResponse = await client.chat.postMessage({
       channel: response.channel.id,
-      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 🍀 (역대 통계 정보는 댓글로 따로 전달해드렸습니다! 🙌)`,
-      blocks: [...(await this.builderService.getDrwnoPrizeInfoBlock())],
+      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 🍀 (통계 정보도 담아드렸어요! 댓글을 열어 확인해주세요.)`,
+      blocks: await this.builderService.getDrwnoPrizeInfoBlock(),
     });
     // 메시지의 thread를 생성합니다.
     const threadTs: string = postMessageResult.ts;
 
     await client.chat.postMessage({
       channel: response.channel.id,
-      blocks: [...(await this.builderService.getStatisticPrizeInfoBlock())],
+      blocks: await this.builderService.getStatisticPrizeInfoBlock(),
       thread_ts: threadTs,
     });
   }
