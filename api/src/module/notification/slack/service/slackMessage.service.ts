@@ -2,7 +2,9 @@ import { WebClient, ConversationsOpenResponse, ChatPostMessageResponse } from '@
 import { UserInfoDto } from '../dto/user.dto';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SlackMessageService {
   constructor(private readonly slackRepository: SlackRepository, private readonly builderService: BuilderService) {}
 
@@ -16,13 +18,24 @@ export class SlackMessageService {
       users: userInfo.userId,
     });
     // 채널에 메시지를 발송합니다.
+    await client.chat.postMessage({
+      channel: response.channel.id,
+      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 🍀 (통계 정보도 담아드렸으니 댓글 창을 열어 확인해주세요.)`,
+    });
+
     const postMessageResult: ChatPostMessageResponse = await client.chat.postMessage({
       channel: response.channel.id,
-      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 🍀 (통계 정보도 담아드렸어요! 댓글을 열어 확인해주세요.)`,
+      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 🍀 (통계 정보도 담아드렸으니 댓글 창을 열어 확인해주세요.)`,
       blocks: await this.builderService.getDrwnoPrizeInfoBlock(),
     });
     // 메시지의 thread를 생성합니다.
     const threadTs: string = postMessageResult.ts;
+
+    await client.chat.postMessage({
+      channel: response.channel.id,
+      text: `로또 당첨 통계 정보는 아래와 같습니다. 📊`,
+      thread_ts: threadTs,
+    });
 
     await client.chat.postMessage({
       channel: response.channel.id,
