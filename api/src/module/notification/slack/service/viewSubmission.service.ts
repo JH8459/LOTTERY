@@ -126,7 +126,7 @@ export class ViewSubmissionService {
     const userId: string = body.user.id;
     const teamId: string = body.team.id;
     // 구독 해제 상태를 저장합니다.
-    await this.slackRepository.upsertSubscribeStatus(teamId, userId, false, new Date());
+    const userIdx = await this.slackRepository.upsertSubscribeStatus(teamId, userId, false, new Date());
     // 피드백을 저장합니다.
     const feedback: string =
       body.view.state.values[SlackBlockIDEnum.FEEDBACK_INPUT][SlackActionIDEnum.FEEDBACK_INPUT].value;

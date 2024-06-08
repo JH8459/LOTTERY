@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { InsertResult, Repository } from 'typeorm';
+import { InsertResult, Repository, UpdateResult } from 'typeorm';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
@@ -38,7 +38,7 @@ export class SlackRepository {
     userId: string,
     isSubscribe: boolean,
     userAvail: Date
-  ): Promise<void> {
+  ): Promise<number> {
     const { workspaceIdx } = await this.workspaceModel
       .createQueryBuilder('workspaceEntity')
       .select('workspaceEntity.workspaceIdx AS workspaceIdx')
@@ -57,18 +57,27 @@ export class SlackRepository {
         .createQueryBuilder('userEntity')
         .update(UserEntity)
         .set({ isSubscribe, userAvail })
-        .where('userId = :userId', { userId })
-        .andWhere('workspaceIdx = :workspaceIdx', { workspaceIdx })
+        .where('userIdx = :userIdx', { userIdx: userInfo.userIdx })
         .execute();
+
+      return userInfo.userIdx;
     } else {
-      await this.userModel
-        .createQueryBuilder('userEntity')
-        .insert()
-        .into(UserEntity)
-        .values({ workspaceIdx, userId, isSubscribe, userAvail })
-        .execute();
+      const userIdx: number = await this.userModel.manager.transaction(async (transactionalEntityManager) => {
+        const { identifiers } = await transactionalEntityManager
+          .createQueryBuilder()
+          .insert()
+          .into(UserEntity)
+          .values({ workspaceIdx, userId, isSubscribe, userAvail })
+          .execute();
+
+        return identifiers[0].userIdx;
+      });
+
+      return userIdx;
     }
   }
+
+  async insertFeedback(userIdx: number, feedback: string): Promise<void> {}
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
     const workspace = await this.workspaceModel
@@ -84,12 +93,14 @@ export class SlackRepository {
         .where('workspaceId = :workspaceId', { workspaceId })
         .execute();
     } else {
-      await this.workspaceModel
-        .createQueryBuilder('workspaceEntity')
-        .insert()
-        .into(WorkspaceEntity)
-        .values({ workspaceName, workspaceId, accessToken })
-        .execute();
+      await this.workspaceModel.manager.transaction(async (transactionalEntityManager) => {
+        await transactionalEntityManager
+          .createQueryBuilder()
+          .insert()
+          .into(WorkspaceEntity)
+          .values({ workspaceName, workspaceId, accessToken })
+          .execute();
+      });
     }
   }
 
