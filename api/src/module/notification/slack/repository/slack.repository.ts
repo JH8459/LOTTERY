@@ -34,8 +34,8 @@ export class SlackRepository {
   }
 
   async upsertSubscribeStatus(
-    userId: string,
     workspaceId: string,
+    userId: string,
     isSubscribe: boolean,
     userAvail: Date
   ): Promise<void> {
@@ -57,8 +57,8 @@ export class SlackRepository {
         .createQueryBuilder('userEntity')
         .update(UserEntity)
         .set({ isSubscribe, userAvail })
-        .where('userEntity.userId = :userId', { userId })
-        .andWhere('userEntity.workspaceIdx = :workspaceIdx', { workspaceIdx })
+        .where('userId = :userId', { userId })
+        .andWhere('workspaceIdx = :workspaceIdx', { workspaceIdx })
         .execute();
     } else {
       await this.userModel

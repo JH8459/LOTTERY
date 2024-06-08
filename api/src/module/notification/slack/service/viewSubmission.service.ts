@@ -123,11 +123,10 @@ export class ViewSubmissionService {
 
   async feedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 유저 정보를 가져옵니다.
-    const teamId: string = body.team.id;
     const userId: string = body.user.id;
-    const userInfo = await this.slackRepository.getUserInfo(teamId, userId);
+    const teamId: string = body.team.id;
     // 구독 해제 상태를 저장합니다.
-    await this.slackRepository.upsertSubscribeStatus(userId, teamId, false, new Date());
+    await this.slackRepository.upsertSubscribeStatus(teamId, userId, false, new Date());
     // 피드백을 저장합니다.
     const feedback: string =
       body.view.state.values[SlackBlockIDEnum.FEEDBACK_INPUT][SlackActionIDEnum.FEEDBACK_INPUT].value;
