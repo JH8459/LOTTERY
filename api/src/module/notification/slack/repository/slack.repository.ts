@@ -35,6 +35,23 @@ export class SlackRepository {
     return userInfo;
   }
 
+  async getUserInfoByIdx(userIdx: number): Promise<UserInfoDto> {
+    const userInfo: UserInfoDto = await this.userModel
+      .createQueryBuilder('userEntity')
+      .select([
+        'userEntity.userIdx AS userIdx',
+        'userEntity.workspaceIdx AS workspaceIdx',
+        'workspaceEntity.workspaceId AS workspaceId',
+        'userEntity.userId AS userId',
+        'userEntity.isSubscribe AS isSubscribe',
+      ])
+      .innerJoin(WorkspaceEntity, 'workspaceEntity', 'workspaceEntity.workspaceIdx = userEntity.workspaceIdx')
+      .where('userEntity.userIdx = :userIdx', { userIdx })
+      .getRawOne();
+
+    return userInfo;
+  }
+
   async upsertSubscribeStatus(
     workspaceId: string,
     userId: string,

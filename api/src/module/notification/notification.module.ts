@@ -13,6 +13,7 @@ import { CommandService } from './slack/service/command.service';
 import { ActionService } from './slack/service/action.service';
 import { ViewSubmissionService } from './slack/service/viewSubmission.service';
 import { FeedbackEntity } from 'src/entity/feedback.entity';
+import { SlackMessageService } from './slack/service/slackMessage.service';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { FeedbackEntity } from 'src/entity/feedback.entity';
     CommandService,
     ActionService,
     ViewSubmissionService,
+    SlackMessageService,
   ],
-  exports: [EmailService],
+  exports: [EmailService, SlackMessageService],
 })
 export class NotificationsModule {}

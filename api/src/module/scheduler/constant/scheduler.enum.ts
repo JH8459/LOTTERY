@@ -1,3 +1,4 @@
 export enum SchedulerLockKeyEnum {
   EMAIL_SEND_LOCK = 'EMAIL_SEND_LOCK',
+  SLACK_MESSAGE_SEND_LOCK = 'SLACK_MESSAGE_SEND_LOCK',
 }
