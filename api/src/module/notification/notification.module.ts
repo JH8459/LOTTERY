@@ -12,9 +12,14 @@ import { UserEntity } from 'src/entity/user.entity';
 import { CommandService } from './slack/service/command.service';
 import { ActionService } from './slack/service/action.service';
 import { ViewSubmissionService } from './slack/service/viewSubmission.service';
+import { FeedbackEntity } from 'src/entity/feedback.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LottoEntity, WorkspaceEntity, UserEntity]), EmailModule, SlackModule],
+  imports: [
+    TypeOrmModule.forFeature([LottoEntity, WorkspaceEntity, UserEntity, FeedbackEntity]),
+    EmailModule,
+    SlackModule,
+  ],
   providers: [
     EmailService,
     SlackService,
