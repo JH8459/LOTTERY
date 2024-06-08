@@ -25,7 +25,7 @@ export class SlackMessageService {
 
     const postMessageResult: ChatPostMessageResponse = await client.chat.postMessage({
       channel: response.channel.id,
-      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 🍀 (통계 정보도 담아드렸으니 댓글 창을 열어 확인해주세요.)`,
+      text: `<@${userInfo.userId}>님, 이번 주 최신 당첨 결과 정보입니다. 통계 정보도 담아드렸으니 댓글 창을 열어 확인해주세요.🍀 `,
       blocks: await this.builderService.getDrwnoPrizeInfoBlock(),
     });
     // 메시지의 thread를 생성합니다.
@@ -33,7 +33,7 @@ export class SlackMessageService {
 
     await client.chat.postMessage({
       channel: response.channel.id,
-      text: `로또 당첨 통계 정보는 아래와 같습니다. 📊`,
+      text: `<@${userInfo.userId}>님, 로또 당첨 통계 정보는 아래와 같습니다. 당첨 통계일 뿐이니 참고 용도로만 활용해주세요. ☘️`,
       thread_ts: threadTs,
     });
 
