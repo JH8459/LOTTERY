@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-import { RedisModule } from '@nestjs-modules/ioredis';
 import { EmailService } from '../notification/email/email.service';
 import { SlackMessageService } from '../notification/slack/service/slackMessage.service';
 import { SchedulerService } from './scheduler.service';
@@ -13,6 +12,7 @@ import { BuilderService } from '../notification/slack/service/builder.service';
 import { FeedbackEntity } from 'src/entity/feedback.entity';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
