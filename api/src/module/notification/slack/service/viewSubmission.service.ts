@@ -135,8 +135,6 @@ export class ViewSubmissionService {
     // 최신 스피또 당첨 정보를 Redis에서 가져옵니다.
     let speettoInfo: SpeettoInfoInterface = JSON.parse(await this.redis.get(`speetto${speettoType}Info`));
 
-    console.log('speettoInfo', speettoInfo);
-
     if (!speettoInfo) {
       speettoInfo = await this.slackRepository.getSpeettoInfo(speettoType);
       // 스피또 정보를 Redis에 저장합니다.
