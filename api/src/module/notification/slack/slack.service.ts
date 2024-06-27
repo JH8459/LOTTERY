@@ -42,6 +42,14 @@ export class SlackService implements OnModuleInit {
       await this.commandService.lottoPrizeInfoCommandHandler(command);
     });
 
+    // '/스피또' command를 처리하는 이벤트 핸들러를 등록합니다.
+    this.app.command('/스피또', async ({ command, ack }) => {
+      // Command 요청을 확인합니다.
+      await ack();
+      // 스피또 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
+      await this.commandService.speettoPrizeInfoCommandHandler(command);
+    });
+
     // '/구독' command를 처리하는 이벤트 핸들러를 등록합니다.
     this.app.command('/구독', async ({ command, ack }) => {
       // Command 요청을 확인합니다.

@@ -34,7 +34,7 @@ export class CommandService {
         type: 'modal',
         title: {
           type: 'plain_text',
-          text: '당첨 정보 조회',
+          text: '로또 당첨 정보 조회',
         },
         blocks: await this.builderService.getLottoPrizeInfoBlock(recentlyLottoDrwNo),
         close: {
@@ -44,6 +44,28 @@ export class CommandService {
         submit: {
           type: 'plain_text',
           text: '조회',
+        },
+      },
+    });
+  }
+
+  async speettoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
+    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
+    const token: string = await this.slackRepository.getAccessToken(command.team_id);
+    const client: WebClient = new WebClient(token);
+    // 모달을 출력합니다.
+    await client.views.open({
+      trigger_id: command.trigger_id,
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: '스피또 당첨 정보 조회',
+        },
+        blocks: [],
+        close: {
+          type: 'plain_text',
+          text: '닫기',
         },
       },
     });
