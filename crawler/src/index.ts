@@ -56,9 +56,8 @@ lottoSchedule(lottoRule);
 const speettoRule = new schedule.RecurrenceRule();
 speettoRule.dayOfWeek = [0, new schedule.Range(0, 6)];
 
-// speettoRule.hour = 3;
-// speettoRule.minute = 0;
-speettoRule.second = 0;
+speettoRule.hour = 3;
+speettoRule.minute = 0;
 speettoRule.tz = 'Asia/Seoul';
 
 speettoSchedule(speettoRule);
