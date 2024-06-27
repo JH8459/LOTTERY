@@ -5,10 +5,12 @@ export enum SlackActionTypeEnum {
 
 export enum SlackActionIDEnum {
   PRIZE_INFO = 'prize_info',
+  SPEETTO_INFO = 'speetto_info',
   STATISTIC_PRIZE_INFO = 'statistic_prize_info',
   RECENTLY_PRIZE_INFO = 'recently_prize_info',
   ORDER_INPUT = 'order_input',
   FEEDBACK_INPUT = 'feedback_input',
+  SPEETTO_INPUT = 'speetto_input',
   SUBSCRIBE = 'subscribe',
   UN_SUBSCRIBE = 'un_subscribe',
 }
@@ -16,6 +18,7 @@ export enum SlackActionIDEnum {
 export enum SlackBlockIDEnum {
   ORDER_INPUT = 'order_input',
   FEEDBACK_INPUT = 'feedback_input',
+  SPEETTO_INPUT = 'speetto_input',
   INPUT_ERROR_MESSAGE = 'input_error_message',
 }
 
