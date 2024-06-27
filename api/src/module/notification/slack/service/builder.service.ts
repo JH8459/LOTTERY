@@ -9,6 +9,7 @@ import {
 } from 'src/module/notification/interface/lotto.interface';
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
+import { SpeettoInfoInterface } from '../../interface/speetto.interface';
 
 @Injectable()
 export class BuilderService {
@@ -294,7 +295,7 @@ export class BuilderService {
     return blocks;
   }
 
-  async getSpeettoPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
+  async getSpeettoPrizeInputBlock(): Promise<(Block | KnownBlock)[]> {
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'section',
@@ -311,7 +312,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*<https://dhlottery.co.kr/gameResult.do?method=speettoWin/|동행복권 바로가기>* 즉석식인쇄복권(스피또)은 동전 등으로 긁어 아주 쉽고, 빠르게 당첨 확인이 가능하고 게임도 함께 즐길 수 있는 인쇄복권입니다. 판매금액에 따라 스피또500 / 스피또1000 / 스피또2000 3종류의 복권이 있습니다.',
+          text: '*<https://dhlottery.co.kr/gameResult.do?method=speettoWin|동행복권 바로가기>* 즉석식 인쇄복권(스피또)은 동전 등으로 긁어 아주 쉽고, 빠르게 당첨 확인이 가능하고 게임도 함께 즐길 수 있는 인쇄복권입니다. 판매금액에 따라 *스피또500* / *스피또1000* / *스피또2000* 3종류의 복권이 있습니다.',
         },
         accessory: {
           type: 'image',
@@ -340,8 +341,58 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-
-          text: '*스피또 판매 정보 조회를 위해 복권 정보를 선택해주세요.*',
+          text: ' ',
+        },
+      },
+      {
+        type: 'input',
+        block_id: SlackBlockIDEnum.SPEETTO_INPUT,
+        element: {
+          type: 'static_select',
+          placeholder: {
+            type: 'plain_text',
+            text: '복권 종류를 선택해주세요.',
+            emoji: true,
+          },
+          options: [
+            {
+              text: {
+                type: 'plain_text',
+                text: '1️⃣ 스피또 500',
+                emoji: true,
+              },
+              value: '500',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '2️⃣ 스피또 1000',
+                emoji: true,
+              },
+              value: '1000',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '3️⃣ 스피또 2000',
+                emoji: true,
+              },
+              value: '2000',
+            },
+          ],
+          action_id: SlackActionIDEnum.SPEETTO_INPUT,
+        },
+        label: {
+          type: 'plain_text',
+          text: '🍀 스피또 판매 정보 조회를 위해 복권 정보를 선택해주세요.',
+          emoji: true,
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
         },
       },
       {
@@ -354,56 +405,177 @@ export class BuilderService {
           },
           {
             type: 'mrkdwn',
-            text: '*당첨 금액, 당첨 등수별 남은 매수, 출고율 정보를 제공합니다.*',
+            text: '*당첨 금액, 당첨 등수별 남은 매수, 판매점 입고율 정보를 제공합니다.*',
           },
         ],
-      },
-      {
-        type: 'input',
-        element: {
-          type: 'multi_static_select',
-          placeholder: {
-            type: 'plain_text',
-            text: 'Select options',
-            emoji: true,
-          },
-          options: [
-            {
-              text: {
-                type: 'plain_text',
-                text: '*☘️ 스피또 500*',
-                emoji: true,
-              },
-              value: 'value-0',
-            },
-            {
-              text: {
-                type: 'plain_text',
-                text: '*☘️ 스피또 1000*',
-                emoji: true,
-              },
-              value: 'value-1',
-            },
-            {
-              text: {
-                type: 'plain_text',
-                text: '*☘️ 스피또 2000*',
-                emoji: true,
-              },
-              value: 'value-2',
-            },
-          ],
-          action_id: 'multi_static_select-action',
-        },
-        label: {
-          type: 'plain_text',
-          text: '🍀 스피또 복권 종류를 선택해주세요.',
-          emoji: true,
-        },
       },
     ];
 
     return blocks;
+  }
+
+  async getSpeettoPrizeInfoBlock(speettoInfo: SpeettoInfoInterface): Promise<(Block | KnownBlock)[]> {
+    const block: (Block | KnownBlock)[] = [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: `🍀 스피또${speettoInfo.speettoType} ${convertKRLocaleStringFormat(speettoInfo.drwNo)}회 정보`,
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '🏆 등수 별 정보',
+          emoji: true,
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*(당첨 금액 / 잔여 매수 / 기준 일자)*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_list',
+            style: 'ordered',
+            elements: [
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `🥇: ${speettoInfo.firstWinAmnt} / ${convertKRLocaleStringFormat(
+                      speettoInfo.firstWinCnt
+                    )}매 / ${convertDateFormat(speettoInfo.firstPrizeDate)}`,
+                  },
+                ],
+              },
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `🥈: ${speettoInfo.secondWinAmnt} / ${convertKRLocaleStringFormat(
+                      speettoInfo.secondWinCnt
+                    )}매 / ${convertDateFormat(speettoInfo.secondPrizeDate)}`,
+                  },
+                ],
+              },
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `🥉: ${speettoInfo.thirdWinAmnt} / ${convertKRLocaleStringFormat(
+                      speettoInfo.thirdWinCnt
+                    )}매 / ${convertDateFormat(speettoInfo.thirdPrizeDate)}`,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*당첨 결과는 3등까지의 정보만 제공합니다.*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
+        },
+      },
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '🔍 판매점 입고율 정보',
+          emoji: true,
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            text: '*(판매점 입고율 = 판매점 입고량 / 발행량)*',
+            type: 'mrkdwn',
+          },
+        ],
+      },
+      {
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_list',
+            style: 'bullet',
+            elements: [
+              {
+                type: 'rich_text_section',
+                elements: [
+                  {
+                    type: 'text',
+                    text: `${speettoInfo.saleRate}% `,
+                    style: {
+                      bold: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: `(${convertDateFormat(speettoInfo.saleDate)} 기준)`,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: ' ',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: ':pushpin: 상기 정보는 참고를 위한 자료로, 오류가 발생하거나 지연될 수 있습니다.',
+          },
+        ],
+      },
+    ];
+
+    return block;
   }
 
   async getLottoStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {

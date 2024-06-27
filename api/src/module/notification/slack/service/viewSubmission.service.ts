@@ -10,6 +10,7 @@ import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { Block } from '@slack/bolt';
 import { LottoInfoInterface } from '../../interface/lotto.interface';
+import { SpeettoInfoInterface } from '../../interface/speetto.interface';
 
 @Injectable()
 export class ViewSubmissionService {
@@ -20,7 +21,7 @@ export class ViewSubmissionService {
     private readonly builderService: BuilderService
   ) {}
 
-  async prizeInfoViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
+  async lottoPrizeInfoViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 최신 로또 회차 번호와 입력한 로또 회차 번호를 가져옵니다.
     const recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
     const drwNo: number = Number(
@@ -87,22 +88,6 @@ export class ViewSubmissionService {
     } else {
       const lottoInfo: LottoInfoInterface = await this.slackRepository.getLottoInfo(drwNo);
 
-      await client.views.open({
-        trigger_id: body.trigger_id,
-        view: {
-          type: 'modal',
-          title: {
-            type: 'plain_text',
-            text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(lottoInfo.drwNo)}회`,
-          },
-          blocks: await this.builderService.getLottoDrwnoPrizeInfoBlock(lottoInfo),
-          close: {
-            type: 'plain_text',
-            text: '닫기',
-          },
-        },
-      });
-
       await ack({
         response_action: 'update',
         view: {
@@ -111,7 +96,24 @@ export class ViewSubmissionService {
             type: 'plain_text',
             text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(lottoInfo.drwNo)}회`,
           },
-          blocks: await this.builderService.getLottoDrwnoPrizeInfoBlock(lottoInfo),
+          blocks: [
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: ' ',
+              },
+              accessory: {
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: '뒤로가기',
+                },
+                action_id: SlackActionIDEnum.PRIZE_INFO,
+              },
+            },
+            ...(await this.builderService.getLottoDrwnoPrizeInfoBlock(lottoInfo)),
+          ],
           close: {
             type: 'plain_text',
             text: '닫기',
@@ -119,6 +121,60 @@ export class ViewSubmissionService {
         },
       });
     }
+  }
+
+  async speettoPrizeInfoViewSubmissionHandler(
+    ack: any,
+    client: WebClient,
+    body: SlackInteractionPayload
+  ): Promise<void> {
+    // 스피또 정보를 가져옵니다.
+    const speettoType: number = Number(
+      body.view.state.values[SlackBlockIDEnum.SPEETTO_INPUT][SlackActionIDEnum.SPEETTO_INPUT].selected_option.value
+    );
+    // 최신 스피또 당첨 정보를 Redis에서 가져옵니다.
+    let speettoInfo: SpeettoInfoInterface = JSON.parse(await this.redis.get(`speetto${speettoType}Info`));
+
+    console.log('speettoInfo', speettoInfo);
+
+    if (!speettoInfo) {
+      speettoInfo = await this.slackRepository.getSpeettoInfo(speettoType);
+      // 스피또 정보를 Redis에 저장합니다.
+      await this.redis.set(`speetto${speettoType}Info`, JSON.stringify(speettoType));
+    }
+
+    await ack({
+      response_action: 'update',
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: `스피또 ${speettoType}`,
+        },
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: ' ',
+            },
+            accessory: {
+              type: 'button',
+              text: {
+                type: 'plain_text',
+                text: '뒤로가기',
+              },
+              action_id: SlackActionIDEnum.SPEETTO_INFO,
+            },
+          },
+          ...(await this.builderService.getSpeettoPrizeInfoBlock(speettoInfo)),
+        ],
+        close: {
+          type: 'plain_text',
+          text: '닫기',
+        },
+      },
+    });
   }
 
   async feedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {

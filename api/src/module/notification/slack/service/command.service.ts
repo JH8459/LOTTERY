@@ -7,7 +7,7 @@ import { BuilderService } from './builder.service';
 import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
 import { SlashCommand } from '@slack/bolt';
 import { UserInfoDto } from '../dto/user.dto';
-import { SpeettoInfoInterface } from '../../interface/speetto.interface';
+import { SlackSubMitButtonNameEnum } from '../constant/slack.enum';
 
 @Injectable()
 export class CommandService {
@@ -54,28 +54,6 @@ export class CommandService {
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(command.team_id);
     const client: WebClient = new WebClient(token);
-    // 최신 스피또 당첨 정보를 Redis에서 가져옵니다.
-    let speetto500Info: SpeettoInfoInterface = JSON.parse(await this.redis.get('speetto500Info'));
-    let speetto1000Info: SpeettoInfoInterface = JSON.parse(await this.redis.get('speetto1000Info'));
-    let speetto2000Info: SpeettoInfoInterface = JSON.parse(await this.redis.get('speetto1000Info'));
-
-    if (!speetto500Info) {
-      speetto500Info = await this.slackRepository.getSpeettoInfo(500);
-      // 스피또500 정보를 Redis에 저장합니다.
-      await this.redis.set('speetto500Info', JSON.stringify(speetto500Info));
-    }
-
-    if (!speetto1000Info) {
-      speetto1000Info = await this.slackRepository.getSpeettoInfo(1000);
-      // 스피또1000 정보를 Redis에 저장합니다.
-      await this.redis.set('speetto1000Info', JSON.stringify(speetto1000Info));
-    }
-
-    if (!speetto2000Info) {
-      speetto2000Info = await this.slackRepository.getSpeettoInfo(2000);
-      // 스피또2000 정보를 Redis에 저장합니다.
-      await this.redis.set('speetto2000Info', JSON.stringify(speetto2000Info));
-    }
     // 모달을 출력합니다.
     await client.views.open({
       trigger_id: command.trigger_id,
@@ -85,14 +63,14 @@ export class CommandService {
           type: 'plain_text',
           text: '스피또 당첨 정보 조회',
         },
-        blocks: await this.builderService.getSpeettoPrizeInfoBlock(),
+        blocks: await this.builderService.getSpeettoPrizeInputBlock(),
         close: {
           type: 'plain_text',
           text: '닫기',
         },
         submit: {
           type: 'plain_text',
-          text: '조회',
+          text: SlackSubMitButtonNameEnum.SEARCH,
         },
       },
     });
