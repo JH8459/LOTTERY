@@ -6,7 +6,7 @@ import schedule from 'node-schedule';
 import { scheduleJob } from 'node-schedule';
 import {
   getHighestPrizeByYear,
-  getRecentlyDrwNo,
+  getRecentlyLottoDrwNo,
   getStatisticByDrwNo,
   insertDrwInfo,
 } from '../repositories/lotto.repository';
@@ -16,7 +16,7 @@ import {
   SpeettoPrizeInfo,
   StatisticDrwNoInterface,
 } from './interface/scheduler.interface';
-import { DrwInfoDto } from './dto/drwInfo.dto';
+import { LottoDrwInfoDto } from './dto/drwInfo.dto';
 import { insertSpeetoPrizeInfo } from '../repositories/speetto.repository';
 
 export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
@@ -180,11 +180,11 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
       await redis.set('lastYearDrwNoDate', highestPrizeInfoList[0].drwNoDate.toString(), 'EX', week);
 
       // DB DrwNo Check
-      const dbDrwNo: number = await getRecentlyDrwNo();
+      const dbDrwNo: number = await getRecentlyLottoDrwNo();
 
       if (drwNo !== dbDrwNo) {
         // Set drwInfo DTO
-        const drwInfo: DrwInfoDto = {
+        const drwInfo: LottoDrwInfoDto = {
           drwNo,
           drwtNoList,
           firstWinamnt,

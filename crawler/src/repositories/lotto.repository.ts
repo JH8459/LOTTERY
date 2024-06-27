@@ -1,10 +1,10 @@
 import { db } from '../database/init.database';
 import { LottoEntity } from '../entities/lotto.entity';
 import { DrwtNoInfoEnum } from '../services/constant/enum';
-import { DrwInfoDto } from '../services/dto/drwInfo.dto';
+import { LottoDrwInfoDto } from '../services/dto/drwInfo.dto';
 import { HighestPrizeDrwNoInterface, StatisticDrwNoInterface } from '../services/interface/scheduler.interface';
 
-export const getRecentlyDrwNo = async (): Promise<number> => {
+export const getRecentlyLottoDrwNo = async (): Promise<number> => {
   const { drwNo } = await db
     .getRepository(LottoEntity)
     .createQueryBuilder('lottoEntity')
@@ -128,7 +128,7 @@ export const insertDrwInfo = async ({
   thirdWinamnt,
   thirdPrzwnerCo,
   drwNoDate,
-}: DrwInfoDto): Promise<void> => {
+}: LottoDrwInfoDto): Promise<void> => {
   await db
     .getRepository(LottoEntity)
     .createQueryBuilder('lottoEntity')

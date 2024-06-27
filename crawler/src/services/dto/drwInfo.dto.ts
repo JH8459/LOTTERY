@@ -1,6 +1,6 @@
 import { DrwtNoInterface } from '../interface/scheduler.interface';
 
-export class DrwInfoDto {
+export class LottoDrwInfoDto {
   drwNo: number;
   drwtNoList: DrwtNoInterface[];
   firstWinamnt: number;
