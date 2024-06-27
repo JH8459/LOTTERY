@@ -13,10 +13,11 @@ import { FeedbackEntity } from 'src/entity/feedback.entity';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { RedisModule } from '../redis/redis.module';
+import { SpeettoEntity } from 'src/entity/speetto.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LottoEntity, WorkspaceEntity, UserEntity, FeedbackEntity]),
+    TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, FeedbackEntity]),
     ScheduleModule.forRoot(),
     RedisModule,
   ],
