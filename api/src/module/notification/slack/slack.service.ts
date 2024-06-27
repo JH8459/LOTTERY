@@ -119,6 +119,9 @@ export class SlackService implements OnModuleInit {
       case SlackActionIDEnum.STATISTIC_PRIZE_INFO:
         await this.actionService.statisticPrizeInfoActionHandler(client, body);
         break;
+      case SlackActionIDEnum.SPEETTO_INFO:
+        await this.actionService.speettoInfoActionHandler(client, body);
+        break;
       case SlackActionIDEnum.SUBSCRIBE:
         await this.actionService.subscribeActionHandler(client, body);
         break;
@@ -137,10 +140,18 @@ export class SlackService implements OnModuleInit {
     const token: string = await this.slackRepository.getAccessToken(teamId);
     const client: WebClient = new WebClient(token);
     // View input Value 값을 구분하여 View Submission을 처리합니다.
-    if (SlackBlockIDEnum.ORDER_INPUT in viewValue) {
-      await this.viewSubMissionService.prizeInfoViewSubmissionHandler(ack, client, body);
-    } else if (SlackBlockIDEnum.FEEDBACK_INPUT in viewValue) {
-      await this.viewSubMissionService.feedbackViewSubmissionHandler(ack, client, body);
+    switch (true) {
+      case SlackBlockIDEnum.ORDER_INPUT in viewValue:
+        await this.viewSubMissionService.lottoPrizeInfoViewSubmissionHandler(ack, client, body);
+        break;
+      case SlackBlockIDEnum.SPEETTO_INPUT in viewValue:
+        await this.viewSubMissionService.speettoPrizeInfoViewSubmissionHandler(ack, client, body);
+        break;
+      case SlackBlockIDEnum.FEEDBACK_INPUT in viewValue:
+        await this.viewSubMissionService.feedbackViewSubmissionHandler(ack, client, body);
+        break;
+      default:
+        break;
     }
   }
 }

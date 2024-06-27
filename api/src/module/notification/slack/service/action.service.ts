@@ -147,6 +147,28 @@ export class ActionService {
     });
   }
 
+  async speettoInfoActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    await client.views.update({
+      view_id: body.view.id,
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: '당첨 정보 조회',
+        },
+        blocks: await this.builderService.getSpeettoPrizeInputBlock(),
+        close: {
+          type: 'plain_text',
+          text: '닫기',
+        },
+        submit: {
+          type: 'plain_text',
+          text: SlackSubMitButtonNameEnum.SEARCH,
+        },
+      },
+    });
+  }
+
   async subscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 유저의 정보를 조회합니다.
     const userId: string = body.user.id;
