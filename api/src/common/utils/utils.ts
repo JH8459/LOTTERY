@@ -1,4 +1,8 @@
-export const convertDateFormat = (date: Date): string => {
+export const convertDateFormat = (date: Date | string): string => {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
