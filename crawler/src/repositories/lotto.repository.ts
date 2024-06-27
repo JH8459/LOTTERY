@@ -1,4 +1,3 @@
-import { EntityManager, getManager } from 'typeorm';
 import { db } from '../database/init.database';
 import { LottoEntity } from '../entities/lotto.entity';
 import { DrwtNoInfoEnum } from '../services/constant/enum';

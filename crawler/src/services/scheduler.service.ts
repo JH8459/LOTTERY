@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import ioredis from 'ioredis';
 import cheerio, { CheerioAPI, Element } from 'cheerio';
+import iconv from 'iconv-lite';
 import schedule from 'node-schedule';
 import { scheduleJob } from 'node-schedule';
 import {
@@ -9,13 +10,17 @@ import {
   getStatisticByDrwNo,
   insertDrwInfo,
 } from '../repositories/lotto.repository';
-import { DrwtNoInterface, HighestPrizeDrwNoInterface, StatisticDrwNoInterface } from './interface/scheduler.interface';
+import {
+  DrwtNoInterface,
+  HighestPrizeDrwNoInterface,
+  SpeettoPrizeInfo,
+  StatisticDrwNoInterface,
+} from './interface/scheduler.interface';
 import { DrwInfoDto } from './dto/drwInfo.dto';
+import { insertSpeetoPrizeInfo } from '../repositories/speetto.repository';
 
 export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
   scheduleJob(rule, async () => {
-    console.log('✅ Running At: ', new Date());
-
     const redis = new ioredis(6379, 'lottery_redis');
 
     let drwNo: number = 0;
@@ -197,4 +202,118 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
     } catch (err) {
       console.log(err);
     }
+  });
+
+export const createSpeettoPrizeInfo = (speettoType: number): SpeettoPrizeInfo => {
+  const speettoPrizeInfo: SpeettoPrizeInfo = {
+    drwNo: 0,
+    speettoType,
+    firstPrizeDate: new Date(),
+    firstWinAmnt: '',
+    firstWinCnt: 0,
+    secondPrizeDate: new Date(),
+    secondWinAmnt: '',
+    secondWinCnt: 0,
+    thirdPrizeDate: new Date(),
+    thirdWinAmnt: '',
+    thirdWinCnt: 0,
+    saleDate: new Date(),
+    saleRate: 0,
+  };
+
+  return speettoPrizeInfo;
+};
+
+export const speettoSchedule = (rule: schedule.RecurrenceRule) =>
+  scheduleJob(rule, async () => {
+    const redis = new ioredis(6379, 'lottery_redis');
+    // 스피또 500
+    let speetto500Info: SpeettoPrizeInfo = createSpeettoPrizeInfo(500);
+    // 스피또 1000
+    let speetto1000Info: SpeettoPrizeInfo = createSpeettoPrizeInfo(1000);
+    // 스피또 2000
+    let speetto2000Info: SpeettoPrizeInfo = createSpeettoPrizeInfo(2000);
+
+    try {
+      // Axios
+      const response: AxiosResponse = await axios.get(
+        'https://m.dhlottery.co.kr/common.do?method=gameInfoAll&wiselog=M_A_1_7',
+        { responseType: 'arraybuffer' } // 응답 타입을 arraybuffer로 설정
+      );
+      // iconv-lite를 사용하여 EUC-KR에서 UTF-8로 디코딩
+      const decodedData = iconv.decode(Buffer.from(response.data), 'EUC-KR');
+      // Cheerio Crawling
+      const $: CheerioAPI = cheerio.load(decodedData);
+
+      $('.slide_item').each((slidItemIdx: number, slidItemElement: Element) => {
+        const titleText = $(slidItemElement).find('.section_title h2 span.round.key_clr1 span').text().trim();
+        const numbers = titleText.match(/[0-9]+/g);
+
+        if (numbers) {
+          // 스피또 정보 생성
+          const speettoInfo: SpeettoPrizeInfo = createSpeettoPrizeInfo(Number(numbers[0]));
+          // 스피또 당첨 회차 정보
+          speettoInfo.drwNo = Number(numbers[1]);
+          // 스피또 당첨 테이블 rows
+          const rows = $(slidItemElement).find('tr');
+          // 스피또 당첨 테이블 rows 순회
+          for (let i = 1; i <= 3; i++) {
+            const prizeIndex = i - 1;
+            const prizeRanking = ['first', 'second', 'third'];
+
+            const prizeDateMatch = $(rows[1])
+              .find('td.sp span')
+              .eq(i * 2 - 1)
+              .text()
+              .trim()
+              .match(/\((\d{2}-\d{2}-\d{2}) 기준\)/);
+            // 스피또 기준 날짜
+            if (prizeDateMatch) {
+              speettoInfo[`${prizeRanking[prizeIndex]}PrizeDate`] = new Date(`20${prizeDateMatch[1]}`);
+            }
+            // 스피또 당첨 상금
+            speettoInfo[`${prizeRanking[prizeIndex]}WinAmnt`] = $(rows[2]).find('td.sp').eq(prizeIndex).text().trim();
+            // 스피또 남은 당첨 매수
+            speettoInfo[`${prizeRanking[prizeIndex]}WinCnt`] = Number(
+              $(rows[3]).find('td.sp strong').eq(prizeIndex).text().trim().replace(/,/g, '')
+            );
+          }
+
+          const saleDateMatch = $(rows[5])
+            .find('td.sp span')
+            .first()
+            .text()
+            .trim()
+            .match(/(\d{2}-\d{2}-\d{2}) 기준/);
+          // 스피또 출고 기준 날짜
+          if (saleDateMatch) {
+            speettoInfo.saleDate = new Date(`20${saleDateMatch[1]}`);
+          }
+          // 스피또 출고율
+          speettoInfo.saleRate = Number($(rows[5]).find('strong.rate').text().trim().replace(/%/g, ''));
+
+          if (numbers[0] === '500') {
+            speetto500Info = speettoInfo;
+          } else if (numbers[0] === '1000') {
+            speetto1000Info = speettoInfo;
+          } else if (numbers[0] === '2000') {
+            speetto2000Info = speettoInfo;
+          }
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    await redis.set('speetto500Info', JSON.stringify(speetto500Info));
+
+    await insertSpeetoPrizeInfo(speetto500Info);
+
+    await redis.set('speetto1000Info', JSON.stringify(speetto1000Info));
+
+    await insertSpeetoPrizeInfo(speetto1000Info);
+
+    await redis.set('speetto2000Info', JSON.stringify(speetto2000Info));
+
+    await insertSpeetoPrizeInfo(speetto2000Info);
   });
