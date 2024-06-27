@@ -6,7 +6,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import schedule from 'node-schedule';
 import { indexRouter } from './routes/index.routes';
-import { lottoSchedule } from './services/scheduler.service';
+import { lottoSchedule, speettoSchedule } from './services/scheduler.service';
 import { healthRouter } from './routes/health.routes';
 import { db } from './database/init.database';
 
@@ -42,14 +42,25 @@ app.use(
 app.use('/', indexRouter);
 app.use('/health', healthRouter);
 
-// Crawler
-const rule = new schedule.RecurrenceRule();
+// Lotto Crawler
+const lottoRule = new schedule.RecurrenceRule();
 
-rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-rule.hour = 3;
-rule.minute = 0;
-rule.tz = 'Asia/Seoul';
+lottoRule.dayOfWeek = [0, new schedule.Range(0, 6)];
+lottoRule.hour = 3;
+lottoRule.minute = 0;
+lottoRule.tz = 'Asia/Seoul';
 
-lottoSchedule(rule);
+lottoSchedule(lottoRule);
+
+// Speetto Crawler
+const speettoRule = new schedule.RecurrenceRule();
+speettoRule.dayOfWeek = [0, new schedule.Range(0, 6)];
+
+// speettoRule.hour = 3;
+// speettoRule.minute = 0;
+speettoRule.second = 0;
+speettoRule.tz = 'Asia/Seoul';
+
+speettoSchedule(speettoRule);
 
 app.listen(app.get('port'));
