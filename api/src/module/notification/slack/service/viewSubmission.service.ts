@@ -95,7 +95,7 @@ export class ViewSubmissionService {
             type: 'plain_text',
             text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(lottoInfo.drwNo)}회`,
           },
-          blocks: await this.builderService.getDrwnoPrizeInfoBlock(lottoInfo),
+          blocks: await this.builderService.getLottoDrwnoPrizeInfoBlock(lottoInfo),
           close: {
             type: 'plain_text',
             text: '닫기',
@@ -111,7 +111,7 @@ export class ViewSubmissionService {
             type: 'plain_text',
             text: `당첨 정보 조회 / ${convertKRLocaleStringFormat(lottoInfo.drwNo)}회`,
           },
-          blocks: await this.builderService.getDrwnoPrizeInfoBlock(lottoInfo),
+          blocks: await this.builderService.getLottoDrwnoPrizeInfoBlock(lottoInfo),
           close: {
             type: 'plain_text',
             text: '닫기',

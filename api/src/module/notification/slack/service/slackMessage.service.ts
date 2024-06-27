@@ -25,7 +25,7 @@ export class SlackMessageService {
 
     const postMessageResult: ChatPostMessageResponse = await client.chat.postMessage({
       channel: response.channel.id,
-      blocks: await this.builderService.getDrwnoPrizeInfoBlock(),
+      blocks: await this.builderService.getLottoDrwnoPrizeInfoBlock(),
     });
     // 메시지의 thread를 생성합니다.
     const threadTs: string = postMessageResult.ts;
@@ -38,7 +38,7 @@ export class SlackMessageService {
 
     await client.chat.postMessage({
       channel: response.channel.id,
-      blocks: await this.builderService.getStatisticPrizeInfoBlock(),
+      blocks: await this.builderService.getLottoStatisticPrizeInfoBlock(),
       thread_ts: threadTs,
     });
   }

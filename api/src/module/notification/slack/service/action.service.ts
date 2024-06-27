@@ -78,7 +78,7 @@ export class ActionService {
               action_id: SlackActionIDEnum.PRIZE_INFO,
             },
           },
-          ...(await this.builderService.getDrwnoPrizeInfoBlock()),
+          ...(await this.builderService.getLottoDrwnoPrizeInfoBlock()),
           {
             type: 'divider',
           },
@@ -125,7 +125,7 @@ export class ActionService {
               action_id: SlackActionIDEnum.PRIZE_INFO,
             },
           },
-          ...(await this.builderService.getStatisticPrizeInfoBlock()),
+          ...(await this.builderService.getLottoStatisticPrizeInfoBlock()),
           {
             type: 'divider',
           },

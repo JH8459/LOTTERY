@@ -14,7 +14,7 @@ import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 export class BuilderService {
   constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  async getDrwnoPrizeInfoBlock(lottoInfo?: LottoInfoInterface): Promise<(Block | KnownBlock)[]> {
+  async getLottoDrwnoPrizeInfoBlock(lottoInfo?: LottoInfoInterface): Promise<(Block | KnownBlock)[]> {
     if (!lottoInfo) {
       lottoInfo = {
         drwNo: Number(await this.redis.get('drwNo')),
@@ -186,7 +186,7 @@ export class BuilderService {
     return block;
   }
 
-  async getPrizeInfoBlock(recentlyDrwNo: number): Promise<(Block | KnownBlock)[]> {
+  async getLottoPrizeInfoBlock(recentlyDrwNo: number): Promise<(Block | KnownBlock)[]> {
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'section',
@@ -294,7 +294,7 @@ export class BuilderService {
     return blocks;
   }
 
-  async getStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
+  async getLottoStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
     const lottoStatisticInfo: LottoStatisticInfoInterface = {
       firstLottoNo: Number(await this.redis.get('firstLottoNo')),
       firstLottoNoCnt: Number(await this.redis.get('firstLottoNoCnt')),

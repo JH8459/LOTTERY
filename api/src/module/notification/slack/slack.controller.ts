@@ -11,16 +11,6 @@ import { SlackInteractionPayload } from './interface/payload.interface';
 export class SlackController {
   constructor(private slackService: SlackService) {}
 
-  @Post('/events')
-  async slackEventHandler(@Body('challenge') challenge: string): Promise<ResponseDto> {
-    const result: ResponseDto = {
-      message: 'success',
-      data: challenge,
-    };
-
-    return result;
-  }
-
   @Get('auth')
   async slackOAuthCallback(@Query('code') code: string, @Res() res: Response): Promise<void> {
     const url: string = await this.slackService.getAccessToken(code);

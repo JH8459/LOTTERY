@@ -142,7 +142,7 @@ export class SlackRepository {
     return accessToken;
   }
 
-  async getRecentlyDrwNo(): Promise<number> {
+  async getRecentlyLottoDrwNo(): Promise<number> {
     const { drwNo }: LottoEntity = await this.lottoModel
       .createQueryBuilder('lottoEntity')
       .select('lottoEntity.drwNo AS drwNo')

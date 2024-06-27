@@ -34,12 +34,12 @@ export class SlackService implements OnModuleInit {
       receiver: this.receiver,
     });
 
-    // '/당첨정보' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.app.command('/당첨정보', async ({ command, ack }) => {
+    // '/로또' command를 처리하는 이벤트 핸들러를 등록합니다.
+    this.app.command('/로또', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
-      // 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
-      await this.commandService.prizeInfoCommandHandler(command);
+      // 로또 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
+      await this.commandService.lottoPrizeInfoCommandHandler(command);
     });
 
     // '/구독' command를 처리하는 이벤트 핸들러를 등록합니다.

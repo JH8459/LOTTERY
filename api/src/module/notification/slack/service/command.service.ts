@@ -17,15 +17,15 @@ export class CommandService {
     private readonly builderService: BuilderService
   ) {}
 
-  async prizeInfoCommandHandler(command: SlashCommand): Promise<void> {
+  async lottoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(command.team_id);
     const client: WebClient = new WebClient(token);
     // 최신 로또 회차 정보를 가져옵니다.
-    let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
+    let recentlyLottoDrwNo: number = Number(await this.redis.get('drwNo'));
 
-    if (!recentlyDrwNo) {
-      recentlyDrwNo = await this.slackRepository.getRecentlyDrwNo();
+    if (!recentlyLottoDrwNo) {
+      recentlyLottoDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
     }
     // 모달을 출력합니다.
     await client.views.open({
@@ -36,7 +36,7 @@ export class CommandService {
           type: 'plain_text',
           text: '당첨 정보 조회',
         },
-        blocks: await this.builderService.getPrizeInfoBlock(recentlyDrwNo),
+        blocks: await this.builderService.getLottoPrizeInfoBlock(recentlyLottoDrwNo),
         close: {
           type: 'plain_text',
           text: '닫기',
