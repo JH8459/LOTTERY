@@ -7,11 +7,14 @@ import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
 import { UserInfoDto } from '../dto/user.dto';
 import { FeedbackEntity } from 'src/entity/feedback.entity';
+import { SpeettoEntity } from 'src/entity/speetto.entity';
+import { SpeettoInfoInterface } from '../../interface/speetto.interface';
 
 @Injectable()
 export class SlackRepository {
   constructor(
     @InjectRepository(LottoEntity) private readonly lottoModel: Repository<LottoEntity>,
+    @InjectRepository(SpeettoEntity) private readonly speettoModel: Repository<SpeettoEntity>,
     @InjectRepository(WorkspaceEntity) private readonly workspaceModel: Repository<WorkspaceEntity>,
     @InjectRepository(UserEntity) private readonly userModel: Repository<UserEntity>,
     @InjectRepository(FeedbackEntity) private readonly feedbackModel: Repository<FeedbackEntity>
@@ -176,5 +179,31 @@ export class SlackRepository {
       .getRawOne();
 
     return lottoInfo;
+  }
+
+  async getSpeettoInfo(speettoType: number): Promise<SpeettoEntity> {
+    const speettoInfo: SpeettoInfoInterface = await this.speettoModel
+      .createQueryBuilder('speettoEntity')
+      .select([
+        'speettoEntity.drwNo AS drwNo',
+        'speettoEntity.speettoType AS speettoType',
+        'speettoEntity.firstPrizeDate AS firstPrizeDate',
+        'speettoEntity.firstWinAmnt AS firstWinAmnt',
+        'speettoEntity.firstWinCnt AS firstWinCnt',
+        'speettoEntity.secondPrizeDate AS secondPrizeDate',
+        'speettoEntity.secondWinAmnt AS secondWinAmnt',
+        'speettoEntity.secondWinCnt AS secondWinCnt',
+        'speettoEntity.thirdPrizeDate AS thirdPrizeDate',
+        'speettoEntity.thirdWinAmnt AS thirdWinAmnt',
+        'speettoEntity.thirdWinCnt AS thirdWinCnt',
+        'speettoEntity.saleDate AS saleDate',
+        'speettoEntity.saleRate AS saleRate',
+      ])
+      .where('speettoEntity.speettoType = :speettoType', { speettoType })
+      .orderBy('speettoEntity.drwNo', 'DESC')
+      .limit(1)
+      .getRawOne();
+
+    return speettoInfo;
   }
 }
