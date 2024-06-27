@@ -294,6 +294,118 @@ export class BuilderService {
     return blocks;
   }
 
+  async getSpeettoPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'plain_text',
+          emoji: true,
+          text: '스피또 판매 정보 조회를 위해 복권 정보를 선택해주세요.',
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*<https://dhlottery.co.kr/gameResult.do?method=speettoWin/|동행복권 바로가기>* 즉석식인쇄복권(스피또)은 동전 등으로 긁어 아주 쉽고, 빠르게 당첨 확인이 가능하고 게임도 함께 즐길 수 있는 인쇄복권입니다. 판매금액에 따라 스피또500 / 스피또1000 / 스피또2000 3종류의 복권이 있습니다.',
+        },
+        accessory: {
+          type: 'image',
+          image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/c55874bc-c3e6-4832-9c47-6595732b6f7e',
+          alt_text: 'speetto thumbnail',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*판매점 입고율은 매주 금요일 오전에 업데이트되니 이점 참고해주세요.*',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+
+          text: '*스피또 판매 정보 조회를 위해 복권 정보를 선택해주세요.*',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/4eb66136-cb23-49bd-8581-6bfebef4ac47',
+            alt_text: 'notifications information icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*당첨 금액, 당첨 등수별 남은 매수, 출고율 정보를 제공합니다.*',
+          },
+        ],
+      },
+      {
+        type: 'input',
+        element: {
+          type: 'multi_static_select',
+          placeholder: {
+            type: 'plain_text',
+            text: 'Select options',
+            emoji: true,
+          },
+          options: [
+            {
+              text: {
+                type: 'plain_text',
+                text: '*☘️ 스피또 500*',
+                emoji: true,
+              },
+              value: 'value-0',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '*☘️ 스피또 1000*',
+                emoji: true,
+              },
+              value: 'value-1',
+            },
+            {
+              text: {
+                type: 'plain_text',
+                text: '*☘️ 스피또 2000*',
+                emoji: true,
+              },
+              value: 'value-2',
+            },
+          ],
+          action_id: 'multi_static_select-action',
+        },
+        label: {
+          type: 'plain_text',
+          text: '🍀 스피또 복권 종류를 선택해주세요.',
+          emoji: true,
+        },
+      },
+    ];
+
+    return blocks;
+  }
+
   async getLottoStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
     const lottoStatisticInfo: LottoStatisticInfoInterface = {
       firstLottoNo: Number(await this.redis.get('firstLottoNo')),

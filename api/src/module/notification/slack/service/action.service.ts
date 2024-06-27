@@ -23,7 +23,7 @@ export class ActionService {
     let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
 
     if (!recentlyDrwNo) {
-      recentlyDrwNo = await this.slackRepository.getRecentlyDrwNo();
+      recentlyDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
     }
 
     await client.views.update({
@@ -34,7 +34,7 @@ export class ActionService {
           type: 'plain_text',
           text: '당첨 정보 조회',
         },
-        blocks: await this.builderService.getPrizeInfoBlock(recentlyDrwNo),
+        blocks: await this.builderService.getLottoPrizeInfoBlock(recentlyDrwNo),
         close: {
           type: 'plain_text',
           text: '닫기',
@@ -51,7 +51,7 @@ export class ActionService {
     let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
 
     if (!recentlyDrwNo) {
-      recentlyDrwNo = await this.slackRepository.getRecentlyDrwNo();
+      recentlyDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
     }
 
     await client.views.update({
