@@ -305,15 +305,21 @@ export const speettoSchedule = (rule: schedule.RecurrenceRule) =>
       console.log(err);
     }
 
-    await redis.set('speetto500Info', JSON.stringify(speetto500Info));
+    if (speetto500Info.drwNo !== 0) {
+      await redis.set('speetto500Info', JSON.stringify(speetto500Info));
 
-    await insertSpeetoPrizeInfo(speetto500Info);
+      await insertSpeetoPrizeInfo(speetto500Info);
+    }
 
-    await redis.set('speetto1000Info', JSON.stringify(speetto1000Info));
+    if (speetto1000Info.drwNo !== 0) {
+      await redis.set('speetto1000Info', JSON.stringify(speetto1000Info));
 
-    await insertSpeetoPrizeInfo(speetto1000Info);
+      await insertSpeetoPrizeInfo(speetto1000Info);
+    }
 
-    await redis.set('speetto2000Info', JSON.stringify(speetto2000Info));
+    if (speetto2000Info.drwNo !== 0) {
+      await redis.set('speetto2000Info', JSON.stringify(speetto2000Info));
 
-    await insertSpeetoPrizeInfo(speetto2000Info);
+      await insertSpeetoPrizeInfo(speetto2000Info);
+    }
   });
