@@ -208,7 +208,7 @@ export class BuilderService {
         },
         accessory: {
           type: 'image',
-          image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/bef55dc9-7eaf-4143-b778-1072d84151dd',
+          image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_lotto.png',
           alt_text: 'lotto thumbnail',
         },
       },
@@ -316,7 +316,7 @@ export class BuilderService {
         },
         accessory: {
           type: 'image',
-          image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/c55874bc-c3e6-4832-9c47-6595732b6f7e',
+          image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_speetto.png',
           alt_text: 'speetto thumbnail',
         },
       },
@@ -400,7 +400,7 @@ export class BuilderService {
         elements: [
           {
             type: 'image',
-            image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/4eb66136-cb23-49bd-8581-6bfebef4ac47',
+            image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/slack/slack_info.png',
             alt_text: 'notifications information icon',
           },
           {
@@ -827,7 +827,7 @@ export class BuilderService {
           text: '/구독 명령어 안내 이미지',
           emoji: true,
         },
-        image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/df833331-43b3-4f01-8f72-f7ceda0c4b90',
+        image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_slack_subscribe_example.png',
         alt_text: 'example',
       },
       {
@@ -897,7 +897,7 @@ export class BuilderService {
           text: '/구독 명령어 안내 이미지',
           emoji: true,
         },
-        image_url: 'https://github.com/JH8459/LOTTERY/assets/83164003/df833331-43b3-4f01-8f72-f7ceda0c4b90',
+        image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_slack_subscribe_example.png',
         alt_text: 'example',
       },
       {
