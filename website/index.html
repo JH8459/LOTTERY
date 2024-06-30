@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>복권 구독 서비스</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <!-- Include header -->
+    <div id="header-include"></div>
+
+    <main>
+      <div class="container">
+        <section class="hero">
+          <h1>🍀 LOTTERY</h1>
+          <p>🍀 LOTTERY는 복권 정보를 로또 / 스피또 정보를 크롤링해서 보기 쉽게 요약해드립니다.</p>
+          <p>이메일 및 슬랙 알림을 통해 최신 정보를 받아보세요!</p>
+          <div class="cta-buttons">
+            <a
+              href="https://slack.com/oauth/v2/authorize?client_id=6884985260326.7168973153766&scope=commands,im:write,team:read,users:read&user_scope="
+            >
+              <img
+                alt="Add to Slack"
+                height="40"
+                width="139"
+                src="https://platform.slack-edge.com/img/add_to_slack.png"
+                srcset="
+                  https://platform.slack-edge.com/img/add_to_slack.png    1x,
+                  https://platform.slack-edge.com/img/add_to_slack@2x.png 2x
+                "
+              />
+            </a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Include footer -->
+    <div id="footer-include"></div>
+
+    <script>
+      // Include header
+      fetch('./html/header.html')
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById('header-include').innerHTML = data;
+        });
+
+      // Include footer
+      fetch('./html/footer.html')
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById('footer-include').innerHTML = data;
+        });
+    </script>
+  </body>
+</html>
