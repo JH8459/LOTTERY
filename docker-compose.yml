@@ -125,15 +125,24 @@ services:
       - lottery_net_default
 
   lottery_website:
-    image: nginx:latest
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: lottery_website
     volumes:
       - ./website:/usr/share/nginx/html:ro
+    restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.website.rule=Host(`lottery.jh8459.com`)
-      - traefik.http.routers.website.entrypoints=websecure
-      - traefik.http.routers.website.tls.certresolver=myresolver
-    restart: always
+      - traefik.http.routers.lottery_website.rule=Host(`lottery.jh8459.com`)
+      - traefik.http.routers.lottery_website.entrypoints=websecure
+      - traefik.http.routers.lottery_website.tls.certresolver=myresolver
+      - traefik.http.services.lottery_website.loadbalancer.server.port=${WEBSITE_PORT}
+      - traefik.docker.network=lottery_net_default
+    networks:
+      - lottery_net_default
+    depends_on:
+      - lottery_reverse_proxy
 
 networks:
   lottery_net_default:
