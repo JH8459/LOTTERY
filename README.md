@@ -2,7 +2,7 @@
 
 <br/>
 <p align="center">
-  <img src="https://github.com/JH8459/LOTTERY/assets/83164003/f62202aa-0678-4936-ac77-78db1fc369e9"/>
+  <img src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_logo.png"/>
 </p>
 <br/>
 
@@ -17,7 +17,7 @@
 - 따라서 Github 개인 프로필의 이메일란을 작성해주세요!
 
   <p align="center">
-    <img src="https://github.com/JH8459/LOTTERY/assets/83164003/f53f96ba-4900-45a0-8642-a60fc381f9d8"/>
+    <img src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_email_example.png"/>
   </p>
 
 #### 2️⃣ 계정 이메일 정보 권한 설정
@@ -26,7 +26,7 @@
 - 이메일 주소를 LOTTERY🍀가 알 수 있도록 Public으로 변경해주세요. (이메일 주소 공개 권한 수정이 어려우시다면 서비스 이용이 어렵습니다. 😭)
 
   <p align="center">
-    <img src="https://github.com/JH8459/LOTTERY/assets/83164003/fc23db60-11de-4038-9668-03f4a307c5f1"/>
+    <img src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_email_setting_example.png"/>
   </p>
 
 </details>
@@ -62,7 +62,7 @@
 ## ℹ️ 로또 메일링 구독 서비스 LOTTERY 아키텍쳐 소개
 
 <p align="center">
-  <img src="https://github.com/JH8459/LOTTERY/assets/83164003/16d3ea31-b8f1-4ca4-b9ba-8845be091904"/>
+  <img src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_architecture.png"/>
 </p>
 
 <p align="center">
