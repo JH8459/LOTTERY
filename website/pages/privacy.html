@@ -38,7 +38,10 @@
       fetch('../html/footer.html')
         .then((response) => response.text())
         .then((data) => {
+          const currentYear = new Date().getFullYear();
+
           document.getElementById('footer-include').innerHTML = data;
+          document.getElementById('current-year').textContent = currentYear;
         });
     </script>
   </body>

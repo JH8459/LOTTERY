@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Support</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
   </head>
   <body>
     <!-- Include header -->
@@ -46,7 +46,10 @@
       fetch('../html/footer.html')
         .then((response) => response.text())
         .then((data) => {
+          const currentYear = new Date().getFullYear();
+
           document.getElementById('footer-include').innerHTML = data;
+          document.getElementById('current-year').textContent = currentYear;
         });
     </script>
   </body>
