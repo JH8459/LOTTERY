@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="icon" href="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/clover.png" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- Include header -->
+    <div id="header-include"></div>
+
+    <main>
+      <div class="container">
+        <div class="title">🍀 LOTTERY SUBSCRIPTION</div>
+        <div class="subtitle">복권 당첨 정보 구독형 서비스</div>
+        <div class="content">
+          <div class="left">
+            <img
+              style="width: 100%"
+              alt="lottery-support"
+              src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_support.jpg"
+            />
+          </div>
+          <div class="right">
+            <div class="support-wrapper">
+              <h1>문의하기</h1>
+              <p>문의하실 내용이 있으신가요? 아래의 서식을 채워 작성해주시면 답변드리겠습니다.</p>
+              <form action="/submit_contact" method="post">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" />
+                <label for="email">이메일 *</label>
+                <input type="email" id="email" name="email" required />
+                <label for="message">내용 *</label>
+                <textarea id="message" name="message" required></textarea>
+                <div class="support-button-wrapper">
+                  <button type="submit">제출</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Include footer -->
+    <div id="footer-include"></div>
+
+    <script>
+      // Include header
+      fetch('../html/header.html')
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById('header-include').innerHTML = data;
+        });
+
+      // Include footer
+      fetch('../html/footer.html')
+        .then((response) => response.text())
+        .then((data) => {
+          const currentYear = new Date().getFullYear();
+
+          document.getElementById('footer-include').innerHTML = data;
+          document.getElementById('current-year').textContent = currentYear;
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개인정보 정책</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="icon" href="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/clover.png" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- Include header -->
+    <div id="header-include"></div>
+
+    <main>
+      <div class="container">
+        <div class="title">🍀 LOTTERY SUBSCRIPTION</div>
+        <div class="subtitle">복권 당첨 정보 구독형 서비스</div>
+        <div class="content">
+          <div class="left">
+            <img
+              style="width: 100%"
+              alt="lottery-privacy_policy"
+              src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_privacy_policy.jpg"
+            />
+          </div>
+          <div class="right">
+            <div class="policy-wrapper">
+              <div class="description">
+                <strong>🍀 LOTTERY</strong>는 슬랙 워크스페이스에 설치되어 특정 권한을 부여받으며 이 과정에서 사용되는
+                개인정보 보호 정책의 주요 내용은 다음과 같습니다.
+              </div>
+
+              <h2>개인정보 보호 정책</h2>
+              <ol>
+                <li>
+                  <strong>수집하는 정보:</strong><br />
+                  - 팀 워크스페이스 이름과 팀 워크스페이스 고유 ID<br />
+                  - 슬랙 유저들의 고유 ID (<strong>"/구독"</strong> 명령어 사용 시)
+                </li>
+                <li>
+                  <strong>수집 목적:</strong><br />
+                  - 팀 워크스페이스 별로 앱이 원활하게 기능을 제공하기 위함<br />
+                  - <strong>"/구독"</strong> 명령어를 통해 개인 앱 채널을 열어 다이렉트 메시지를 보내기 위함
+                </li>
+                <li>
+                  <strong>보관 및 삭제 정책:</strong><br />
+                  - 구독 해지 시 슬랙 유저 ID는 한 달 후에 폐기됨<br />
+                  - 개인정보는 별도로 암호화된 DB 서버에 저장됨<br />
+                  - 접근 권한은 IP와 도메인 통제를 통해 허용된 담당자만 접근 가능
+                </li>
+                <li>
+                  <strong>기타 사항:</strong><br />
+                  - 개인정보는 보안을 유지하기 위해 적절한 기술적, 물리적, 관리적 조치가 취해짐<br />
+                  - 개인정보 보호 정책은 정기적으로 검토 및 개선될 수 있음
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Include footer -->
+    <div id="footer-include"></div>
+
+    <script>
+      // Include header
+      fetch('../html/header.html')
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById('header-include').innerHTML = data;
+        });
+
+      // Include footer
+      fetch('../html/footer.html')
+        .then((response) => response.text())
+        .then((data) => {
+          const currentYear = new Date().getFullYear();
+
+          document.getElementById('footer-include').innerHTML = data;
+          document.getElementById('current-year').textContent = currentYear;
+        });
+    </script>
+  </body>
+</html>
