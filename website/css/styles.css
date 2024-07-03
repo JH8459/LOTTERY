@@ -3,8 +3,7 @@
 main {
   font-family: 'NanumSquare', sans-serif;
   margin: 0;
-  padding: 0;
-  min-height: 100vh;
+  padding: 2.5%;
   background-color: #fff;
 }
 
@@ -30,23 +29,22 @@ label {
 input,
 textarea {
   margin-bottom: 20px;
-  padding: 10px 0px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
+  width: calc(100% - 20px);
 }
 
 input[type='email'],
 input[type='text'],
 textarea {
-  width: 100%;
+  width: calc(100% - 20px);
 }
 
 textarea {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 100px;
-  /* height: 100px;
-  box-sizing: border-box; */
 }
 
 button {
@@ -167,6 +165,7 @@ nav ul li a {
 .title {
   font-size: 2.25em;
   font-weight: bold;
+  font-stretch: ultra-expanded;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -188,7 +187,11 @@ nav ul li a {
 }
 
 .left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   max-width: 42.5%;
+  text-align: center;
 }
 
 .right {
@@ -220,12 +223,19 @@ nav ul li a {
   margin-bottom: 40px;
 }
 
-.button {
+.wrapper {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.wrapper .button {
   background-color: #438902;
   box-shadow: 0 3px 4.5px rgba(0, 0, 0, 0.5);
   width: 80%;
-  padding: 20px 0;
-  margin: 40px 40px;
+  padding: 20px;
   color: white;
   border: none;
   border-radius: 15px;
@@ -233,10 +243,12 @@ nav ul li a {
   cursor: pointer;
   text-decoration: none;
   font-weight: bold;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
-.wrapper {
-  text-align: center;
+.wrapper .button:hover {
+  background-color: #60952f;
 }
 
 .policy-wrapper {
@@ -249,20 +261,45 @@ nav ul li a {
 }
 
 .support-button-wrapper {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   width: 100%;
 }
 
+.support-button-wrapper > * {
+  flex: 0 0 auto;
+}
+
 .description {
+  text-align: left;
   line-height: 1.5;
   font-size: 1.1em;
-  margin-bottom: 40px;
+  word-break: keep-all;
+}
+
+.description-wrapper {
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex-direction: row;
 }
 
 .description-sub {
   font-size: 1em;
+  word-break: keep-all;
 }
 
 .description-policy {
   font-size: 1em;
+  word-break: keep-all;
+}
+
+#response {
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: opacity 3s ease-in-out;
+  opacity: 1;
 }

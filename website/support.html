@@ -29,12 +29,13 @@
               <p>문의하실 내용이 있으신가요? 아래의 서식을 채워 작성해주시면 답변드리겠습니다.</p>
               <form id="form">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="name" />
+                <input type="text" id="name" name="name" maxlength="100" />
                 <label for="email">이메일 *</label>
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" maxlength="200" required />
                 <label for="message">내용 *</label>
                 <textarea id="message" name="message" required></textarea>
                 <div class="support-button-wrapper">
+                  <div id="response"></div>
                   <button type="submit">제출</button>
                 </div>
               </form>
@@ -68,10 +69,27 @@
         })
           .then((response) => {
             if (response.ok) {
-              alert('최대한 빠르게 답변드리겠습니다. 소중한 의견 감사합니다.');
+              document.getElementById('name').value = '';
+              document.getElementById('email').value = '';
+              document.getElementById('message').value = '';
+
+              document.getElementById('response').textContent = '소중한 의견 감사합니다.';
+              document.getElementById('response').style.color = 'green';
             } else {
-              throw new Error('Error:', response.status);
+              console.log('response: ', response);
+              document.getElementById('response').textContent = '문제가 발생했습니다. 다시 시도해주세요.';
+              document.getElementById('response').style.color = 'red';
             }
+
+            setTimeout(() => {
+              const responseElement = document.getElementById('response');
+              responseElement.style.opacity = '0';
+
+              setTimeout(() => {
+                responseElement.textContent = '';
+                responseElement.style.opacity = '1';
+              }, 3000);
+            }, 3000);
           })
           .catch((error) => {
             alert('에러 발생: ' + error);
