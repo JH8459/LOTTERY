@@ -81,6 +81,8 @@ jobs:
             echo "API_SLACK_CLIENT_ID=${{ secrets.API_SLACK_CLIENT_ID }}" >> .env
             echo "API_SLACK_CLIENT_SECRET=${{ secrets.API_SLACK_CLIENT_SECRET }}" >> .env 
             echo "COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}" >> .env
+            echo "SWAGGER_USERNAME=${{ secrets.SWAGGER_USERNAME }}" >> .env
+            echo "SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}" >> .env
             cat .env
 
             echo "############# DOCKER DEPLOY SCRIPT #############"
