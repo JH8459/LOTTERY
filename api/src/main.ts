@@ -3,7 +3,7 @@ import { AppModule } from './module/app.module';
 import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { setupSwagger } from './common/swagger/swagger.config';
+import { setupSwagger } from './config/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
 import { validationOptions } from './config/validation.config';
 import { ServerErrorFilter } from './common/filter/error.filter';

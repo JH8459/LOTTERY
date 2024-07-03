@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
-import { ResponseDto } from 'src/common/dto/response.dto';
 import { SlackService } from './slack.service';
 import { SlackActionTypeEnum } from './constant/slack.enum';
 import { SlackInteractionPayload } from './interface/payload.interface';
