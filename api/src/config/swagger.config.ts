@@ -1,6 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder, SwaggerCustomOptions, OpenAPIObject } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
+import { HealthModule } from 'src/module/health/health.module';
+import { EmailModule } from 'src/module/notification/email/email.module';
+import { QnaModule } from 'src/module/qna/qna.module';
 
 const swaggerCustomOptions: SwaggerCustomOptions = {
   swaggerOptions: {
@@ -9,7 +12,7 @@ const swaggerCustomOptions: SwaggerCustomOptions = {
   },
 };
 
-export function setupSwagger(app: INestApplication): void {
+export const setupSwagger = (app: INestApplication): void => {
   const options: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
     .setTitle('LOTTERY 🍀')
     .setDescription('LOTTERY 🍀 API Swagger 문서')
@@ -24,9 +27,12 @@ export function setupSwagger(app: INestApplication): void {
     )
     .build();
 
-  const document = SwaggerModule.createDocument(app, options);
+  const document = SwaggerModule.createDocument(app, options, {
+    include: [HealthModule, EmailModule, QnaModule],
+  });
 
   app.use(
+    ['/api'],
     expressBasicAuth({
       challenge: true,
       users: { [process.env.SWAGGER_USERNAME]: process.env.SWAGGER_PASSWORD },
@@ -34,4 +40,4 @@ export function setupSwagger(app: INestApplication): void {
   );
 
   SwaggerModule.setup('api', app, document, swaggerCustomOptions);
-}
+};

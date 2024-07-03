@@ -1,12 +1,12 @@
-import { ApiBodyOptions, ApiOperationOptions } from '@nestjs/swagger';
 import { QnaRegistInfoDto } from '../dto/qna.dto';
+import { SwaggerMethod } from 'src/common/interface/swagger.interface';
 
-export const QNA = {
+export const QNA_SWAGGER: SwaggerMethod = {
   POST: {
     API_OPERATION: {
       summary: '문의하기 API',
       description: '작성된 문의하기 내용을 기반으로 DB에 저장한다.',
-    } as ApiOperationOptions,
+    },
     API_BODY: {
       description: '문의하기 FORM의 내용을 전달합니다.',
       required: true,
@@ -22,6 +22,6 @@ export const QNA = {
           } as QnaRegistInfoDto,
         },
       },
-    } as ApiBodyOptions,
+    },
   },
 };

@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { ResponseDto } from '../../common/dto/response.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { HEALTH } from './swagger/health.swagger';
+import { HEALTH_SWAGGER } from './swagger/health.swagger';
 
 @ApiTags('Health Check API')
 @Controller('/health')
 export class HealthController {
-  @ApiOperation(HEALTH.GET.API_OPERATION)
+  @ApiOperation(HEALTH_SWAGGER.GET.API_OPERATION)
   @Get()
   async getHealth(): Promise<ResponseDto> {
     console.log('API HEALTHY 💪');
