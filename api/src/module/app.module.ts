@@ -12,6 +12,7 @@ import { REDIS_CONFIG } from 'src/config/redis.config';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TYPE_ORM_CONFIG } from 'src/config/typeorm.config';
+import { QnaModule } from './qna/qna.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TYPE_ORM_CONFIG } from 'src/config/typeorm.config';
     NotificationsModule,
     SchedulerModule,
     RedisModule,
+    QnaModule,
   ],
 })
 export class AppModule implements NestModule {
