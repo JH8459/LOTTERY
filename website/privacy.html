@@ -80,6 +80,16 @@
           document.getElementById('footer-include').innerHTML = data;
           document.getElementById('current-year').textContent = currentYear;
         });
+
+      // Adjust body padding
+      const adjustBodyPadding = () => {
+        const header = document.getElementById('header-include');
+        const headerHeight = header.offsetHeight;
+        document.body.style.paddingTop = headerHeight + 'px';
+      };
+
+      window.onload = adjustBodyPadding;
+      window.onresize = adjustBodyPadding;
     </script>
   </body>
 </html>
