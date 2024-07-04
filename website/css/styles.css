@@ -112,6 +112,12 @@ nav ul li a {
   width: 15%;
 }
 
+@media (max-width: 768px) {
+  .logo {
+    width: 35%;
+  }
+}
+
 #footer-include {
   bottom: 0;
   left: 0;

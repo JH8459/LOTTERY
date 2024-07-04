@@ -19,7 +19,7 @@ export const QNA_SWAGGER: SwaggerMethod = {
             name: '김정현',
             email: 'kk_ong2233@naver.com',
             question: '안녕하세요. 문의사항이 있어 문의드립니다.',
-          } as QnaRegistInfoDto,
+          },
         },
       },
     },

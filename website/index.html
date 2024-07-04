@@ -86,6 +86,19 @@
         document.body.style.paddingTop = headerHeight + 'px';
       };
 
+      // Adjust main height
+      const adjustMainHeight = () => {
+        const viewportHeight = window.innerHeight;
+        const headerHeight = document.querySelector('#header-include').offsetHeight;
+        const footerHeight = document.querySelector('#footer-include').offsetHeight;
+        const mainElement = document.querySelector('main');
+        const totalHeight = viewportHeight - headerHeight - footerHeight;
+        mainElement.style.minHeight = `${totalHeight}px`;
+      };
+
+      window.addEventListener('load', adjustMainHeight);
+      window.addEventListener('resize', adjustMainHeight);
+
       window.onload = adjustBodyPadding;
       window.onresize = adjustBodyPadding;
     </script>
