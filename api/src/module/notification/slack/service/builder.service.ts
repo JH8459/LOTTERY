@@ -569,7 +569,19 @@ export class BuilderService {
         elements: [
           {
             type: 'mrkdwn',
-            text: ':pushpin: 상기 정보는 참고를 위한 자료로, 오류가 발생하거나 지연될 수 있습니다.',
+            text: '*상기 정보는 참고를 위한 자료로 활용해주세요. 오류가 발생하거나 지연될 수 있습니다.*',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support.html|게시글>* 을 남겨주시면 답변드리겠습니다.',
           },
         ],
       },
@@ -862,7 +874,7 @@ export class BuilderService {
         elements: [
           {
             type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
+            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support.html|게시글>* 을 남겨주시면 답변드리겠습니다.',
           },
         ],
       },
@@ -932,7 +944,7 @@ export class BuilderService {
         elements: [
           {
             type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://github.com/JH8459/LOTTERY/issues|Github ISSUE>* 를 남겨주시면 답변드리겠습니다.',
+            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support.html|게시글>* 을 남겨주시면 답변드리겠습니다.',
           },
         ],
       },
