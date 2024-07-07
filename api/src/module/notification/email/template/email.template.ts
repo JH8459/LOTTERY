@@ -2991,13 +2991,13 @@ export const emailTemplate = (
                                           혹은
                                           <a
                                             style="text-decoration: underline; color: #fff"
-                                            href="https://github.com/JH8459/LOTTERY/issues"
+                                            href="https://lottery.jh8459.com/support.html"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                           >
-                                            Github ISSUE</a
+                                            문의사항</a
                                           >
-                                          를 남겨주시면 확인 후 답변드리겠습니다.
+                                          을 남겨주시면 확인 후 답변드리겠습니다.
                                         </p>
                                       </div>
                                     </div>
