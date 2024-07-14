@@ -1,13 +1,16 @@
-import { ApiBodyOptions, ApiOperationOptions, ApiResponseMetadata } from '@nestjs/swagger';
+import { ApiBodyOptions, ApiOperationOptions, ApiResponseOptions } from '@nestjs/swagger';
 
 export interface SwaggerMethod {
   GET?: {
     API_OPERATION: ApiOperationOptions;
-    API_RESPONSE: ApiResponseMetadata;
+    API_OK_RESPONSE: ApiResponseOptions;
+    API_BAD_REQUEST_RESPONSE?: ApiErrorResponsesOptions;
   };
 
   POST?: {
     API_OPERATION: ApiOperationOptions;
     API_BODY: ApiBodyOptions;
+    API_OK_RESPONSE: ApiResponseOptions;
+    API_BAD_REQUEST_RESPONSE?: ApiErrorResponsesOptions;
   };
 }
