@@ -1,5 +1,7 @@
 import { QnaRegistInfoDto } from '../dto/qna.dto';
 import { SwaggerMethod } from 'src/common/interface/swagger.interface';
+import { ApiOKResponseDto } from './dto/response.dto';
+import { BadRequestError } from '../error/400.error';
 
 export const QNA_SWAGGER: SwaggerMethod = {
   POST: {
@@ -19,6 +21,37 @@ export const QNA_SWAGGER: SwaggerMethod = {
             name: '김정현',
             email: 'kk_ong2233@naver.com',
             question: '안녕하세요. 문의사항이 있어 문의드립니다.',
+          },
+        },
+      },
+    },
+    API_OK_RESPONSE: {
+      status: 201,
+      description: '문의하기 성공',
+      type: ApiOKResponseDto,
+    },
+    API_BAD_REQUEST_RESPONSE: {
+      status: 400,
+      description: '잘못된 요청',
+      content: {
+        'application/json': {
+          examples: {
+            NAME: {
+              summary: '잘못된 이름 요청 예시',
+              value: {
+                message: BadRequestError.NAME.message,
+                error: BadRequestError.NAME.error,
+                statusCode: BadRequestError.NAME.statusCode,
+              },
+            },
+            EMAIL: {
+              summary: '잘못된 이메일 요청 예시',
+              value: {
+                message: BadRequestError.EMAIL.message,
+                error: BadRequestError.EMAIL.error,
+                statusCode: BadRequestError.EMAIL.statusCode,
+              },
+            },
           },
         },
       },
