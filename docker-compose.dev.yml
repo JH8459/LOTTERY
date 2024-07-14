@@ -25,11 +25,12 @@ services:
     container_name: lottery_api_server
     build:
       context: ./api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - ./api/logs:/api/logs
       - ./api/public:/api/public
       - ./api/resource:/api/resource
+      - ./api/src:/api/src
     env_file:
       - ./api/.env
     environment:
