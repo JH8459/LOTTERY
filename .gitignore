@@ -13,6 +13,7 @@
 /api/dist
 /api/public
 /api/resource
+/api/coverage
 
 # crawler
 /crawler/logs
