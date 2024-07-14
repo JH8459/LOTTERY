@@ -5,6 +5,7 @@ export interface SwaggerMethod {
     API_OPERATION: ApiOperationOptions;
     API_OK_RESPONSE: ApiResponseOptions;
     API_BAD_REQUEST_RESPONSE?: ApiErrorResponsesOptions;
+    API_INTERNAL_SERVER_ERROR_RESPONSE?: ApiErrorResponsesOptions;
   };
 
   POST?: {
@@ -12,5 +13,6 @@ export interface SwaggerMethod {
     API_BODY: ApiBodyOptions;
     API_OK_RESPONSE: ApiResponseOptions;
     API_BAD_REQUEST_RESPONSE?: ApiErrorResponsesOptions;
+    API_INTERNAL_SERVER_ERROR_RESPONSE?: ApiErrorResponsesOptions;
   };
 }
