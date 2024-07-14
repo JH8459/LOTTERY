@@ -24,3 +24,4 @@
 
 # common
 **/.env*
+**/.DS_Store
