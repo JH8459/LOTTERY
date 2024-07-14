@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import { InjectRedis } from '@nestjs-modules/ioredis';
@@ -12,6 +12,7 @@ import {
   LottoStatisticInfoInterface,
 } from '../interface/lotto.interface';
 import { PublicSubscriberInfoInterface, SubscriberInfoInterface } from './interface/subscriber.interface';
+import { InternalServerError } from './error/500.error';
 
 @Injectable()
 export class EmailService {
@@ -70,7 +71,7 @@ export class EmailService {
         html: emailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
       });
     } catch (err) {
-      throw new BadRequestException('메일 전송에 실패했습니다.');
+      throw new InternalServerErrorException('메일 전송에 실패했습니다.');
     }
   }
 
@@ -99,7 +100,7 @@ export class EmailService {
         })
       );
     } catch (err) {
-      throw new BadRequestException('구독자 목록을 불러오는데 실패했습니다.');
+      throw new InternalServerErrorException(InternalServerError.GITHUB.message);
     }
   }
 }
