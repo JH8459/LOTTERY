@@ -113,10 +113,10 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.website.rule=Host(`localhost`)
+      - traefik.http.routers.lottery_website.rule=Host(`localhost`)
       - traefik.http.routers.lottery_website.service=lottery_website
       - traefik.http.services.lottery_website.loadbalancer.server.port=${WEBSITE_PORT}
-      - traefik.http.routers.lottery_api_server.entrypoints=website
+      - traefik.http.routers.lottery_website.entrypoints=website
       - traefik.docker.network=lottery_net_default
     networks:
       - lottery_net_default
