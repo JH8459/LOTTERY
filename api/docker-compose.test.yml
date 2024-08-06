@@ -1,0 +1,67 @@
+version: '1.0'
+
+services:
+  lottery_test_api_server:
+    container_name: lottery_test_api_server
+    build:
+      context: '.'
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./logs:/api/logs
+      - ./src:/api/src
+    env_file:
+      - ./.env.test
+    environment:
+      - TZ=Asia/Seoul
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+    networks:
+      - lottery_test_net_default
+    depends_on:
+      - lottery_test_db
+      - lottery_test_redis
+
+  lottery_test_db:
+    image: mariadb:10.5
+    container_name: lottery_test_db
+    environment:
+      MYSQL_ROOT_PASSWORD: testpassword
+      MYSQL_USER: root
+      MYSQL_PASSWORD: testpassword
+      MYSQL_DATABASE: testdb
+    ports:
+      - 3007:3306
+    volumes:
+      - test_db_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h localhost']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lottery_test_net_default
+
+  lottery_test_redis:
+    image: redis:latest
+    container_name: lottery_test_redis
+    restart: always
+    volumes:
+      - test_redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - lottery_test_net_default
+
+volumes:
+  test_db_data:
+  test_redis_data:
+
+networks:
+  lottery_test_net_default:
+    driver: bridge

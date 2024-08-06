@@ -11,13 +11,13 @@ import { EMAIL_CONFIG } from 'src/config/email.config';
 import { REDIS_CONFIG } from 'src/config/redis.config';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TYPE_ORM_CONFIG } from 'src/config/typeorm.config';
+import { TYPE_ORM_CONFIG, TYPE_ORM_TEST_CONFIG } from 'src/config/typeorm.config';
 import { QnaModule } from './qna/qna.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync(TYPE_ORM_CONFIG),
+    TypeOrmModule.forRootAsync(process.env.API_NODE_ENV === 'test' ? TYPE_ORM_TEST_CONFIG : TYPE_ORM_CONFIG),
     MailerModule.forRootAsync(EMAIL_CONFIG),
     RedisModule.forRootAsync(REDIS_CONFIG),
     WinstonModule.forRoot(WINSTON_CONFIG),
