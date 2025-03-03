@@ -9,26 +9,20 @@ services:
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --certificatesresolvers.myresolver.acme.httpchallenge=true
-      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
-      - --certificatesresolvers.myresolver.acme.email=kk_ong2233@naver.com
-      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.address=:1080
+      - --entrypoints.websecure.address=:1443
     ports:
-      - '80:80'
-      - '443:443'
+      - '1080:1080'
+      - '1443:1443'
       - '8080:8080'
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./letsencrypt:/letsencrypt
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.rule=Host(`lottery-dashboard.jh8459.com`)
       - traefik.http.routers.traefik.middlewares=auth
       - traefik.http.routers.traefik.entrypoints=websecure
-      - traefik.http.routers.traefik.tls.certresolver=myresolver
       - traefik.http.routers.http-catchall.entrypoints=web
       - traefik.http.routers.http-catchall.middlewares=redirect-to-https
       - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
@@ -62,12 +56,14 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_api_server.rule=Host(`lottery-api.jh8459.com`)
       - traefik.http.routers.lottery_api_server.entrypoints=websecure
-      - traefik.http.routers.lottery_api_server.tls.certresolver=myresolver
       - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
-      - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.path=/health
-      - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.interval=11s
-      - traefik.http.services.lottery_api_server.loadbalancer.healthcheck.timeout=1s
       - traefik.docker.network=lottery_net_default
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:${API_SERVER_PORT}/health']
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 20s
     networks:
       - lottery_net_default
     depends_on:
@@ -98,12 +94,14 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_crawler_server.rule=Host(`lottery-crawler.jh8459.com`)
       - traefik.http.routers.lottery_crawler_server.entrypoints=websecure
-      - traefik.http.routers.lottery_crawler_server.tls.certresolver=myresolver
       - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
-      - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.path=/health
-      - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.interval=11s
-      - traefik.http.services.lottery_crawler_server.loadbalancer.healthcheck.timeout=1s
       - traefik.docker.network=lottery_net_default
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:${CRAWLER_SERVER_PORT}/health']
+      interval: 60s
+      timeout: 20s
+      retries: 3
+      start_period: 20s
     networks:
       - lottery_net_default
     depends_on:
@@ -136,7 +134,6 @@ services:
       - traefik.enable=true
       - traefik.http.routers.lottery_website.rule=Host(`lottery.jh8459.com`)
       - traefik.http.routers.lottery_website.entrypoints=websecure
-      - traefik.http.routers.lottery_website.tls.certresolver=myresolver
       - traefik.http.services.lottery_website.loadbalancer.server.port=${WEBSITE_PORT}
       - traefik.docker.network=lottery_net_default
     networks:
