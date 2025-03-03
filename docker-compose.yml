@@ -5,30 +5,19 @@ services:
     image: traefik:v2.10
     container_name: lottery_reverse_proxy
     command:
-      - --api.dashboard=true
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:1080
-      - --entrypoints.websecure.address=:1443
+      - --entrypoints.api.address=:${API_SERVER_PORT}
+      - --entrypoints.crawler.address=:${CRAWLER_SERVER_PORT}
+      - --entrypoints.website.address=:${WEBSITE_PORT}
     ports:
-      - '1080:1080'
-      - '1443:1443'
-      - '8080:8080'
+      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
+      - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
+      - '${WEBSITE_PORT}:${WEBSITE_PORT}'
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`lottery-dashboard.jh8459.com`)
-      - traefik.http.routers.traefik.middlewares=auth
-      - traefik.http.routers.traefik.entrypoints=websecure
-      - traefik.http.routers.http-catchall.entrypoints=web
-      - traefik.http.routers.http-catchall.middlewares=redirect-to-https
-      - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
-      - traefik.http.services.traefik.loadbalancer.server.port=8080
-      - traefik.http.middlewares.auth.basicauth.users=wjd5588:$$apr1$$amZ86RcA$$DURWl.NAMBnRStmi1I69q0
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
     networks:
       - lottery_net_default
 
@@ -55,8 +44,9 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.lottery_api_server.rule=Host(`lottery-api.jh8459.com`)
-      - traefik.http.routers.lottery_api_server.entrypoints=websecure
+      - traefik.http.routers.lottery_api_server.service=lottery_api_server
       - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
+      - traefik.http.routers.lottery_api_server.entrypoints=api
       - traefik.docker.network=lottery_net_default
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${API_SERVER_PORT}/health']
@@ -93,8 +83,9 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.lottery_crawler_server.rule=Host(`lottery-crawler.jh8459.com`)
-      - traefik.http.routers.lottery_crawler_server.entrypoints=websecure
+      - traefik.http.routers.lottery_crawler_server.service=lottery_crawler_server
       - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
+      - traefik.http.routers.lottery_crawler_server.entrypoints=crawler
       - traefik.docker.network=lottery_net_default
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${CRAWLER_SERVER_PORT}/health']
@@ -133,8 +124,9 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.lottery_website.rule=Host(`lottery.jh8459.com`)
-      - traefik.http.routers.lottery_website.entrypoints=websecure
+      - traefik.http.routers.lottery_website.service=lottery_website
       - traefik.http.services.lottery_website.loadbalancer.server.port=${WEBSITE_PORT}
+      - traefik.http.routers.lottery_website.entrypoints=website
       - traefik.docker.network=lottery_net_default
     networks:
       - lottery_net_default
