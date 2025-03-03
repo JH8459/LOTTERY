@@ -8,9 +8,9 @@ services:
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.api.address=:${API_SERVER_PORT}
-      - --entrypoints.crawler.address=:${CRAWLER_SERVER_PORT}
-      - --entrypoints.website.address=:${WEBSITE_PORT}
+      - --entrypoints.web.address=:${API_SERVER_PORT}
+      - --entrypoints.web.address=:${CRAWLER_SERVER_PORT}
+      - --entrypoints.web.address=:${WEBSITE_PORT}
     ports:
       - '${API_SERVER_PORT}:${API_SERVER_PORT}'
       - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
