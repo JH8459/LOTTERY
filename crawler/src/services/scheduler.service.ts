@@ -117,6 +117,7 @@ export const lottoSchedule = (rule: schedule.RecurrenceRule) =>
             }
           });
       });
+
       drwNoDate = new Date(
         $drwNoDateInfo.slice(0, 4) + '-' + $drwNoDateInfo.slice(4, 6) + '-' + $drwNoDateInfo.slice(6)
       );

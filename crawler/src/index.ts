@@ -54,6 +54,7 @@ lottoSchedule(lottoRule);
 
 // Speetto Crawler
 const speettoRule = new schedule.RecurrenceRule();
+
 speettoRule.dayOfWeek = [0, new schedule.Range(0, 6)];
 speettoRule.hour = 9;
 speettoRule.minute = 0;

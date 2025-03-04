@@ -1,29 +1,11 @@
 version: '1.0'
 
 services:
-  lottery_reverse_proxy:
-    image: traefik:v2.10
-    container_name: lottery_reverse_proxy
-    command:
-      - --api.insecure=true
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:${API_SERVER_PORT}
-      - --entrypoints.web.address=:${CRAWLER_SERVER_PORT}
-      - --entrypoints.web.address=:${WEBSITE_PORT}
-    ports:
-      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
-      - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
-      - '${WEBSITE_PORT}:${WEBSITE_PORT}'
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - lottery_net_default
-
   lottery_api_server:
     image: jh8459/lottery_api_server:latest
     container_name: lottery_api_server
+    ports:
+      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
     platform: linux/amd64
     build:
       context: ./api
@@ -41,28 +23,22 @@ services:
       restart_policy:
         condition: on-failure
         delay: 3s
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.lottery_api_server.rule=Host(`lottery-api.jh8459.com` || `localhost`)
-      - traefik.http.routers.lottery_api_server.service=lottery_api_server
-      - traefik.http.services.lottery_api_server.loadbalancer.server.port=${API_SERVER_PORT}
-      - traefik.http.routers.lottery_api_server.entrypoints=web
-      - traefik.docker.network=lottery_net_default
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${API_SERVER_PORT}/health']
-      interval: 60s
+      interval: 1h
       timeout: 20s
       retries: 3
       start_period: 20s
     networks:
       - lottery_net_default
     depends_on:
-      - lottery_reverse_proxy
       - lottery_redis
 
   lottery_crawler_server:
     image: jh8459/lottery_crawler_server:latest
     container_name: lottery_crawler_server
+    ports:
+      - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
     platform: linux/amd64
     build:
       context: ./crawler
@@ -80,23 +56,15 @@ services:
       restart_policy:
         condition: on-failure
         delay: 3s
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.lottery_crawler_server.rule=Host(`lottery-crawler.jh8459.com` || `localhost`)
-      - traefik.http.routers.lottery_crawler_server.service=lottery_crawler_server
-      - traefik.http.services.lottery_crawler_server.loadbalancer.server.port=${CRAWLER_SERVER_PORT}
-      - traefik.http.routers.lottery_crawler_server.entrypoints=web
-      - traefik.docker.network=lottery_net_default
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${CRAWLER_SERVER_PORT}/health']
-      interval: 60s
+      interval: 1h
       timeout: 20s
       retries: 3
       start_period: 20s
     networks:
       - lottery_net_default
     depends_on:
-      - lottery_reverse_proxy
       - lottery_redis
 
   lottery_redis:
@@ -107,8 +75,8 @@ services:
       - ./redis-data:/data
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
-      interval: 30s
-      timeout: 10s
+      interval: 1h
+      timeout: 20s
       retries: 3
     networks:
       - lottery_net_default
@@ -118,20 +86,13 @@ services:
       context: ./website
       dockerfile: Dockerfile
     container_name: lottery_website
+    ports:
+      - '${WEBSITE_PORT}:${WEBSITE_PORT}'
     volumes:
       - ./website:/usr/share/nginx/html:ro
     restart: always
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.lottery_website.rule=Host(`lottery.jh8459.com` || `localhost`)
-      - traefik.http.routers.lottery_website.service=lottery_website
-      - traefik.http.services.lottery_website.loadbalancer.server.port=${WEBSITE_PORT}
-      - traefik.http.routers.lottery_website.entrypoints=web
-      - traefik.docker.network=lottery_net_default
     networks:
       - lottery_net_default
-    depends_on:
-      - lottery_reverse_proxy
 
 networks:
   lottery_net_default:
