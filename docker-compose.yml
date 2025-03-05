@@ -2,14 +2,12 @@ version: '1.0'
 
 services:
   lottery_api_server:
-    image: jh8459/lottery_api_server:latest
-    container_name: lottery_api_server
-    ports:
-      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
-    platform: linux/amd64
     build:
       context: ./api
       dockerfile: Dockerfile
+    container_name: lottery_api_server
+    ports:
+      - '${API_SERVER_PORT}:${API_SERVER_PORT}'
     volumes:
       - ./api/logs:/api/logs
       - ./api/public:/api/public
@@ -30,19 +28,15 @@ services:
       retries: 3
       start_period: 20s
     networks:
-      - lottery_net_default
-    depends_on:
-      - lottery_redis
+      - bridge
 
   lottery_crawler_server:
-    image: jh8459/lottery_crawler_server:latest
-    container_name: lottery_crawler_server
-    ports:
-      - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
-    platform: linux/amd64
     build:
       context: ./crawler
       dockerfile: Dockerfile
+    container_name: lottery_crawler_server
+    ports:
+      - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
     volumes:
       - ./crawler/logs:/crawler/logs
       - ./crawler/public:/crawler/public
@@ -63,9 +57,7 @@ services:
       retries: 3
       start_period: 20s
     networks:
-      - lottery_net_default
-    depends_on:
-      - lottery_redis
+      - bridge
 
   lottery_redis:
     image: redis:latest
@@ -79,7 +71,7 @@ services:
       timeout: 20s
       retries: 3
     networks:
-      - lottery_net_default
+      - bridge
 
   lottery_website:
     build:
@@ -92,8 +84,4 @@ services:
       - ./website:/usr/share/nginx/html:ro
     restart: always
     networks:
-      - lottery_net_default
-
-networks:
-  lottery_net_default:
-    driver: bridge
+      - bridge
