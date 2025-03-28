@@ -75,6 +75,10 @@ jobs:
             git fetch origin
             git reset --hard origin/prod
 
+            echo "📁 필요한 디렉토리 생성"
+            mkdir -p ./api/logs ./api/public ./api/resource
+            mkdir -p ./crawler/logs ./crawler/public ./crawler/resource
+
             echo "🐳 Docker 이미지 Pull"
             /usr/local/bin/docker-compose pull
 
