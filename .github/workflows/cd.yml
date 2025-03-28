@@ -72,13 +72,13 @@ jobs:
             EOF
 
             echo "🐳 Docker Hub에서 최신 이미지 Pull 중..."
-            docker compose pull
+            docker-compose pull
 
             echo "🧨 기존 컨테이너 종료 중..."
-            docker compose down
+            docker-compose down
 
             echo "🚀 최신 이미지로 컨테이너 재시작!"
-            docker compose up -d
+            docker-compose up -d
 
             echo ""
             echo "✅ 배포가 완료되었습니다! 🎉"
