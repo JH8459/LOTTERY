@@ -8,8 +8,6 @@ services:
       - '${API_SERVER_PORT}:${API_SERVER_PORT}'
     volumes:
       - ./api/logs:/api/logs
-      - ./api/public:/api/public
-      - ./api/resource:/api/resource
     env_file:
       - ./api/.env
     environment:
@@ -33,8 +31,6 @@ services:
       - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
     volumes:
       - ./crawler/logs:/crawler/logs
-      - ./crawler/public:/crawler/public
-      - ./crawler/resource:/crawler/resource
     env_file:
       - ./crawler/.env
     environment:
