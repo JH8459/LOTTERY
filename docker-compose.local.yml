@@ -1,6 +1,8 @@
 services:
   lottery_api_server:
-    image: jh8459/lottery_api_server:latest
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
     container_name: lottery_api_server
     ports:
       - '${API_SERVER_PORT}:${API_SERVER_PORT}'
@@ -23,7 +25,9 @@ services:
       - lottery_net
 
   lottery_crawler_server:
-    image: jh8459/lottery_crawler_server:latest
+    build:
+      context: ./crawler
+      dockerfile: Dockerfile
     container_name: lottery_crawler_server
     ports:
       - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
@@ -61,7 +65,9 @@ services:
       - lottery_net
 
   lottery_website:
-    image: jh8459/lottery_website:latest
+    build:
+      context: ./website
+      dockerfile: Dockerfile
     container_name: lottery_website
     ports:
       - '${WEBSITE_PORT}:${WEBSITE_PORT}'
