@@ -18,5 +18,73 @@ jobs:
           password: ${{ secrets.NAS_PASSWORD }}
           port: ${{ secrets.NAS_PORT }}
           script: |
-            echo "### 이동"
+            echo "✅ NAS 접속 성공"
+
             cd /volume1/docker/lottery
+
+            echo "📦 COMMON .env 생성"
+            [ -f .env ] && rm .env
+            cat <<EOF > .env
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
+            CRAWLER_SERVER_PORT=${{ secrets.CRAWLER_SERVER_PORT }}
+            WEBSITE_PORT=${{ secrets.WEBSITE_PORT }}
+            EOF
+
+            echo "📦 API .env 생성"
+            mkdir -p ./api
+            [ -f ./api/.env ] && rm ./api/.env
+            cat <<EOF > ./api/.env
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_DATABASE=${{ secrets.DB_DATABASE }}
+            API_NODE_ENV=${{ secrets.API_NODE_ENV }}
+            API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
+            API_EMAIL_USERNAME=${{ secrets.API_EMAIL_USERNAME }}
+            API_EMAIL_PASSWORD=${{ secrets.API_EMAIL_PASSWORD }}
+            API_EMAIL_HOST=${{ secrets.API_EMAIL_HOST }}
+            API_EMAIL_PORT=${{ secrets.API_EMAIL_PORT }}
+            API_EMAIL_FROM=${{ secrets.API_EMAIL_FROM }}
+            API_REDIS_HOST=${{ secrets.API_REDIS_HOST }}
+            API_REDIS_PORT=${{ secrets.API_REDIS_PORT }}
+            API_SLACK_SIGNING_SECRET=${{ secrets.API_SLACK_SIGNING_SECRET }}
+            API_SLACK_BOT_TOKEN=${{ secrets.API_SLACK_BOT_TOKEN }}
+            API_SLACK_CLIENT_ID=${{ secrets.API_SLACK_CLIENT_ID }}
+            API_SLACK_CLIENT_SECRET=${{ secrets.API_SLACK_CLIENT_SECRET }}
+            COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}
+            SWAGGER_USERNAME=${{ secrets.SWAGGER_USERNAME }}
+            SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
+            EOF
+
+            echo "📦 CRAWLER .env 생성"
+            mkdir -p ./crawler
+            [ -f ./crawler/.env ] && rm ./crawler/.env
+            cat <<EOF > ./crawler/.env
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_DATABASE=${{ secrets.DB_DATABASE }}
+            CRAWLER_SERVER_PORT=${{ secrets.CRAWLER_SERVER_PORT }}
+            COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}
+            EOF
+
+            echo "🐳 Docker Hub에서 최신 이미지 Pull 중..."
+            docker compose pull
+
+            echo "🧨 기존 컨테이너 종료 중..."
+            docker compose down
+
+            echo "🚀 최신 이미지로 컨테이너 재시작!"
+            docker compose up -d
+
+            echo ""
+            echo "✅ 배포가 완료되었습니다! 🎉"
+            echo "---------------------------------------"
+            echo "서비스 목록:"
+            echo "- API 서버: http://<NAS_IP>:${{secrets.API_SERVER_PORT}}"
+            echo "- Crawler 서버: http://<NAS_IP>:${{secrets.CRAWLER_SERVER_PORT}}"
+            echo "- 웹사이트: http://<NAS_IP>:${{secrets.WEBSITE_PORT}}"
+            echo "---------------------------------------"
