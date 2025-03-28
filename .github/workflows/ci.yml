@@ -3,8 +3,6 @@ name: Build & Push Docker Images (CI)
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 jobs:
   deploy:
@@ -41,16 +39,3 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest ./website
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest
-
-      # Github Pull Request to prod branch
-      - name: Create Pull Request to prod branch
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.COMMON_GITHUB_TOKEN }}
-          title: 'Merge master into prod'
-          commit-message: 'ci: sync master to prod'
-          base: prod
-          branch: master
-          body: |
-            이 PR은 master 브랜치에서 prod 브랜치로의 자동 PR입니다.
-            빌드 및 Docker Hub 푸시가 완료된 후 생성되었습니다.
