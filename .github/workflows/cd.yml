@@ -76,12 +76,12 @@ jobs:
             git reset --hard origin/prod
 
             echo "🐳 Docker 이미지 Pull"
-            docker-compose pull
+            /usr/local/bin/docker-compose pull
 
             echo "🧨 기존 컨테이너 중지"
-            docker-compose down
+            /usr/local/bin/docker-compose down
 
             echo "🚀 최신 이미지로 컨테이너 재시작"
-            docker-compose up -d
+            /usr/local/bin/docker-compose up -d
 
             echo "✅ 배포 완료 🎉"
