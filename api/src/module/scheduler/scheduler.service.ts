@@ -10,22 +10,25 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SchedulerService {
+  private readonly API_NODE_ENV: string;
+
   constructor(
     public readonly configService: ConfigService,
     private readonly schedulerRepository: SchedulerRepository,
     private readonly redisService: RedisService,
     private readonly emailService: EmailService,
     private readonly slackMessageService: SlackMessageService
-  ) {}
-
-  private readonly nodeEnv = this.configService.get('API_NODE_ENV');
+  ) {
+    this.API_NODE_ENV = this.configService.get<string>('API_NODE_ENV');
+  }
 
   @Cron('0 9 * * 0', { timeZone: 'Asia/Seoul' })
   async sendLottoEmailToSubscriberListScheduler(): Promise<void> {
     const lockKey: SchedulerLockKeyEnum = SchedulerLockKeyEnum.EMAIL_SEND_LOCK;
     const lock: string = await this.redisService.setLock(lockKey);
+
     // lock 획득을 성공한 prod 환경에서만 실행
-    if (lock && this.nodeEnv === 'prod') {
+    if (lock && this.API_NODE_ENV === 'prod') {
       await this.emailService.sendLottoEmailToSubscriberList();
 
       await this.redisService.unLock(lockKey);
@@ -36,8 +39,9 @@ export class SchedulerService {
   async sendSlackMessageToSubscriberListScheduler(): Promise<void> {
     const lockKey: SchedulerLockKeyEnum = SchedulerLockKeyEnum.SLACK_MESSAGE_SEND_LOCK;
     const lock: string = await this.redisService.setLock(lockKey);
+
     // lock 획득을 성공한 prod 환경에서만 실행
-    if (lock && this.nodeEnv === 'prod') {
+    if (lock && this.API_NODE_ENV === 'prod') {
       const userList: UserEntity[] = await this.schedulerRepository.getSubscribeUsers();
 
       if (userList.length) {
