@@ -7,9 +7,7 @@ services:
     ports:
       - '${API_SERVER_PORT}:${API_SERVER_PORT}'
     volumes:
-      - ./api/logs:/api/logs
-      - ./api/public:/api/public
-      - ./api/resource:/api/resource
+      - ./api:/api
     env_file:
       - ./api/.env
     environment:
