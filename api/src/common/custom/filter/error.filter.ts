@@ -6,7 +6,7 @@ import {
   HttpStatus,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CustomLoggerService } from '../logger/logger.service';
+import { CustomLoggerService } from '../../../module/logger/logger.service';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Response, Request } from 'express';
 import { QueryFailedError } from 'typeorm';

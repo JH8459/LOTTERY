@@ -1,6 +1,6 @@
 import { ValidationError } from 'class-validator';
 import { CustomBadRequestException } from 'src/common/custom/exception/exception.service';
-import { CustomLoggerService } from '../common/custom/logger/logger.service';
+import { CustomLoggerService } from '../module/logger/logger.service';
 
 /**
  *

@@ -6,7 +6,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { setupSwagger } from './config/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
 import { ServerErrorFilter } from './common/custom/filter/error.filter';
-import { CustomLoggerService } from './common/custom/logger/logger.service';
+import { CustomLoggerService } from './module/logger/logger.service';
 import { VALIDATION_CONFIG } from './config/validation.config';
 
 async function bootstrap() {

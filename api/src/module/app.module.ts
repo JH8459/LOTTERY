@@ -13,7 +13,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TYPE_ORM_CONFIG, TYPE_ORM_TEST_CONFIG } from 'src/config/typeorm.config';
 import { QnaModule } from './qna/qna.module';
 import { BullModule } from '@nestjs/bull';
-import { CustomLoggerService } from 'src/common/custom/logger/logger.service';
+import { CustomLoggerService } from 'src/module/logger/logger.service';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -22,8 +23,8 @@ import { CustomLoggerService } from 'src/common/custom/logger/logger.service';
     MailerModule.forRootAsync(EMAIL_CONFIG),
     RedisModule.forRootAsync(REDIS_CONFIG),
     BullModule.forRootAsync(BULL_CONFIG),
-    // WinstonModule.forRoot(WINSTON_CONFIG),
     HealthModule,
+    LoggerModule,
     NotificationsModule,
     SchedulerModule,
     RedisModule,
