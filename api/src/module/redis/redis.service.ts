@@ -16,6 +16,12 @@ export class RedisService {
     this.LOCK_DURATION = 60 * 5; // 5분
   }
 
+  /**
+   *
+   * @param key
+   * @returns lock 획득 여부
+   * @description Redis에 Lock을 획득합니다. Lock을 획득하지 못할 경우, null을 반환합니다.
+   */
   async setLock(key: string): Promise<string> {
     // Lock 획득
     const lock: string = await this.redis.set(key, 'LOCK', 'EX', this.LOCK_DURATION, 'NX');
@@ -23,6 +29,12 @@ export class RedisService {
     return lock;
   }
 
+  /**
+   *
+   * @param key
+   * @returns lock 해제 여부
+   * @description Redis에 Lock을 해제합니다.
+   */
   async unLock(key: string): Promise<void> {
     // Lock 해제
     await this.redis.del(key);
