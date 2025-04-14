@@ -12,7 +12,7 @@ export class EmailController {
 
   @ApiOperation(SEND_EMAIL_SWAGGER.GET.API_OPERATION)
   @ApiResponse(SEND_EMAIL_SWAGGER.GET.API_OK_RESPONSE)
-  @ApiResponse(SEND_EMAIL_SWAGGER.GET.API_INTERNAL_SERVER_ERROR_RESPONSE)
+  @ApiResponse(SEND_EMAIL_SWAGGER.GET.API_INTERNEL_SERVER_ERR_RESPONSE)
   @Get()
   async sendSubscribersEmail(): Promise<ResponseDto> {
     await this.emailService.enqueueLottoEmailToSubscriberList();
@@ -28,7 +28,7 @@ export class EmailController {
   @ApiOperation(SEND_EMAIL_SWAGGER.POST.API_OPERATION)
   @ApiBody(SEND_EMAIL_SWAGGER.POST.API_BODY)
   @ApiResponse(SEND_EMAIL_SWAGGER.POST.API_OK_RESPONSE)
-  @ApiResponse(SEND_EMAIL_SWAGGER.POST.API_INTERNAL_SERVER_ERROR_RESPONSE)
+  @ApiResponse(SEND_EMAIL_SWAGGER.POST.API_INTERNEL_SERVER_ERR_RESPONSE)
   @Post('test')
   async sendTestEmail(@Body() { emailInfo }: InputEmailDto): Promise<ResponseDto> {
     await this.emailService.enqueueLottoEmail(emailInfo);

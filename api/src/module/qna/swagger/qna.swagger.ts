@@ -1,6 +1,7 @@
 import { QnaRegistInfoDto } from '../dto/qna.dto';
 import { SwaggerMethod } from 'src/common/interface/swagger.interface';
 import { ApiOKResponseDto } from './dto/response.dto';
+import { HttpStatus } from '@nestjs/common';
 import { BadRequestError } from '../error/400.error';
 
 export const QNA_SWAGGER: SwaggerMethod = {
@@ -39,17 +40,15 @@ export const QNA_SWAGGER: SwaggerMethod = {
             NAME: {
               summary: '잘못된 이름 요청 예시',
               value: {
-                message: BadRequestError.NAME.message,
-                error: BadRequestError.NAME.error,
                 statusCode: BadRequestError.NAME.statusCode,
+                message: BadRequestError.NAME.message,
               },
             },
             EMAIL: {
               summary: '잘못된 이메일 요청 예시',
               value: {
-                message: BadRequestError.EMAIL.message,
-                error: BadRequestError.EMAIL.error,
                 statusCode: BadRequestError.EMAIL.statusCode,
+                message: BadRequestError.EMAIL.message,
               },
             },
           },

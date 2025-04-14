@@ -5,9 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { setupSwagger } from './config/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
-import { validationOptions } from './config/validation.config';
 import { ServerErrorFilter } from './common/custom/filter/error.filter';
 import { CustomLoggerService } from './common/custom/logger/logger.service';
+import { VALIDATION_CONFIG } from './config/validation.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -29,7 +29,7 @@ async function bootstrap() {
   // Swagger Options Setting, API DOCS 처리
   setupSwagger(app);
   // Validation Pipe Setting, 유효성 검사 처리
-  app.useGlobalPipes(new ValidationPipe(validationOptions));
+  app.useGlobalPipes(new ValidationPipe(VALIDATION_CONFIG));
   // Exception Global Filter 적용, 에러 처리 및 로깅
   app.useGlobalFilters(new ServerErrorFilter(new CustomLoggerService()));
   // ResponseInterceptor Setting, 응답 통합 처리
