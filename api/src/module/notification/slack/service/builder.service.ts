@@ -1,39 +1,22 @@
-import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-import Redis from 'ioredis';
 import { Block, KnownBlock } from '@slack/bolt';
 import {
   LottoHighestPrizeInfoInterface,
   LottoInfoInterface,
   LottoStatisticInfoInterface,
-} from 'src/module/notification/interface/lotto.interface';
+} from 'src/common/interface/lotto.interface';
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
-import { SpeettoInfoInterface } from '../../interface/speetto.interface';
+import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
+import { RedisService } from 'src/module/redis/redis.service';
 
 @Injectable()
 export class BuilderService {
-  constructor(@InjectRedis() private readonly redis: Redis) {}
+  constructor(private readonly redisService: RedisService) {}
 
   async getLottoDrwnoPrizeInfoBlock(lottoInfo?: LottoInfoInterface): Promise<(Block | KnownBlock)[]> {
     if (!lottoInfo) {
-      lottoInfo = {
-        drwNo: Number(await this.redis.get('drwNo')),
-        drwtNo1: Number(await this.redis.get('drwtNo1')),
-        drwtNo2: Number(await this.redis.get('drwtNo2')),
-        drwtNo3: Number(await this.redis.get('drwtNo3')),
-        drwtNo4: Number(await this.redis.get('drwtNo4')),
-        drwtNo5: Number(await this.redis.get('drwtNo5')),
-        drwtNo6: Number(await this.redis.get('drwtNo6')),
-        bnusNo: Number(await this.redis.get('bnusNo')),
-        firstWinamnt: Number(await this.redis.get('firstWinamnt')),
-        firstPrzwnerCo: Number(await this.redis.get('firstPrzwnerCo')),
-        secondWinamnt: Number(await this.redis.get('secondWinamnt')),
-        secondPrzwnerCo: Number(await this.redis.get('secondPrzwnerCo')),
-        thirdWinamnt: Number(await this.redis.get('thirdWinamnt')),
-        thirdPrzwnerCo: Number(await this.redis.get('thirdPrzwnerCo')),
-        drwNoDate: new Date(await this.redis.get('drwNoDate')),
-      };
+      lottoInfo = await this.redisService.getRecentlyLottoInfo();
     }
 
     const block: (Block | KnownBlock)[] = [
@@ -591,25 +574,10 @@ export class BuilderService {
   }
 
   async getLottoStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
-    const lottoStatisticInfo: LottoStatisticInfoInterface = {
-      firstLottoNo: Number(await this.redis.get('firstLottoNo')),
-      firstLottoNoCnt: Number(await this.redis.get('firstLottoNoCnt')),
-      secondLottoNo: Number(await this.redis.get('secondLottoNo')),
-      secondLottoNoCnt: Number(await this.redis.get('secondLottoNoCnt')),
-      thirdLottoNo: Number(await this.redis.get('thirdLottoNo')),
-      thirdLottoNoCnt: Number(await this.redis.get('thirdLottoNoCnt')),
-    };
+    const lottoStatisticInfo: LottoStatisticInfoInterface = await this.redisService.getRecentlyLottoStatisticInfo();
 
-    const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface = {
-      thisYearDrwNo: Number(await this.redis.get('thisYearDrwNo')),
-      thisYearFirstWinamnt: Number(await this.redis.get('thisYearFirstWinamnt')),
-      thisYearFirstPrzwnerCo: Number(await this.redis.get('thisYearFirstPrzwnerCo')),
-      thisYearDrwNoDate: new Date(await this.redis.get('thisYearDrwNoDate')),
-      lastYearDrwNo: Number(await this.redis.get('lastYearDrwNo')),
-      lastYearFirstWinamnt: Number(await this.redis.get('lastYearFirstWinamnt')),
-      lastYearFirstPrzwnerCo: Number(await this.redis.get('lastYearFirstPrzwnerCo')),
-      lastYearDrwNoDate: new Date(await this.redis.get('lastYearDrwNoDate')),
-    };
+    const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface =
+      await this.redisService.getRecentlyLottoHighestPrizeInfo();
 
     const blocks: (Block | KnownBlock)[] = [
       {

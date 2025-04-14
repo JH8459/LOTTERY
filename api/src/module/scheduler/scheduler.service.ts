@@ -14,8 +14,8 @@ export class SchedulerService {
 
   constructor(
     public readonly configService: ConfigService,
-    private readonly schedulerRepository: SchedulerRepository,
     private readonly redisService: RedisService,
+    private readonly schedulerRepository: SchedulerRepository,
     private readonly emailService: EmailService,
     private readonly slackMessageService: SlackMessageService
   ) {

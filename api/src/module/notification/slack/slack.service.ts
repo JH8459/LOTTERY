@@ -13,29 +13,38 @@ import { ViewSubmissionService } from './service/viewSubmission.service';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
+  private APP: App;
+  private RECEIVER: ExpressReceiver;
+  private readonly API_SLACK_SIGNING_SECRET: string;
+  private readonly API_SLACK_BOT_TOKEN: string;
+  private readonly API_SLACK_CLIENT_ID: string;
+  private readonly API_SLACK_CLIENT_SECRET: string;
+
   constructor(
     public readonly configService: ConfigService,
     private slackRepository: SlackRepository,
     private readonly commandService: CommandService,
     private readonly actionService: ActionService,
     private readonly viewSubMissionService: ViewSubmissionService
-  ) {}
-
-  private app: App;
-  private receiver: ExpressReceiver;
+  ) {
+    this.API_SLACK_SIGNING_SECRET = this.configService.get<string>('API_SLACK_SIGNING_SECRET');
+    this.API_SLACK_BOT_TOKEN = this.configService.get<string>('API_SLACK_BOT_TOKEN');
+    this.API_SLACK_CLIENT_ID = this.configService.get<string>('API_SLACK_CLIENT_ID');
+    this.API_SLACK_CLIENT_SECRET = this.configService.get<string>('API_SLACK_CLIENT_SECRET');
+  }
 
   onModuleInit() {
-    this.receiver = new ExpressReceiver({
-      signingSecret: this.configService.get<string>('API_SLACK_SIGNING_SECRET'),
+    this.RECEIVER = new ExpressReceiver({
+      signingSecret: this.API_SLACK_SIGNING_SECRET,
     });
 
-    this.app = new App({
-      token: this.configService.get<string>('API_SLACK_BOT_TOKEN'),
-      receiver: this.receiver,
+    this.APP = new App({
+      token: this.API_SLACK_BOT_TOKEN,
+      receiver: this.RECEIVER,
     });
 
     // '/로또' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.app.command('/로또', async ({ command, ack }) => {
+    this.APP.command('/로또', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
       // 로또 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
@@ -43,7 +52,7 @@ export class SlackService implements OnModuleInit {
     });
 
     // '/스피또' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.app.command('/스피또', async ({ command, ack }) => {
+    this.APP.command('/스피또', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
       // 스피또 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
@@ -51,7 +60,7 @@ export class SlackService implements OnModuleInit {
     });
 
     // '/구독' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.app.command('/구독', async ({ command, ack }) => {
+    this.APP.command('/구독', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
       await ack();
       // 구독 Command를 처리하는 메서드를 호출합니다.
@@ -60,19 +69,19 @@ export class SlackService implements OnModuleInit {
   }
 
   getSlackApp() {
-    return this.app;
+    return this.APP;
   }
 
   getReceiver() {
-    return this.receiver;
+    return this.RECEIVER;
   }
 
   async getAccessToken(code: string): Promise<string> {
     const oauthResponse: AxiosResponse = await axios.post(
       'https://slack.com/api/oauth.v2.access',
       querystring.stringify({
-        client_id: this.configService.get<string>('API_SLACK_CLIENT_ID'),
-        client_secret: this.configService.get<string>('API_SLACK_CLIENT_SECRET'),
+        client_id: this.API_SLACK_CLIENT_ID,
+        client_secret: this.API_SLACK_CLIENT_SECRET,
         code,
       }),
       {
@@ -136,9 +145,11 @@ export class SlackService implements OnModuleInit {
   async slackViewSubMissionHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
     const teamId: string = body.team.id;
     const viewValue = body.view.state.values;
+
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(teamId);
     const client: WebClient = new WebClient(token);
+
     // View input Value 값을 구분하여 View Submission을 처리합니다.
     switch (true) {
       case SlackBlockIDEnum.ORDER_INPUT in viewValue:

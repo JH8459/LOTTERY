@@ -8,7 +8,7 @@ import { RedisModule } from '../redis/redis.module';
 import { NotificationsModule } from '../notification/notification.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), ScheduleModule.forRoot(), RedisModule, NotificationsModule],
+  imports: [TypeOrmModule.forFeature([UserEntity]), ScheduleModule.forRoot(), NotificationsModule],
   providers: [SchedulerService, SchedulerRepository],
 })
 export class SchedulerModule {}

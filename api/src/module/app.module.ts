@@ -1,8 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { RedisModule } from '@nestjs-modules/ioredis';
-import { WinstonModule } from 'nest-winston';
+import * as ioredis from '@nestjs-modules/ioredis';
 import { LoggerMiddleware } from 'src/common/custom/logger/logger.middleware';
 import { HealthModule } from './health/health.module';
 import { NotificationsModule } from './notification/notification.module';
@@ -15,19 +14,20 @@ import { QnaModule } from './qna/qna.module';
 import { BullModule } from '@nestjs/bull';
 import { CustomLoggerService } from 'src/module/logger/logger.service';
 import { LoggerModule } from './logger/logger.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(process.env.API_NODE_ENV === 'test' ? TYPE_ORM_TEST_CONFIG : TYPE_ORM_CONFIG),
     MailerModule.forRootAsync(EMAIL_CONFIG),
-    RedisModule.forRootAsync(REDIS_CONFIG),
+    ioredis.RedisModule.forRootAsync(REDIS_CONFIG),
     BullModule.forRootAsync(BULL_CONFIG),
     HealthModule,
     LoggerModule,
+    RedisModule,
     NotificationsModule,
     SchedulerModule,
-    RedisModule,
     QnaModule,
   ],
   providers: [CustomLoggerService],

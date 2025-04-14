@@ -8,12 +8,13 @@ import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
 import { SlashCommand } from '@slack/bolt';
 import { UserInfoDto } from '../dto/user.dto';
 import { SlackSubMitButtonNameEnum } from '../constant/slack.enum';
+import { RedisService } from 'src/module/redis/redis.service';
 
 @Injectable()
 export class CommandService {
   constructor(
     public readonly configService: ConfigService,
-    @InjectRedis() private readonly redis: Redis,
+    private readonly redisService: RedisService,
     private readonly slackRepository: SlackRepository,
     private readonly builderService: BuilderService
   ) {}
@@ -22,12 +23,15 @@ export class CommandService {
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(command.team_id);
     const client: WebClient = new WebClient(token);
+
     // 최신 로또 회차 정보를 가져옵니다.
-    let recentlyLottoDrwNo: number = Number(await this.redis.get('drwNo'));
+    let recentlyLottoDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
 
     if (!recentlyLottoDrwNo) {
+      // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
       recentlyLottoDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
     }
+
     // 모달을 출력합니다.
     await client.views.open({
       trigger_id: command.trigger_id,
@@ -54,6 +58,7 @@ export class CommandService {
     // 저장된 토큰을 가져와 클라이언트를 생성합니다.
     const token: string = await this.slackRepository.getAccessToken(command.team_id);
     const client: WebClient = new WebClient(token);
+
     // 모달을 출력합니다.
     await client.views.open({
       trigger_id: command.trigger_id,
@@ -83,10 +88,12 @@ export class CommandService {
 
     const userId: string = command.user_id;
     const teamId: string = command.team_id;
+
     // 유저와 앱 간의 개인 채널을 엽니다.
     const response: ConversationsOpenResponse = await client.conversations.open({
       users: userId,
     });
+
     // 유저의 정보를 조회합니다.
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
 
