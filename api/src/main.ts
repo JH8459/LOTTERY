@@ -6,16 +6,14 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { setupSwagger } from './config/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
 import { validationOptions } from './config/validation.config';
-import { ServerErrorFilter } from './common/filter/error.filter';
-import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston';
-import { WINSTON_CONFIG } from './config/logger.config';
+import { ServerErrorFilter } from './common/custom/filter/error.filter';
+import { CustomLoggerService } from './common/custom/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
       origin: true,
     },
-    logger: WinstonModule.createLogger(WINSTON_CONFIG),
   });
 
   const configService = app.get(ConfigService);
@@ -32,12 +30,10 @@ async function bootstrap() {
   setupSwagger(app);
   // Validation Pipe Setting, 유효성 검사 처리
   app.useGlobalPipes(new ValidationPipe(validationOptions));
+  // Exception Global Filter 적용, 에러 처리 및 로깅
+  app.useGlobalFilters(new ServerErrorFilter(new CustomLoggerService()));
   // ResponseInterceptor Setting, 응답 통합 처리
   app.useGlobalInterceptors(new ResponseInterceptor());
-  // ExceptionFilter Setting, 예외 통합 처리
-  app.useGlobalFilters(new ServerErrorFilter());
-  // Winston Logger Setting, 서버 로그 처리
-  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   const API_SERVER_PORT = configService.get<number>('API_SERVER_PORT');
 
