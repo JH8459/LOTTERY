@@ -15,10 +15,10 @@ export class EmailController {
   @ApiResponse(SEND_EMAIL_SWAGGER.GET.API_INTERNAL_SERVER_ERROR_RESPONSE)
   @Get()
   async sendSubscribersEmail(): Promise<ResponseDto> {
-    await this.emailService.sendLottoEmailToSubscriberList();
+    await this.emailService.enqueueLottoEmailToSubscriberList();
 
     const result: ResponseDto = {
-      message: '이메일 발송 성공',
+      message: '큐에 이메일 발송 요청 성공',
     };
 
     return result;
@@ -30,10 +30,10 @@ export class EmailController {
   @ApiResponse(SEND_EMAIL_SWAGGER.POST.API_INTERNAL_SERVER_ERROR_RESPONSE)
   @Post('test')
   async sendTestEmail(@Body() { emailInfo }: InputEmailDto): Promise<ResponseDto> {
-    await this.emailService.sendLottoEmail(emailInfo);
+    await this.emailService.enqueueLottoEmail(emailInfo);
 
     const result: ResponseDto = {
-      message: '이메일 발송 성공',
+      message: '큐에 이메일 발송 요청 성공',
     };
 
     return result;

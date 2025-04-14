@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MailerService } from '@nestjs-modules/mailer';
+import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -11,20 +11,27 @@ import {
   LottoInfoInterface,
   LottoStatisticInfoInterface,
 } from '../interface/lotto.interface';
-import { PublicSubscriberInfoInterface, SubscriberInfoInterface } from './interface/subscriber.interface';
+import { PublicSubscriberInfoInterface } from './interface/subscriber.interface';
 import { InternalServerError } from './error/500.error';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class EmailService {
+  private readonly API_EMAIL_FROM: string;
+  private readonly GITHUB_TOKEN: string;
+
   constructor(
     public readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-    @InjectRedis() private readonly redis: Redis
-  ) {}
+    @InjectRedis() private readonly redis: Redis,
+    @InjectQueue('emailQueue') private readonly emailQueue: Queue
+  ) {
+    this.API_EMAIL_FROM = this.configService.get<string>('API_EMAIL_FROM');
+    this.GITHUB_TOKEN = this.configService.get<string>('COMMON_GITHUB_TOKEN');
+  }
 
-  async sendLottoEmail(emailInfo: string): Promise<void> {
-    const from: string = this.configService.get<string>('API_EMAIL_FROM');
-
+  async enqueueLottoEmail(emailInfo: string): Promise<void> {
     const lottoInfo: LottoInfoInterface = {
       drwNo: Number(await this.redis.get('drwNo')),
       drwtNo1: Number(await this.redis.get('drwtNo1')),
@@ -63,25 +70,21 @@ export class EmailService {
       lastYearDrwNoDate: new Date(await this.redis.get('lastYearDrwNoDate')),
     };
 
-    try {
-      await this.mailerService.sendMail({
-        to: emailInfo,
-        from,
-        subject: `[LOTTERY🍀] ${lottoInfo.drwNo}회 당첨결과 (${convertDateFormat(lottoInfo.drwNoDate)})`,
-        html: emailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
-      });
-    } catch (err) {
-      throw new InternalServerErrorException('메일 전송에 실패했습니다.');
-    }
+    const mailOptions: ISendMailOptions = {
+      to: emailInfo,
+      from: this.API_EMAIL_FROM,
+      subject: `[LOTTERY🍀] ${lottoInfo.drwNo}회 당첨결과 (${convertDateFormat(lottoInfo.drwNoDate)})`,
+      html: emailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
+    };
+
+    await this.emailQueue.add('sendEmail', mailOptions);
   }
 
-  async sendLottoEmailToSubscriberList(): Promise<void> {
+  async enqueueLottoEmailToSubscriberList(): Promise<void> {
     try {
-      const GITHUB_TOKEN: string = this.configService.get<string>('COMMON_GITHUB_TOKEN');
-
       const axiosReqConfig: AxiosRequestConfig = {
         headers: {
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Authorization: `Bearer ${this.GITHUB_TOKEN}`,
         },
       };
 
@@ -95,12 +98,20 @@ export class EmailService {
           const subscriberInfo: AxiosResponse = await axios.get(subscriber.url, axiosReqConfig);
 
           if (subscriberInfo.data.email !== null && subscriberInfo.data.email !== '') {
-            await this.sendLottoEmail(subscriberInfo.data.email);
+            await this.enqueueLottoEmail(subscriberInfo.data.email);
           }
         })
       );
     } catch (err) {
       throw new InternalServerErrorException(InternalServerError.GITHUB.message);
+    }
+  }
+
+  async sendLottoEmail(mailOptions: ISendMailOptions): Promise<void> {
+    try {
+      await this.mailerService.sendMail(mailOptions);
+    } catch (err) {
+      throw new InternalServerErrorException('메일 전송에 실패했습니다.');
     }
   }
 }
