@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Ip, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EmailService } from './email.service';
 import { InputEmailDto } from './dto/inputEmail.dto';
@@ -18,6 +18,7 @@ export class EmailController {
     await this.emailService.enqueueLottoEmailToSubscriberList();
 
     const result: ResponseDto = {
+      statusCode: HttpStatus.OK,
       message: '큐에 이메일 발송 요청 성공',
     };
 
@@ -33,6 +34,7 @@ export class EmailController {
     await this.emailService.enqueueLottoEmail(emailInfo);
 
     const result: ResponseDto = {
+      statusCode: HttpStatus.OK,
       message: '큐에 이메일 발송 요청 성공',
     };
 

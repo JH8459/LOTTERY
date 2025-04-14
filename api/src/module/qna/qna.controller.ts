@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { QnaService } from './qna.service';
 import { QNA_SWAGGER } from './swagger/qna.swagger';
@@ -19,6 +19,7 @@ export class QnaController {
     await this.qnaService.requestQuestion(qnaRegistInfo);
 
     const result: ResponseDto = {
+      statusCode: HttpStatus.CREATED,
       message: '문의하기 성공',
     };
 
