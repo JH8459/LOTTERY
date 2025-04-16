@@ -1,29 +1,38 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import { validateSync } from 'class-validator';
-import { CustomBadRequestException } from '../exception/exception.service';
+import { Injectable } from '@nestjs/common';
+import { ValidationError, ValidationPipeOptions } from '@nestjs/common';
+import { CustomBadRequestException } from 'src/common/custom/exception/exception.service';
+import { CustomLoggerService } from 'src/module/logger/logger.service';
 
-/**
- *
- * @description: @Body 데코레이터를 통해 들어온 DTO를 검증하는 파이프입니다.
- */
 @Injectable()
-export class CustomDTOValidationPipe<T> implements PipeTransform {
-  constructor(private readonly dto: new () => T) {}
+export class ValidationPipeService {
+  constructor(private readonly loggerService: CustomLoggerService) {}
 
-  transform(value: T, metadata: ArgumentMetadata): object {
-    // @Body 데코레이터로 전달된 데이터만 검증
-    if (metadata.type !== 'body') {
-      return value as object;
-    }
+  getConfig(): ValidationPipeOptions {
+    return {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
 
-    const object = plainToClass(this.dto, value) as object;
-    const errors = validateSync(object, { skipMissingProperties: false });
+      exceptionFactory: (validationErrors: ValidationError[]) => {
+        validationErrors.forEach(({ property, constraints }) => {
+          this.loggerService.warn(
+            `에러 발생 키: ${property}, 에러 제목: ${Object.keys(constraints)}, 에러 내용: ${Object.values(
+              constraints
+            )}`,
+            '🚧 유효성 검사 에러 🚧'
+          );
+        });
 
-    if (errors.length > 0) {
-      throw new CustomBadRequestException('잘못된 파라미터 입니다.');
-    }
+        const allMessages = validationErrors
+          .map((error) => {
+            const field = error.property;
+            const messages = Object.values(error.constraints ?? {}).join(', ');
+            return `• ${field}: ${messages}`;
+          })
+          .join('\n');
 
-    return object;
+        throw new CustomBadRequestException(allMessages);
+      },
+    };
   }
 }
