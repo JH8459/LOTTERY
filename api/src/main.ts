@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './module/app.module';
-import { ResponseInterceptor } from './common/interceptor/response.interceptor';
+import { ResponseInterceptor } from './common/custom/interceptor/response.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { setupSwagger } from './config/swagger.config';
-import { ValidationPipe } from '@nestjs/common';
 import { ServerErrorFilter } from './common/custom/filter/error.filter';
 import { CustomLoggerService } from './module/logger/logger.service';
-import { VALIDATION_CONFIG } from './config/validation.config';
+import { ValidationPipeService } from './common/custom/pipe/pipe.service';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -17,6 +17,9 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
+  const validationPipeService = app.get(ValidationPipeService);
+  const customLoggerService = app.get(CustomLoggerService);
+  const responseInterceptor = app.get(ResponseInterceptor);
 
   // CORS Setting, 옵션 처리
   app.enableCors({
@@ -29,11 +32,11 @@ async function bootstrap() {
   // Swagger Options Setting, API DOCS 처리
   setupSwagger(app);
   // Validation Pipe Setting, 유효성 검사 처리
-  app.useGlobalPipes(new ValidationPipe(VALIDATION_CONFIG));
+  app.useGlobalPipes(new ValidationPipe(validationPipeService.getConfig()));
   // Exception Global Filter 적용, 에러 처리 및 로깅
-  app.useGlobalFilters(new ServerErrorFilter(new CustomLoggerService()));
+  app.useGlobalFilters(new ServerErrorFilter(customLoggerService));
   // ResponseInterceptor Setting, 응답 통합 처리
-  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalInterceptors(responseInterceptor);
 
   const API_SERVER_PORT = configService.get<number>('API_SERVER_PORT');
 

@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CustomLoggerService } from '../../../module/logger/logger.service';
@@ -16,6 +17,7 @@ import { QueryFailedError } from 'typeorm';
  * @description: 서버에서 발생하는 모든 에러를 처리하는 클래스입니다.
  */
 @Catch(UnauthorizedException, HttpException, QueryFailedError, Error)
+@Injectable()
 export class ServerErrorFilter implements ExceptionFilter {
   constructor(private readonly loggerService: CustomLoggerService) {}
 

@@ -1,5 +1,5 @@
 import { RedisModuleAsyncOptions, RedisModuleOptions } from '@nestjs-modules/ioredis';
-import { BullModuleAsyncOptions, BullModuleOptions, SharedBullAsyncConfiguration } from '@nestjs/bull';
+import { BullModuleOptions, SharedBullAsyncConfiguration } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export const REDIS_CONFIG: RedisModuleAsyncOptions = {
