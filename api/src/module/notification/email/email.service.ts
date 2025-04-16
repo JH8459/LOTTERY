@@ -31,14 +31,20 @@ export class EmailService {
     this.GITHUB_TOKEN = this.configService.get<string>('COMMON_GITHUB_TOKEN');
   }
 
+  /**
+   *
+   * @param emailInfo
+   * @description 이메일 전송을 위한 작업을 큐에 추가합니다.
+   * @returns void
+   */
   async enqueueLottoEmail(emailInfo: string): Promise<void> {
+    // 로또 회차 정보, 통계 정보, 당첨금 정보를 Redis에서 가져옵니다.
     const lottoInfo: LottoInfoInterface = await this.redisService.getRecentlyLottoInfo();
-
     const lottoStatisticInfo: LottoStatisticInfoInterface = await this.redisService.getRecentlyLottoStatisticInfo();
-
     const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface =
       await this.redisService.getRecentlyLottoHighestPrizeInfo();
 
+    // 이메일 전송 작업을 위한 옵션을 설정합니다.
     const mailOptions: ISendMailOptions = {
       to: emailInfo,
       from: this.API_EMAIL_FROM,
@@ -46,6 +52,7 @@ export class EmailService {
       html: emailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
     };
 
+    // 큐에 작업을 추가합니다.
     await this.emailQueue.add('sendEmail', mailOptions, {
       attempts: 3, // 최대 3회 재시도
       backoff: 10000, // 10초 간격으로 재시도
@@ -54,6 +61,11 @@ export class EmailService {
     });
   }
 
+  /**
+   *
+   * @description GitHub의 구독자 목록을 가져와서 이메일 전송 작업을 큐에 추가합니다.
+   * @returns void
+   */
   async enqueueLottoEmailToSubscriberList(): Promise<void> {
     try {
       const axiosReqConfig: AxiosRequestConfig = {
@@ -81,6 +93,13 @@ export class EmailService {
     }
   }
 
+  /**
+   *
+   * @param mailOptions
+   * @description 이메일 전송을 실행합니다.
+   * @throws CustomInternalServerErrorException
+   * @returns void
+   */
   async sendLottoEmail(mailOptions: ISendMailOptions): Promise<void> {
     try {
       await this.mailerService.sendMail(mailOptions);
