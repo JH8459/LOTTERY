@@ -18,8 +18,12 @@ export class UserEntity extends CommonEntity {
   userId: string;
 
   @IsBoolean()
-  @Column({ name: 'is_subscribe', type: 'boolean', nullable: true })
-  isSubscribe: boolean;
+  @Column({ name: 'is_slack_subscribe', type: 'boolean', nullable: true })
+  isSlackSubscribe: boolean;
+
+  @IsBoolean()
+  @Column({ name: 'is_email_subscribe', type: 'boolean', nullable: true })
+  isEmailSubscribe: boolean;
 
   @IsDate()
   @Column({ name: 'user_avail', type: 'datetime', nullable: true })

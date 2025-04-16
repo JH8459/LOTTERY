@@ -177,7 +177,7 @@ export class ActionService {
 
     let text: string;
 
-    if (userInfo && userInfo.isSubscribe) {
+    if (userInfo && userInfo.isSlackSubscribe) {
       text = `<@${userId}>님은 이미 구독중입니다. 구독 취소를 원하시면 '/구독' 명령어를 입력해주세요.`;
     } else {
       await this.slackRepository.upsertSubscribeStatus(teamId, userId, true, null);
@@ -198,7 +198,7 @@ export class ActionService {
 
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
 
-    if (userInfo && userInfo.isSubscribe) {
+    if (userInfo && userInfo.isSlackSubscribe) {
       // 모달을 출력합니다.
       await client.views.open({
         trigger_id: body.trigger_id,
