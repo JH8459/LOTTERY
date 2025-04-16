@@ -9,6 +9,7 @@ import { SlashCommand } from '@slack/bolt';
 import { UserInfoDto } from '../dto/user.dto';
 import { SlackSubMitButtonNameEnum } from '../constant/slack.enum';
 import { RedisService } from 'src/module/redis/redis.service';
+import { ClientService } from './client.service';
 
 @Injectable()
 export class CommandService {
@@ -16,13 +17,13 @@ export class CommandService {
     public readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly slackRepository: SlackRepository,
-    private readonly builderService: BuilderService
+    private readonly builderService: BuilderService,
+    private readonly clientService: ClientService
   ) {}
 
   async lottoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
-    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-    const token: string = await this.slackRepository.getAccessToken(command.team_id);
-    const client: WebClient = new WebClient(token);
+    // 클라이언트를 생성합니다.
+    const client: WebClient = await this.clientService.getWebClientById(command.team_id);
 
     // 최신 로또 회차 정보를 가져옵니다.
     let recentlyLottoDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
@@ -55,9 +56,8 @@ export class CommandService {
   }
 
   async speettoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
-    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-    const token: string = await this.slackRepository.getAccessToken(command.team_id);
-    const client: WebClient = new WebClient(token);
+    // 클라이언트를 생성합니다.
+    const client: WebClient = await this.clientService.getWebClientById(command.team_id);
 
     // 모달을 출력합니다.
     await client.views.open({
@@ -82,9 +82,8 @@ export class CommandService {
   }
 
   async subscribeCommandHandler(command: SlashCommand): Promise<void> {
-    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-    const token: string = await this.slackRepository.getAccessToken(command.team_id);
-    const client: WebClient = new WebClient(token);
+    // 클라이언트를 생성합니다.
+    const client: WebClient = await this.clientService.getWebClientById(command.team_id);
 
     const userId: string = command.user_id;
     const teamId: string = command.team_id;

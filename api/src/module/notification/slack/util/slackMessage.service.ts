@@ -3,20 +3,30 @@ import { UserInfoDto } from '../dto/user.dto';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+import { ClientService } from './client.service';
 
 @Injectable()
 export class SlackMessageService {
-  constructor(private readonly slackRepository: SlackRepository, private readonly builderService: BuilderService) {}
+  constructor(
+    private readonly slackRepository: SlackRepository,
+    private readonly builderService: BuilderService,
+    private readonly clientService: ClientService,
+    @InjectQueue('slackQueue') private readonly slackQueue: Queue
+  ) {}
 
   async sendSlackMessageToSubscriberList(userIdx: number): Promise<void> {
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfoByIdx(userIdx);
-    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-    const token: string = await this.slackRepository.getAccessToken(userInfo.workspaceId);
-    const client: WebClient = new WebClient(token);
+
+    // 클라이언트를 생성합니다.
+    const client: WebClient = await this.clientService.getWebClientById(userInfo.workspaceId);
+
     // 유저와 앱 간의 개인 채널을 엽니다.
     const response: ConversationsOpenResponse = await client.conversations.open({
       users: userInfo.userId,
     });
+
     // 채널에 메시지를 발송합니다.
     await client.chat.postMessage({
       channel: response.channel.id,
@@ -27,6 +37,7 @@ export class SlackMessageService {
       channel: response.channel.id,
       blocks: await this.builderService.getLottoDrwnoPrizeInfoBlock(),
     });
+
     // 메시지의 thread를 생성합니다.
     const threadTs: string = postMessageResult.ts;
 

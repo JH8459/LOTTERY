@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { EmailService } from '../notification/email/email.service';
 import { RedisService } from '../redis/redis.service';
 import { SchedulerLockKeyEnum } from './constant/scheduler.enum';
-import { SlackMessageService } from '../notification/slack/service/slackMessage.service';
+import { SlackMessageService } from '../notification/slack/util/slackMessage.service';
 import { SchedulerRepository } from './repository/scheduler.repository';
 import { UserEntity } from 'src/entity/user.entity';
 import { ConfigService } from '@nestjs/config';

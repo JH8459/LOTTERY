@@ -20,6 +20,7 @@ export class SlackController {
   @Post('/commands')
   async slackCommandHandler(@Req() req: Request, @Res() res: Response): Promise<void> {
     const receiver = this.slackService.getReceiver();
+
     // receiver를 사용하여 command 요청을 처리합니다.
     await receiver.requestHandler(req, res);
   }

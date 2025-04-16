@@ -6,10 +6,11 @@ import { SlackActionIDEnum, SlackBlockIDEnum } from './constant/slack.enum';
 import { SlackRepository } from './repository/slack.repository';
 import axios, { AxiosResponse } from 'axios';
 import * as querystring from 'querystring';
-import { CommandService } from './service/command.service';
+import { CommandService } from './util/command.service';
 import { SlackInteractionPayload } from './interface/payload.interface';
-import { ActionService } from './service/action.service';
-import { ViewSubmissionService } from './service/viewSubmission.service';
+import { ActionService } from './util/action.service';
+import { ViewSubmissionService } from './util/viewSubmission.service';
+import { ClientService } from './util/client.service';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -22,10 +23,11 @@ export class SlackService implements OnModuleInit {
 
   constructor(
     public readonly configService: ConfigService,
-    private slackRepository: SlackRepository,
+    private readonly slackRepository: SlackRepository,
     private readonly commandService: CommandService,
     private readonly actionService: ActionService,
-    private readonly viewSubMissionService: ViewSubmissionService
+    private readonly viewSubMissionService: ViewSubmissionService,
+    private readonly clientService: ClientService
   ) {
     this.API_SLACK_SIGNING_SECRET = this.configService.get<string>('API_SLACK_SIGNING_SECRET');
     this.API_SLACK_BOT_TOKEN = this.configService.get<string>('API_SLACK_BOT_TOKEN');
@@ -113,10 +115,9 @@ export class SlackService implements OnModuleInit {
   async slackBlockActionsHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
     await ack();
 
+    // 클라이언트를 생성합니다.
     const actionId: string = body.actions[0].action_id;
-    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-    const token: string = await this.slackRepository.getAccessToken(body.user.team_id);
-    const client: WebClient = new WebClient(token);
+    const client: WebClient = await this.clientService.getWebClientById(body.user.team_id);
 
     switch (actionId) {
       case SlackActionIDEnum.PRIZE_INFO:
@@ -146,9 +147,8 @@ export class SlackService implements OnModuleInit {
     const teamId: string = body.team.id;
     const viewValue = body.view.state.values;
 
-    // 저장된 토큰을 가져와 클라이언트를 생성합니다.
-    const token: string = await this.slackRepository.getAccessToken(teamId);
-    const client: WebClient = new WebClient(token);
+    // 클라이언트를 생성합니다.
+    const client: WebClient = await this.clientService.getWebClientById(teamId);
 
     // View input Value 값을 구분하여 View Submission을 처리합니다.
     switch (true) {
