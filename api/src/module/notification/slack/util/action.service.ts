@@ -1,28 +1,26 @@
-import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { WebClient } from '@slack/web-api';
-import Redis from 'ioredis';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { SlackInteractionPayload } from '../interface/payload.interface';
 import { SlackActionIDEnum, SlackSubMitButtonNameEnum } from '../constant/slack.enum';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { UserInfoDto } from '../dto/user.dto';
+import { RedisService } from 'src/module/redis/redis.service';
 
 @Injectable()
 export class ActionService {
   constructor(
-    public readonly configService: ConfigService,
-    @InjectRedis() private readonly redis: Redis,
+    private readonly redisService: RedisService,
     private readonly slackRepository: SlackRepository,
     private readonly builderService: BuilderService
   ) {}
 
   async prizeInfoActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
+    let recentlyDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
 
     if (!recentlyDrwNo) {
+      // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
       recentlyDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
     }
 
@@ -48,9 +46,10 @@ export class ActionService {
   }
 
   async recentlyPrizeInfoActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    let recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
+    let recentlyDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
 
     if (!recentlyDrwNo) {
+      // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
       recentlyDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
     }
 

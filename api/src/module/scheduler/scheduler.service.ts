@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { EmailService } from '../notification/email/email.service';
 import { RedisService } from '../redis/redis.service';
 import { SchedulerLockKeyEnum } from './constant/scheduler.enum';
-import { SlackMessageService } from '../notification/slack/service/slackMessage.service';
+import { SlackMessageService } from '../notification/slack/util/slackMessage.service';
 import { SchedulerRepository } from './repository/scheduler.repository';
 import { UserEntity } from 'src/entity/user.entity';
 import { ConfigService } from '@nestjs/config';
@@ -14,8 +14,8 @@ export class SchedulerService {
 
   constructor(
     public readonly configService: ConfigService,
-    private readonly schedulerRepository: SchedulerRepository,
     private readonly redisService: RedisService,
+    private readonly schedulerRepository: SchedulerRepository,
     private readonly emailService: EmailService,
     private readonly slackMessageService: SlackMessageService
   ) {
@@ -29,7 +29,7 @@ export class SchedulerService {
 
     // lock 획득을 성공한 prod 환경에서만 실행
     if (lock && this.API_NODE_ENV === 'prod') {
-      await this.emailService.sendLottoEmailToSubscriberList();
+      await this.emailService.enqueueLottoEmailToSubscriberList();
 
       await this.redisService.unLock(lockKey);
     }

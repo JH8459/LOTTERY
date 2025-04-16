@@ -4,18 +4,24 @@ import { SlackService } from './slack.service';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SlackRepository } from './repository/slack.repository';
-import { BuilderService } from './service/builder.service';
+import { BuilderService } from './util/builder.service';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
-import { CommandService } from './service/command.service';
-import { ActionService } from './service/action.service';
-import { ViewSubmissionService } from './service/viewSubmission.service';
+import { CommandService } from './util/command.service';
+import { ActionService } from './util/action.service';
+import { ViewSubmissionService } from './util/viewSubmission.service';
 import { FeedbackEntity } from 'src/entity/feedback.entity';
-import { SlackMessageService } from './service/slackMessage.service';
+import { SlackMessageService } from './util/slackMessage.service';
 import { SpeettoEntity } from 'src/entity/speetto.entity';
+import { WebHookService } from './util/webhook.service';
+import { BullModule } from '@nestjs/bull';
+import { ClientService } from './util/client.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, FeedbackEntity])],
+  imports: [
+    TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, FeedbackEntity]),
+    BullModule.registerQueue({ name: 'slackQueue' }),
+  ],
   providers: [
     SlackService,
     SlackRepository,
@@ -23,9 +29,11 @@ import { SpeettoEntity } from 'src/entity/speetto.entity';
     CommandService,
     ActionService,
     ViewSubmissionService,
+    WebHookService,
     SlackMessageService,
+    ClientService,
   ],
   controllers: [SlackController],
-  exports: [SlackMessageService],
+  exports: [SlackMessageService, WebHookService],
 })
 export class SlackModule {}

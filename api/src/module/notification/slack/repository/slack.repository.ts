@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { Repository } from 'typeorm';
-import { LottoInfoInterface } from '../../interface/lotto.interface';
+import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
 import { UserInfoDto } from '../dto/user.dto';
 import { FeedbackEntity } from 'src/entity/feedback.entity';
 import { SpeettoEntity } from 'src/entity/speetto.entity';
-import { SpeettoInfoInterface } from '../../interface/speetto.interface';
+import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 
 @Injectable()
 export class SlackRepository {

@@ -1,4 +1,3 @@
-import { ResponseDto } from 'src/common/dto/response.dto';
 import { InputEmailDto } from '../dto/inputEmail.dto';
 import { SwaggerMethod } from 'src/common/interface/swagger.interface';
 import { ApiOKResponseDto } from './dto/response.dto';
@@ -15,7 +14,7 @@ export const SEND_EMAIL_SWAGGER: SwaggerMethod = {
       description: '응답 성공',
       type: ApiOKResponseDto,
     },
-    API_INTERNAL_SERVER_ERROR_RESPONSE: {
+    API_INTERNEL_SERVER_ERR_RESPONSE: {
       status: 500,
       description: '서버 에러',
       content: {
@@ -24,9 +23,8 @@ export const SEND_EMAIL_SWAGGER: SwaggerMethod = {
             INTERNAL_SERVER_ERROR: {
               summary: '서버 에러 예시',
               value: {
-                message: InternalServerError.GITHUB.message,
-                error: InternalServerError.GITHUB.error,
                 statusCode: InternalServerError.GITHUB.statusCode,
+                message: InternalServerError.GITHUB.message,
               },
             },
           },
@@ -58,7 +56,7 @@ export const SEND_EMAIL_SWAGGER: SwaggerMethod = {
       description: '응답 성공',
       type: ApiOKResponseDto,
     },
-    API_INTERNAL_SERVER_ERROR_RESPONSE: {
+    API_INTERNEL_SERVER_ERR_RESPONSE: {
       status: 500,
       description: '서버 에러',
       content: {
@@ -67,9 +65,8 @@ export const SEND_EMAIL_SWAGGER: SwaggerMethod = {
             INTERNAL_SERVER_ERROR: {
               summary: '서버 에러 예시',
               value: {
-                message: InternalServerError.EMAIL.message,
-                error: InternalServerError.EMAIL.error,
                 statusCode: InternalServerError.EMAIL.statusCode,
+                message: InternalServerError.EMAIL.message,
               },
             },
           },

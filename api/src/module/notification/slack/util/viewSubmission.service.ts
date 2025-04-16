@@ -1,32 +1,38 @@
-import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
-import Redis from 'ioredis';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { SlackInteractionPayload } from '../interface/payload.interface';
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { Block } from '@slack/bolt';
-import { LottoInfoInterface } from '../../interface/lotto.interface';
-import { SpeettoInfoInterface } from '../../interface/speetto.interface';
+import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
+import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
+import { RedisService } from 'src/module/redis/redis.service';
 
 @Injectable()
 export class ViewSubmissionService {
   constructor(
     public readonly configService: ConfigService,
-    @InjectRedis() private readonly redis: Redis,
+    private readonly redisService: RedisService,
     private readonly slackRepository: SlackRepository,
     private readonly builderService: BuilderService
   ) {}
 
   async lottoPrizeInfoViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 최신 로또 회차 번호와 입력한 로또 회차 번호를 가져옵니다.
-    const recentlyDrwNo: number = Number(await this.redis.get('drwNo'));
+    let recentlyDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
+
+    if (!recentlyDrwNo) {
+      // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
+      recentlyDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
+    }
+
     const drwNo: number = Number(
       body.view.state.values[SlackBlockIDEnum.ORDER_INPUT][SlackActionIDEnum.ORDER_INPUT].value
     );
+
     // 유효성 검사를 진행합니다.
     if (drwNo > recentlyDrwNo || drwNo <= 0 || !drwNo) {
       const originalBlocks = body.view.blocks;
@@ -132,13 +138,13 @@ export class ViewSubmissionService {
     const speettoType: number = Number(
       body.view.state.values[SlackBlockIDEnum.SPEETTO_INPUT][SlackActionIDEnum.SPEETTO_INPUT].selected_option.value
     );
+
     // 최신 스피또 당첨 정보를 Redis에서 가져옵니다.
-    let speettoInfo: SpeettoInfoInterface = JSON.parse(await this.redis.get(`speetto${speettoType}Info`));
+    let speettoInfo: SpeettoInfoInterface = await this.redisService.getRecentlySpettoInfo(speettoType);
 
     if (!speettoInfo) {
+      // Redis에 저장된 스피또 정보가 없을 경우, DB에서 조회합니다.
       speettoInfo = await this.slackRepository.getSpeettoInfo(speettoType);
-      // 스피또 정보를 Redis에 저장합니다.
-      await this.redis.set(`speetto${speettoType}Info`, JSON.stringify(speettoType));
     }
 
     await ack({
