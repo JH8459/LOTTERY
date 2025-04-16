@@ -30,8 +30,8 @@ export class EmailController {
   @ApiResponse(SEND_EMAIL_SWAGGER.POST.API_OK_RESPONSE)
   @ApiResponse(SEND_EMAIL_SWAGGER.POST.API_INTERNEL_SERVER_ERR_RESPONSE)
   @Post('test')
-  async sendTestEmail(@Body() { emailInfo }: InputEmailDto): Promise<ResponseDto> {
-    await this.emailService.enqueueLottoEmail(emailInfo);
+  async sendTestEmail(@Body() input: InputEmailDto): Promise<ResponseDto> {
+    await this.emailService.enqueueLottoEmail(input.emailInfo);
 
     const result: ResponseDto = {
       statusCode: HttpStatus.OK,
