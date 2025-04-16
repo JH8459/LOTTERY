@@ -1,4 +1,4 @@
-interface ApiErrorResponsesOptions {
+export interface ApiErrorResponsesOptions {
   status: number;
   description: string;
   content: {
@@ -13,11 +13,7 @@ interface ApiErrorResponsesOptions {
   };
 }
 
-type ErrorType = {
-  [key: string]: ErrorResponse;
-};
-
-interface ErrorResponse {
+export interface ErrorResponse {
   message: string;
   statusCode: 400 | 401 | 404 | 409 | 500;
 }

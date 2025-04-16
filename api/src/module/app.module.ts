@@ -12,12 +12,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TYPE_ORM_CONFIG, TYPE_ORM_TEST_CONFIG } from 'src/config/typeorm.config';
 import { QnaModule } from './qna/qna.module';
 import { BullModule } from '@nestjs/bull';
-import { CustomLoggerService } from 'src/module/logger/logger.service';
 import { RedisModule } from './redis/redis.module';
 import { LoggerModule } from './logger/logger.module';
 import { ValidationPipeService } from 'src/common/custom/pipe/pipe.service';
 import { ResponseInterceptor } from 'src/common/custom/interceptor/response.interceptor';
-import { ServerErrorFilter } from 'src/common/custom/filter/error.filter';
 
 @Module({
   imports: [

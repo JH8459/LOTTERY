@@ -1,4 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
+import { ErrorType } from 'src/common/type/error.type';
 
 export const BadRequestError: ErrorType = {
   NAME: {

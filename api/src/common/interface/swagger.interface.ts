@@ -7,7 +7,6 @@ import {
 } from '@nestjs/swagger';
 
 /**
- * ApiMethodOptions 인터페이스
  * @description API 메소드 옵션을 정의하는 인터페이스입니다.
  * @interface
  * @property {ApiOperationOptions} API_OPERATION - API 작업 옵션
@@ -41,7 +40,6 @@ interface ApiMethodOptions {
 }
 
 /**
- * ApiPostMethodOptions 인터페이스
  * @description POST 메소드의 API 옵션을 정의하는 인터페이스입니다.
  * @interface
  * @extends ApiMethodOptions

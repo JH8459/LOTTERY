@@ -8,6 +8,8 @@ import * as winstonDaily from 'winston-daily-rotate-file';
  */
 @Injectable()
 export class CustomLoggerService implements LoggerService {
+  private logger: winston.Logger;
+
   constructor() {
     // logger format 설정
     const logFormatOption = (colorize?: boolean): winston.Logform.Format =>
@@ -68,8 +70,6 @@ export class CustomLoggerService implements LoggerService {
       ],
     });
   }
-
-  private logger: winston.Logger;
 
   async error(message: string, stack?: string, context?: any): Promise<void> {
     this.logger.error(message, { stack, context });
