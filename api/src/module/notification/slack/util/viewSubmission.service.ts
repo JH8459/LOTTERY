@@ -11,7 +11,6 @@ import { LottoInfoInterface } from '../../../../common/interface/lotto.interface
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 import { RedisService } from 'src/module/redis/redis.service';
 import { UserInfoDto } from '../dto/user.dto';
-import { Transactional } from 'typeorm-transactional';
 import { LOG_TYPE_ENUM } from 'src/common/constant/enum';
 
 @Injectable()
@@ -184,7 +183,6 @@ export class ViewSubmissionService {
     });
   }
 
-  @Transactional()
   async unSubscribeViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     const teamId: string = body.team.id;
     const userId: string = body.user.id;
