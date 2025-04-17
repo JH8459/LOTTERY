@@ -8,11 +8,8 @@ import { ServerErrorFilter } from './common/custom/filter/error.filter';
 import { CustomLoggerService } from './module/logger/logger.service';
 import { ValidationPipeService } from './common/custom/pipe/pipe.service';
 import { ValidationPipe } from '@nestjs/common';
-import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
-  initializeTransactionalContext();
-
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
       origin: true,

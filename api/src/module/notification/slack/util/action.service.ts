@@ -7,7 +7,6 @@ import { SlackActionIDEnum, SlackSubMitButtonNameEnum } from '../constant/slack.
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { UserInfoDto } from '../dto/user.dto';
 import { RedisService } from 'src/module/redis/redis.service';
-import { Transactional } from 'typeorm-transactional';
 import { LOG_TYPE_ENUM } from 'src/common/constant/enum';
 
 @Injectable()
@@ -170,7 +169,6 @@ export class ActionService {
     });
   }
 
-  @Transactional()
   async subscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 유저의 정보를 조회합니다.
     const userId: string = body.user.id;
