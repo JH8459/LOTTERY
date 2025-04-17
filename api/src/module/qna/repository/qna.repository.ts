@@ -9,13 +9,11 @@ export class QnaRepository {
   constructor(@InjectRepository(QnaEntity) private readonly qnaModel: Repository<QnaEntity>) {}
 
   async insertQna(qnaRegistInfo: QnaRegistInfoDto): Promise<void> {
-    await this.qnaModel.manager.transaction(async (transactionalEntityManager) => {
-      await transactionalEntityManager
-        .createQueryBuilder()
-        .insert()
-        .into(QnaEntity)
-        .values({ ...qnaRegistInfo })
-        .execute();
-    });
+    await this.qnaModel
+      .createQueryBuilder()
+      .insert()
+      .into(QnaEntity)
+      .values({ ...qnaRegistInfo })
+      .execute();
   }
 }

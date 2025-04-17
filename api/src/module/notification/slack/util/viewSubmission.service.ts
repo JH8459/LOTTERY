@@ -10,6 +10,9 @@ import { Block } from '@slack/bolt';
 import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 import { RedisService } from 'src/module/redis/redis.service';
+import { UserInfoDto } from '../dto/user.dto';
+import { Transactional } from 'typeorm-transactional';
+import { LOG_TYPE_ENUM } from 'src/common/constant/enum';
 
 @Injectable()
 export class ViewSubmissionService {
@@ -181,29 +184,46 @@ export class ViewSubmissionService {
     });
   }
 
-  async feedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    // 유저 정보를 가져옵니다.
-    const userId: string = body.user.id;
+  @Transactional()
+  async unSubscribeViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     const teamId: string = body.team.id;
-    // 구독 해제 상태를 저장합니다.
-    const userIdx = await this.slackRepository.upsertSubscribeStatus(teamId, userId, false, new Date());
+    const userId: string = body.user.id;
+
+    // 유저 정보를 가져옵니다.
+    const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+    let workspaceIdx: number;
+
+    if (!userInfo) {
+      workspaceIdx = await this.slackRepository.getWorkSpaceIdx(teamId);
+    }
+
+    // 정보를 업데이트합니다. (구독 해제)
+    const userIdx = await this.slackRepository.upsertSubscribeStatus(userInfo, workspaceIdx, userId, false);
+
+    // 슬랙 구독 해제 로그를 저장합니다.
+    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE, userId);
+
     // 구독 해제 메시지를 작성합니다.
-    let text: string = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
-    // 피드백이 있을 경우 저장합니다.
+    let text = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
+
     const feedback: string =
       body.view.state.values[SlackBlockIDEnum.FEEDBACK_INPUT][SlackActionIDEnum.FEEDBACK_INPUT].value;
 
     if (feedback) {
-      await this.slackRepository.insertFeedback(userIdx, feedback);
+      // 피드백이 있을 경우 저장합니다.
+      await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.FEEDBACK_INPUT, feedback);
 
       text += ' (소중한 피드백 감사합니다. 👍)';
     }
+
     // View를 업데이트합니다. (모달 창 닫기)
     await ack();
+
     // 유저와 앱 간의 개인 채널을 엽니다.
     const response: ConversationsOpenResponse = await client.conversations.open({
       users: userId,
     });
+
     // 채널에 메시지를 발송합니다.
     await client.chat.postMessage({
       channel: response.channel.id,
