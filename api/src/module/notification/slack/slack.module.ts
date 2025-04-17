@@ -10,16 +10,16 @@ import { UserEntity } from 'src/entity/user.entity';
 import { CommandService } from './util/command.service';
 import { ActionService } from './util/action.service';
 import { ViewSubmissionService } from './util/viewSubmission.service';
-import { FeedbackEntity } from 'src/entity/feedback.entity';
 import { SlackMessageService } from './util/slackMessage.service';
 import { SpeettoEntity } from 'src/entity/speetto.entity';
 import { WebHookService } from './util/webhook.service';
 import { BullModule } from '@nestjs/bull';
 import { ClientService } from './util/client.service';
+import { UserLogEntity } from 'src/entity/userLog.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, FeedbackEntity]),
+    TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, UserLogEntity]),
     BullModule.registerQueue({ name: 'slackQueue' }),
   ],
   providers: [

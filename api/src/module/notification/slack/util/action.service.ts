@@ -7,6 +7,8 @@ import { SlackActionIDEnum, SlackSubMitButtonNameEnum } from '../constant/slack.
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { UserInfoDto } from '../dto/user.dto';
 import { RedisService } from 'src/module/redis/redis.service';
+import { Transactional } from 'typeorm-transactional';
+import { LOG_TYPE_ENUM } from 'src/common/constant/enum';
 
 @Injectable()
 export class ActionService {
@@ -168,21 +170,32 @@ export class ActionService {
     });
   }
 
+  @Transactional()
   async subscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 유저의 정보를 조회합니다.
     const userId: string = body.user.id;
     const teamId: string = body.user.team_id;
 
+    // 유저 정보를 가져옵니다.
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+    let workspaceIdx: number;
+
+    if (!userInfo) {
+      workspaceIdx = await this.slackRepository.getWorkSpaceIdx(teamId);
+    }
 
     let text: string;
 
     if (userInfo && userInfo.isSlackSubscribe) {
       text = `<@${userId}>님은 이미 구독중입니다. 구독 취소를 원하시면 '/구독' 명령어를 입력해주세요.`;
     } else {
-      await this.slackRepository.upsertSubscribeStatus(teamId, userId, true, null);
-
       text = `<@${userId}>님, 구독해주셔서 감사합니다. 매주 월요일 09시에 당첨 결과 정보를 알려드릴게요. 🍀`;
+
+      // 정보를 업데이트합니다. (구독)
+      const userIdx = await this.slackRepository.upsertSubscribeStatus(userInfo, workspaceIdx, userId, false);
+
+      // 슬랙 구독 로그를 저장합니다.
+      await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_SUBSCRIBE, userId);
     }
 
     await client.chat.postMessage({

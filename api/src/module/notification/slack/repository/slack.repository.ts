@@ -6,9 +6,10 @@ import { LottoInfoInterface } from '../../../../common/interface/lotto.interface
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
 import { UserInfoDto } from '../dto/user.dto';
-import { FeedbackEntity } from 'src/entity/feedback.entity';
 import { SpeettoEntity } from 'src/entity/speetto.entity';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
+import { UserLogEntity } from 'src/entity/userLog.entity';
+import { LOG_TYPE_ENUM } from 'src/common/constant/enum';
 
 @Injectable()
 export class SlackRepository {
@@ -17,7 +18,7 @@ export class SlackRepository {
     @InjectRepository(SpeettoEntity) private readonly speettoModel: Repository<SpeettoEntity>,
     @InjectRepository(WorkspaceEntity) private readonly workspaceModel: Repository<WorkspaceEntity>,
     @InjectRepository(UserEntity) private readonly userModel: Repository<UserEntity>,
-    @InjectRepository(FeedbackEntity) private readonly feedbackModel: Repository<FeedbackEntity>
+    @InjectRepository(UserLogEntity) private readonly userLogModel: Repository<UserLogEntity>
   ) {}
 
   async getUserInfo(workspaceId: string, userId: string): Promise<UserInfoDto> {
@@ -28,8 +29,9 @@ export class SlackRepository {
         'userEntity.workspaceIdx AS workspaceIdx',
         'workspaceEntity.workspaceId AS workspaceId',
         'userEntity.userId AS userId',
-        'userEntity.isEmailSubscribe AS isEmailSubscribe',
+        'userEntity.userEmail AS userEmail',
         'userEntity.isSlackSubscribe AS isSlackSubscribe',
+        'userEntity.isEmailSubscribe AS isEmailSubscribe',
       ])
       .innerJoin(WorkspaceEntity, 'workspaceEntity', 'workspaceEntity.workspaceIdx = userEntity.workspaceIdx')
       .where('workspaceEntity.workspaceId = :workspaceId', { workspaceId })
@@ -56,30 +58,27 @@ export class SlackRepository {
     return userInfo;
   }
 
-  async upsertSubscribeStatus(
-    workspaceId: string,
-    userId: string,
-    isSlackSubscribe: boolean,
-    userAvail: Date
-  ): Promise<number> {
-    const { workspaceIdx } = await this.workspaceModel
+  async getWorkSpaceIdx(workspaceId: string): Promise<number> {
+    const workspaceInfo: WorkspaceEntity = await this.workspaceModel
       .createQueryBuilder('workspaceEntity')
-      .select('workspaceEntity.workspaceIdx AS workspaceIdx')
+      .select(['workspaceEntity.workspaceIdx AS workspaceIdx'])
       .where('workspaceEntity.workspaceId = :workspaceId', { workspaceId })
       .getRawOne();
 
-    const userInfo: UserEntity = await this.userModel
-      .createQueryBuilder('userEntity')
-      .select('userEntity.userIdx AS userIdx')
-      .where('userEntity.userId = :userId', { userId })
-      .andWhere('userEntity.workspaceIdx = :workspaceIdx', { workspaceIdx })
-      .getRawOne();
+    return workspaceInfo ? workspaceInfo.workspaceIdx : null;
+  }
 
+  async upsertSubscribeStatus(
+    userInfo: UserInfoDto,
+    workspaceIdx: number,
+    userId: string,
+    isSlackSubscribe: boolean
+  ): Promise<number> {
     if (userInfo) {
       await this.userModel
         .createQueryBuilder('userEntity')
         .update(UserEntity)
-        .set({ isSlackSubscribe, userAvail })
+        .set({ isSlackSubscribe })
         .where('userIdx = :userIdx', { userIdx: userInfo.userIdx })
         .execute();
 
@@ -89,22 +88,20 @@ export class SlackRepository {
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
-        .values({ workspaceIdx, userId, isSlackSubscribe, userAvail })
+        .values({ workspaceIdx, userId, isSlackSubscribe })
         .execute();
 
       return insertResult.identifiers[0].userIdx;
     }
   }
 
-  async insertFeedback(userIdx: number, feedbackContent: string): Promise<void> {
-    await this.feedbackModel.manager.transaction(async (transactionalEntityManager) => {
-      await transactionalEntityManager
-        .createQueryBuilder()
-        .insert()
-        .into(FeedbackEntity)
-        .values({ userIdx, feedbackContent })
-        .execute();
-    });
+  async saveUserlog(userIdx: number, logType: LOG_TYPE_ENUM, description?: string): Promise<void> {
+    await this.userLogModel
+      .createQueryBuilder()
+      .insert()
+      .into(UserLogEntity)
+      .values({ userIdx, logType, description })
+      .execute();
   }
 
   async saveAccessToken(workspaceName: string, workspaceId: string, accessToken: string): Promise<void> {
@@ -121,14 +118,12 @@ export class SlackRepository {
         .where('workspaceId = :workspaceId', { workspaceId })
         .execute();
     } else {
-      await this.workspaceModel.manager.transaction(async (transactionalEntityManager) => {
-        await transactionalEntityManager
-          .createQueryBuilder()
-          .insert()
-          .into(WorkspaceEntity)
-          .values({ workspaceName, workspaceId, accessToken })
-          .execute();
-      });
+      await this.workspaceModel
+        .createQueryBuilder()
+        .insert()
+        .into(WorkspaceEntity)
+        .values({ workspaceName, workspaceId, accessToken })
+        .execute();
     }
   }
 

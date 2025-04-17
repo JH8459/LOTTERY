@@ -1,8 +1,8 @@
 import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
-import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { WorkspaceEntity } from './workspace.entity';
-import { FeedbackEntity } from './feedback.entity';
 import { CommonEntity } from 'src/common/entity/common.entity';
+import { UserLogEntity } from './userLog.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends CommonEntity {
@@ -40,6 +40,6 @@ export class UserEntity extends CommonEntity {
   @JoinColumn([{ name: 'workspace_idx', referencedColumnName: 'workspaceIdx' }])
   workspaceIdxRelation: WorkspaceEntity;
 
-  @OneToMany(() => FeedbackEntity, (feedback) => feedback.userIdxRelation)
-  feedbackRelation: FeedbackEntity[];
+  @OneToMany(() => UserLogEntity, (userLog) => userLog.userIdxRelation)
+  userLogRelation: UserLogEntity[];
 }
