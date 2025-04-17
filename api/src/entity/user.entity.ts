@@ -17,12 +17,16 @@ export class UserEntity extends CommonEntity {
   @Column({ name: 'user_id', type: 'varchar', length: 500 })
   userId: string;
 
+  @IsString()
+  @Column({ name: 'user_email', type: 'varchar', length: 100, nullable: true })
+  userEmail: string;
+
   @IsBoolean()
-  @Column({ name: 'is_slack_subscribe', type: 'boolean', nullable: true })
+  @Column({ name: 'is_slack_subscribe', type: 'boolean', default: false })
   isSlackSubscribe: boolean;
 
   @IsBoolean()
-  @Column({ name: 'is_email_subscribe', type: 'boolean', nullable: true })
+  @Column({ name: 'is_email_subscribe', type: 'boolean', default: false })
   isEmailSubscribe: boolean;
 
   @IsDate()
