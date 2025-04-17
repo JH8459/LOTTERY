@@ -96,7 +96,7 @@ export class CommandService {
     // 유저의 정보를 조회합니다.
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
 
-    if (userInfo && userInfo.isSubscribe) {
+    if (userInfo && userInfo.isSlackSubscribe) {
       // 유저의 앱 채널에서 구독 취소 메시지를 발송합니다.
       await client.chat.postMessage({
         channel: response.channel.id,

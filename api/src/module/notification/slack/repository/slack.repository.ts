@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { Repository } from 'typeorm';
+import { InsertResult, Repository } from 'typeorm';
 import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
@@ -28,7 +28,8 @@ export class SlackRepository {
         'userEntity.workspaceIdx AS workspaceIdx',
         'workspaceEntity.workspaceId AS workspaceId',
         'userEntity.userId AS userId',
-        'userEntity.isSubscribe AS isSubscribe',
+        'userEntity.isEmailSubscribe AS isEmailSubscribe',
+        'userEntity.isSlackSubscribe AS isSlackSubscribe',
       ])
       .innerJoin(WorkspaceEntity, 'workspaceEntity', 'workspaceEntity.workspaceIdx = userEntity.workspaceIdx')
       .where('workspaceEntity.workspaceId = :workspaceId', { workspaceId })
@@ -58,7 +59,7 @@ export class SlackRepository {
   async upsertSubscribeStatus(
     workspaceId: string,
     userId: string,
-    isSubscribe: boolean,
+    isSlackSubscribe: boolean,
     userAvail: Date
   ): Promise<number> {
     const { workspaceIdx } = await this.workspaceModel
@@ -78,24 +79,20 @@ export class SlackRepository {
       await this.userModel
         .createQueryBuilder('userEntity')
         .update(UserEntity)
-        .set({ isSubscribe, userAvail })
+        .set({ isSlackSubscribe, userAvail })
         .where('userIdx = :userIdx', { userIdx: userInfo.userIdx })
         .execute();
 
       return userInfo.userIdx;
     } else {
-      const userIdx: number = await this.userModel.manager.transaction(async (transactionalEntityManager) => {
-        const { identifiers } = await transactionalEntityManager
-          .createQueryBuilder()
-          .insert()
-          .into(UserEntity)
-          .values({ workspaceIdx, userId, isSubscribe, userAvail })
-          .execute();
+      const insertResult: InsertResult = await this.userModel
+        .createQueryBuilder()
+        .insert()
+        .into(UserEntity)
+        .values({ workspaceIdx, userId, isSlackSubscribe, userAvail })
+        .execute();
 
-        return identifiers[0].userIdx;
-      });
-
-      return userIdx;
+      return insertResult.identifiers[0].userIdx;
     }
   }
 
