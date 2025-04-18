@@ -237,7 +237,7 @@ export class ActionService {
     });
   }
 
-  async emailSubscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+  async emailSubscribeInputActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 모달창 업데이트
     await client.views.update({
       view_id: body.view.id,
