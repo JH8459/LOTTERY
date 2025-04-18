@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { emailTemplate } from './template/email.template';
+import { emailTemplate } from './template/lotto.template';
 import { convertDateFormat } from 'src/common/utils/utils';
 import {
   LottoHighestPrizeInfoInterface,
@@ -34,7 +34,7 @@ export class EmailService {
   /**
    *
    * @param emailInfo
-   * @description 이메일 전송을 위한 작업을 큐에 추가합니다.
+   * @description 로또 당첨 정보 이메일 전송을 위한 작업을 큐에 추가합니다.
    * @returns void
    */
   async enqueueLottoEmail(emailInfo: string): Promise<void> {

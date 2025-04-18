@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { SlackController } from './slack.controller';
 import { SlackService } from './slack.service';
 import { LottoEntity } from 'src/entity/lotto.entity';
@@ -16,11 +16,13 @@ import { WebHookService } from './util/webhook.service';
 import { BullModule } from '@nestjs/bull';
 import { ClientService } from './util/client.service';
 import { UserLogEntity } from 'src/entity/userLog.entity';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, UserLogEntity]),
     BullModule.registerQueue({ name: 'slackQueue' }),
+    forwardRef(() => EmailModule),
   ],
   providers: [
     SlackService,

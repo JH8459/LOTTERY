@@ -12,12 +12,14 @@ import { SpeettoInfoInterface } from '../../../../common/interface/speetto.inter
 import { RedisService } from 'src/module/redis/redis.service';
 import { UserInfoDto } from '../dto/user.dto';
 import { LOG_TYPE_ENUM, SUBSCRIBE_TYPE } from 'src/common/constant/enum';
+import { EmailService } from '../../email/email.service';
 
 @Injectable()
 export class ViewSubmissionService {
   constructor(
     public readonly configService: ConfigService,
     private readonly redisService: RedisService,
+    private readonly emailService: EmailService,
     private readonly slackRepository: SlackRepository,
     private readonly builderService: BuilderService
   ) {}
@@ -381,6 +383,14 @@ export class ViewSubmissionService {
 
       // 인증코드 입력 블록을 EMAIL_CONFIRM_INPUT 블록 아래에 추가합니다.
       originalBlocks.splice(emailConfirmIndex + 1, 0, verificationInputBlock);
+
+      // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
+      const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
+
+      console.log('verificationCode: ', verificationCode);
+
+      // 이메일 인증을 위한 메일을 발송합니다.
+      await this.emailService.enqueueLottoEmail(userEmail);
 
       // View를 업데이트합니다.
       await client.views.update({
