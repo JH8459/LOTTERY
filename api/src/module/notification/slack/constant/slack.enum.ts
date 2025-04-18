@@ -27,6 +27,7 @@ export enum SlackBlockIDEnum {
   SLACK_FEEDBACK_INPUT = 'slack_feedback_input',
   EMAIL_SUBSCRIBE_INPUT = 'email_subscribe_input',
   EMAIL_CONFIRM_INPUT = 'email_confirm_input',
+  EMAIL_CONFIRM_INPUT_WARNING = 'email_confirm_input_warning',
   EMAIL_CONFIRM = 'email_confirm',
   EMAIL_RESEND_VERIFICATION_CODE = 'email_resend_verification_code',
   EMAIL_FEEDBACK_INPUT = 'email_feedback_input',
