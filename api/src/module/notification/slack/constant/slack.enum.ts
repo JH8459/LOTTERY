@@ -16,6 +16,8 @@ export enum SlackActionIDEnum {
   SLACK_UNSUBSCRIBE = 'slack_unsubscribe',
   EMAIL_SUBSCRIBE = 'email_subscribe',
   EMAIL_SUBSCRIBE_INPUT = 'email_subscribe_input',
+  EMAIL_CONFIRM_INPUT = 'email_confirm_input',
+  EMAIL_CONFIRM = 'email_confirm',
   EMAIL_UNSUBSCRIBE = 'email_unsubscribe',
 }
 
@@ -23,6 +25,8 @@ export enum SlackBlockIDEnum {
   ORDER_INPUT = 'order_input',
   SLACK_FEEDBACK_INPUT = 'slack_feedback_input',
   EMAIL_SUBSCRIBE_INPUT = 'email_subscribe_input',
+  EMAIL_CONFIRM_INPUT = 'email_confirm_input',
+  EMAIL_CONFIRM = 'email_confirm',
   EMAIL_FEEDBACK_INPUT = 'email_feedback_input',
   SPEETTO_INPUT = 'speetto_input',
   INPUT_ERROR_MESSAGE = 'input_error_message',

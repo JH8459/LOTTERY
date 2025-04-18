@@ -965,14 +965,14 @@ export class BuilderService {
       },
       {
         type: 'input',
-        block_id: SlackBlockIDEnum.EMAIL_SUBSCRIBE_INPUT,
+        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT,
         element: {
           type: 'plain_text_input',
-          action_id: SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT,
+          action_id: SlackActionIDEnum.EMAIL_CONFIRM_INPUT,
         },
         label: {
           type: 'plain_text',
-          text: '📧 정확한 이메일 주소를 입력해주세요.',
+          text: '정확한 이메일 주소를 입력해주세요.',
           emoji: true,
         },
         optional: false,
