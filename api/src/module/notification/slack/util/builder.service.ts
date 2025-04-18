@@ -979,6 +979,7 @@ export class BuilderService {
       },
       {
         type: 'context',
+        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT_WARNING,
         elements: [
           {
             type: 'image',

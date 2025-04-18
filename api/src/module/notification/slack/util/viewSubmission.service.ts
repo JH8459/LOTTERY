@@ -308,6 +308,11 @@ export class ViewSubmissionService {
         (block: Block) => block.block_id === SlackBlockIDEnum.EMAIL_CONFIRM_INPUT
       );
 
+      // EMAIL_CONFIRM_INPUT_WARNING 블록의 인덱스를 찾습니다.
+      const emailConfirmWarningIndex = originalBlocks.findIndex(
+        (block: Block) => block.block_id === SlackBlockIDEnum.EMAIL_CONFIRM_INPUT_WARNING
+      );
+
       // 기존 에러 메시지 블록의 인덱스를 찾습니다.
       const errorBlockIndex = originalBlocks.findIndex(
         (block: Block) => block.block_id === SlackBlockIDEnum.INPUT_ERROR_MESSAGE
@@ -337,7 +342,24 @@ export class ViewSubmissionService {
         },
       };
 
-      // 6자리 인증번호 입력 블록을 추가합니다.
+      // EMAIL_CONFIRM_INPUT_WARNING 블록의 주의사항 메시지를 수정합니다.
+      originalBlocks[emailConfirmWarningIndex] = {
+        type: 'context',
+        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT_WARNING,
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*인증코드의 유효시간은 1시간입니다.*',
+          },
+        ],
+      };
+
+      // 6자리 인증코드 입력 블록을 추가합니다.
       const verificationInputBlock = {
         type: 'input',
         block_id: SlackBlockIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
@@ -346,18 +368,18 @@ export class ViewSubmissionService {
           action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
           placeholder: {
             type: 'plain_text',
-            text: '6자리 인증번호를 입력하세요',
+            text: '6자리 인증코드를 입력하세요',
           },
           max_length: 6,
         },
         label: {
           type: 'plain_text',
-          text: '인증번호 입력',
+          text: '인증코드 입력',
           emoji: true,
         },
       };
 
-      // 인증번호 입력 블록을 EMAIL_CONFIRM_INPUT 블록 아래에 추가합니다.
+      // 인증코드 입력 블록을 EMAIL_CONFIRM_INPUT 블록 아래에 추가합니다.
       originalBlocks.splice(emailConfirmIndex + 1, 0, verificationInputBlock);
 
       // View를 업데이트합니다.
