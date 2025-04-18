@@ -839,7 +839,7 @@ export class BuilderService {
               emoji: true,
             },
             style: 'danger',
-            action_id: SlackActionIDEnum.SLACK_UNSUBSCRIBE,
+            action_id: SlackActionIDEnum.EMAIL_UNSUBSCRIBE,
           },
         };
       } else {

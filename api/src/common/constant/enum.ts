@@ -5,3 +5,8 @@ export enum LOG_TYPE_ENUM {
   EMAIL_UNSUBSCRIBE = 'email_unsubscribe',
   FEEDBACK_INPUT = 'feedback_input',
 }
+
+export enum SUBSCRIBE_TYPE {
+  SLACK = 'slack',
+  ELMAIL = 'email',
+}
