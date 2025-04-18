@@ -372,7 +372,16 @@ export class ViewSubmissionService {
         },
       });
 
-      await ack();
+      await ack({
+        response_action: 'update',
+        view: {
+          type: 'modal',
+          title: body.view.title,
+          blocks: originalBlocks,
+          close: body.view.close,
+          submit: body.view.submit,
+        },
+      });
     }
   }
 }
