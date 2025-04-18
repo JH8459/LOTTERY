@@ -11,8 +11,10 @@ export enum SlackActionIDEnum {
   ORDER_INPUT = 'order_input',
   FEEDBACK_INPUT = 'feedback_input',
   SPEETTO_INPUT = 'speetto_input',
-  SUBSCRIBE = 'subscribe',
-  UN_SUBSCRIBE = 'un_subscribe',
+  SLACK_SUBSCRIBE = 'slack_subscribe',
+  SLACK_UNSUBSCRIBE = 'slack_unsubscribe',
+  EMAIL_SUBSCRIBE = 'email_subscribe',
+  EMAIL_UNSUBSCRIBE = 'email_unsubscribe',
 }
 
 export enum SlackBlockIDEnum {

@@ -199,7 +199,7 @@ export class ViewSubmissionService {
     const userIdx = await this.slackRepository.upsertSubscribeStatus(userInfo, workspaceIdx, userId, false);
 
     // 슬랙 구독 해제 로그를 저장합니다.
-    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE, userId);
+    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE);
 
     // 구독 해제 메시지를 작성합니다.
     let text = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;

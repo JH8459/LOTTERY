@@ -9,6 +9,7 @@ import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringForm
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 import { RedisService } from 'src/module/redis/redis.service';
+import { UserInfoDto } from '../dto/user.dto';
 
 @Injectable()
 export class BuilderService {
@@ -781,6 +782,134 @@ export class BuilderService {
     return blocks;
   }
 
+  async getSubscribeInputBlock(userInfo: UserInfoDto): Promise<(Block | KnownBlock)[]> {
+    const convertSlackSubscribeBlock = (userInfo: UserInfoDto) => {
+      if (userInfo && userInfo.isSlackSubscribe) {
+        return {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `*🔕 슬랙 구독 해지*\n<@${userInfo.userId}>님은 이미 구독중이시네요. 구독 해지를 원하시면 선택해주세요.`,
+          },
+          accessory: {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              text: '구독해지',
+              emoji: true,
+            },
+            style: 'danger',
+            action_id: SlackActionIDEnum.SLACK_UNSUBSCRIBE,
+          },
+        };
+      } else {
+        return {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '*🔔 슬랙 구독하기*\n매주 월요일 AM 09:00에 앱 채널로 로또 당첨 정보가 발송됩니다.',
+          },
+          accessory: {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              text: '구독하기',
+              emoji: true,
+            },
+            style: 'primary',
+            action_id: SlackActionIDEnum.SLACK_SUBSCRIBE,
+          },
+        };
+      }
+    };
+
+    const convertEmailSubscribeBlock = (userInfo: UserInfoDto) => {
+      if (userInfo && userInfo.isEmailSubscribe) {
+        return {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `*🔕 이메일 구독 해지*\n<@${userInfo.userId}>님은 이미 구독중이시네요. 구독 해지를 원하시면 선택해주세요.`,
+          },
+          accessory: {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              text: '구독해지',
+              emoji: true,
+            },
+            style: 'danger',
+            action_id: SlackActionIDEnum.SLACK_UNSUBSCRIBE,
+          },
+        };
+      } else {
+        return {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '*🔔 이메일 구독하기*\n매주 일요일 AM 09:00에 로또 당첨 정보 뉴스레터가 발송됩니다.',
+          },
+          accessory: {
+            type: 'button',
+            text: {
+              type: 'plain_text',
+              text: '구독하기',
+              emoji: true,
+            },
+            style: 'primary',
+            action_id: SlackActionIDEnum.EMAIL_SUBSCRIBE,
+          },
+        };
+      }
+    };
+
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*🍀 LOTTERY* 구독 상태를 확인 후 신청해주세요.',
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*🍀 LOTTERY* 는 두가지 방식 (*슬랙 채널*, *이메일 뉴스레터*) 의 구독 채널을 지원합니다. 두가지 방식 모두 선택이 가능하니 원하시는 구독 방식을 선택해주세요.',
+        },
+        accessory: {
+          type: 'image',
+          image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_subscribe.png',
+          alt_text: 'subscribe',
+        },
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*이메일이 수신이 안되시나요? <https://lottery.jh8459.com/support.html|👉 문의하기>*',
+          },
+        ],
+      },
+      {
+        type: 'divider',
+      },
+      convertSlackSubscribeBlock(userInfo),
+      convertEmailSubscribeBlock(userInfo),
+    ];
+
+    return blocks;
+  }
+
   async getSubscribeInfoBlock(userId: string): Promise<(Block | KnownBlock)[]> {
     const blocks: (Block | KnownBlock)[] = [
       {
@@ -831,7 +960,7 @@ export class BuilderService {
             emoji: true,
           },
           style: 'primary',
-          action_id: SlackActionIDEnum.SUBSCRIBE,
+          action_id: SlackActionIDEnum.SLACK_SUBSCRIBE,
         },
       },
       {
@@ -901,7 +1030,7 @@ export class BuilderService {
             emoji: true,
           },
           style: 'danger',
-          action_id: SlackActionIDEnum.UN_SUBSCRIBE,
+          action_id: SlackActionIDEnum.SLACK_UNSUBSCRIBE,
         },
       },
       {
