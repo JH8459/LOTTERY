@@ -132,10 +132,10 @@ export class SlackService implements OnModuleInit {
       case SlackActionIDEnum.SPEETTO_INFO:
         await this.actionService.speettoInfoActionHandler(client, body);
         break;
-      case SlackActionIDEnum.SUBSCRIBE:
+      case SlackActionIDEnum.SLACK_SUBSCRIBE:
         await this.actionService.subscribeActionHandler(client, body);
         break;
-      case SlackActionIDEnum.UN_SUBSCRIBE:
+      case SlackActionIDEnum.SLACK_UNSUBSCRIBE:
         await this.actionService.unSubscribeActionHandler(client, body);
         break;
       default:
