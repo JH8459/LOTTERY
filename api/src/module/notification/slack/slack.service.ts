@@ -138,6 +138,9 @@ export class SlackService implements OnModuleInit {
       case SlackActionIDEnum.SLACK_UNSUBSCRIBE:
         await this.actionService.slackUnSubscribeActionHandler(client, body);
         break;
+      case SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT:
+        await this.actionService.emailSubscribeInputActionHandler(client, body);
+        break;
       default:
         break;
     }

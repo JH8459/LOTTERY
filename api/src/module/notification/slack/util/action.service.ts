@@ -205,7 +205,7 @@ export class ActionService {
           type: 'plain_text',
           text: '구독 서비스 관리',
         },
-        blocks: await this.builderService.getSubscribeInputBlock(updateUserInfo),
+        blocks: this.builderService.getSubscribeInputBlock(updateUserInfo),
         close: {
           type: 'plain_text',
           text: '닫기',
@@ -224,7 +224,30 @@ export class ActionService {
           type: 'plain_text',
           text: '구독 취소 확인',
         },
-        blocks: await this.builderService.getUnSubscribeConfirmedBlock(body.user.name),
+        blocks: this.builderService.getUnSubscribeConfirmedBlock(),
+        close: {
+          type: 'plain_text',
+          text: '닫기',
+        },
+        submit: {
+          type: 'plain_text',
+          text: '확인',
+        },
+      },
+    });
+  }
+
+  async emailSubscribeInputActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    // 모달창 업데이트
+    await client.views.update({
+      view_id: body.view.id,
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: '이메일 주소 확인',
+        },
+        blocks: this.builderService.getSubscribeEmailInputBlock(),
         close: {
           type: 'plain_text',
           text: '닫기',
