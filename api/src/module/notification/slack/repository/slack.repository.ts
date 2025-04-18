@@ -9,7 +9,7 @@ import { UserInfoDto } from '../dto/user.dto';
 import { SpeettoEntity } from 'src/entity/speetto.entity';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 import { UserLogEntity } from 'src/entity/userLog.entity';
-import { LOG_TYPE_ENUM } from 'src/common/constant/enum';
+import { LOG_TYPE_ENUM, SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 
 @Injectable()
 export class SlackRepository {
@@ -49,7 +49,9 @@ export class SlackRepository {
         'userEntity.workspaceIdx AS workspaceIdx',
         'workspaceEntity.workspaceId AS workspaceId',
         'userEntity.userId AS userId',
-        'userEntity.isSubscribe AS isSubscribe',
+        'userEntity.userEmail AS userEmail',
+        'userEntity.isSlackSubscribe AS isSlackSubscribe',
+        'userEntity.isEmailSubscribe AS isEmailSubscribe',
       ])
       .innerJoin(WorkspaceEntity, 'workspaceEntity', 'workspaceEntity.workspaceIdx = userEntity.workspaceIdx')
       .where('userEntity.userIdx = :userIdx', { userIdx })
@@ -72,13 +74,16 @@ export class SlackRepository {
     userInfo: UserInfoDto,
     workspaceIdx: number,
     userId: string,
-    isSlackSubscribe: boolean
+    subscribeType: SUBSCRIBE_TYPE,
+    isSubscribe: boolean
   ): Promise<number> {
     if (userInfo) {
       await this.userModel
         .createQueryBuilder('userEntity')
         .update(UserEntity)
-        .set({ isSlackSubscribe })
+        .set(
+          subscribeType === SUBSCRIBE_TYPE.SLACK ? { isSlackSubscribe: isSubscribe } : { isEmailSubscribe: isSubscribe }
+        )
         .where('userIdx = :userIdx', { userIdx: userInfo.userIdx })
         .execute();
 
@@ -88,7 +93,11 @@ export class SlackRepository {
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
-        .values({ workspaceIdx, userId, isSlackSubscribe })
+        .values(
+          subscribeType === SUBSCRIBE_TYPE.SLACK
+            ? { workspaceIdx, userId, isSlackSubscribe: isSubscribe }
+            : { workspaceIdx, userId, isEmailSubscribe: isSubscribe }
+        )
         .execute();
 
       return insertResult.identifiers[0].userIdx;
