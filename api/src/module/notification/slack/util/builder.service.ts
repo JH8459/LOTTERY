@@ -807,7 +807,7 @@ export class BuilderService {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: '*🔔 슬랙 구독하기*\n매주 월요일 AM 09:00에 앱 채널로 로또 당첨 정보가 발송됩니다.',
+            text: '*🔔 슬랙 구독하기*\n매주 월요일 AM 09:00에 워크스페이스의 앱 채널로 로또 당첨 정보를 요약해서 발송해드려요.',
           },
           accessory: {
             type: 'button',
@@ -847,7 +847,7 @@ export class BuilderService {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: '*🔔 이메일 구독하기*\n매주 일요일 AM 09:00에 로또 당첨 정보 뉴스레터가 발송됩니다.',
+            text: '*🔔 이메일 구독하기*\n매주 일요일 AM 09:00에 로또 당첨 정보가 담긴 뉴스레터를 발송해드려요.',
           },
           accessory: {
             type: 'button',
@@ -868,7 +868,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*🍀 LOTTERY* 구독 상태를 확인 후 신청해주세요.',
+          text: '구독 서비스들의 구독 상태를 확인 후 신청해주세요.',
         },
       },
       {
@@ -878,7 +878,7 @@ export class BuilderService {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: '*🍀 LOTTERY* 는 두가지 방식 (*슬랙 채널*, *이메일 뉴스레터*) 의 구독 채널을 지원합니다. 두가지 방식 모두 선택이 가능하니 원하시는 구독 방식을 선택해주세요.',
+          text: '*🍀 LOTTERY* 는 두가지 방식 (*슬랙 앱 채널 알림*, *이메일 뉴스레터*) 의 구독 서비스를 지원합니다. 두가지 방식 모두 선택이 가능하니 원하시는 구독 서비스를 선택해주세요.',
         },
         accessory: {
           type: 'image',
@@ -896,7 +896,7 @@ export class BuilderService {
           },
           {
             type: 'mrkdwn',
-            text: '*이메일이 수신이 안되시나요? <https://lottery.jh8459.com/support.html|👉 문의하기>*',
+            text: '*이메일이 수신이 안되시면 <https://lottery.jh8459.com/support.html|문의하기>* 게시판에 남겨주세요.',
           },
         ],
       },
