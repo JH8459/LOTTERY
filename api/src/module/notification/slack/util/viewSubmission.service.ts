@@ -260,14 +260,23 @@ export class ViewSubmissionService {
           },
         };
       } else {
-        originalBlocks.push({
+        // EMAIL_CONFIRM_INPUT 블록의 인덱스를 찾습니다.
+        const emailConfirmIndex = originalBlocks.findIndex(
+          (block: Block) => block.block_id === SlackBlockIDEnum.EMAIL_CONFIRM_INPUT
+        );
+
+        // 에러 메시지 블록을 생성합니다.
+        const errorBlock = {
           type: 'section',
           block_id: SlackBlockIDEnum.INPUT_ERROR_MESSAGE,
           text: {
             type: 'mrkdwn',
             text: errorMessage,
           },
-        });
+        };
+
+        // EMAIL_CONFIRM_INPUT 블록 뒤에 에러 메시지 블록을 삽입합니다.
+        originalBlocks.splice(emailConfirmIndex + 1, 0, errorBlock);
       }
 
       await client.views.update({
@@ -291,6 +300,8 @@ export class ViewSubmissionService {
           submit: body.view.submit,
         },
       });
+    } else {
+      // 해당 이메일 주소로 인증 번호가 담긴 메일을 발송합니다.
     }
   }
 }
