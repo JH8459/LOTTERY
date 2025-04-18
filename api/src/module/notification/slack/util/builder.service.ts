@@ -782,7 +782,7 @@ export class BuilderService {
     return blocks;
   }
 
-  async getSubscribeInputBlock(userInfo: UserInfoDto): Promise<(Block | KnownBlock)[]> {
+  getSubscribeInputBlock(userInfo: UserInfoDto): (Block | KnownBlock)[] {
     const convertSlackSubscribeBlock = (userInfo: UserInfoDto) => {
       if (userInfo && userInfo.isSlackSubscribe) {
         return {
@@ -910,147 +910,7 @@ export class BuilderService {
     return blocks;
   }
 
-  async getSubscribeInfoBlock(userId: string): Promise<(Block | KnownBlock)[]> {
-    const blocks: (Block | KnownBlock)[] = [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `안녕하세요 <@${userId}>님, 아직 당첨 결과 정보 구독 신청을 하지 않으셨네요.\n아래 안내사항을 확인 후 로또 당첨 정보 구독 여부를 결정해주세요. 🍀`,
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*1️⃣ 구독 신청과 취소 모두 `/구독` 명령어를 입력하여 실행합니다*. 당첨 결과 알림을 더이상 그만받고 싶으시다면 다시 한번 `/구독` 명령어를 호출해주세요. 구독 해제 안내를 도와드릴께요.',
-        },
-      },
-      {
-        type: 'image',
-        title: {
-          type: 'plain_text',
-          text: '/구독 명령어 안내 이미지',
-          emoji: true,
-        },
-        image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_slack_subscribe_example.png',
-        alt_text: 'example',
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*2️⃣ 구독 후 당첨 결과 정보는 🍀LOTTERY 앱 채널로 안내해드려요*. 매주 월요일 AM 09:00에 확인하실 수 있습니다.',
-        },
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: ' ',
-        },
-        accessory: {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: '구독하기',
-            emoji: true,
-          },
-          style: 'primary',
-          action_id: SlackActionIDEnum.SLACK_SUBSCRIBE,
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'context',
-        elements: [
-          {
-            type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support.html|게시글>* 을 남겨주시면 답변드리겠습니다.',
-          },
-        ],
-      },
-    ];
-
-    return blocks;
-  }
-
-  async getUnSubscribeInfoBlock(userId: string): Promise<(Block | KnownBlock)[]> {
-    const blocks: (Block | KnownBlock)[] = [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `안녕하세요 <@${userId}>님, 구독 해제를 원하시면 아래의 구독 해제 버튼을 눌러주세요. 🍀`,
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*1️⃣ 구독 신청과 취소 모두 `/구독` 명령어를 입력하여 실행합니다*. 당첨 결과 알림을 다시 받고 싶으시다면 다시 한번 `/구독` 명령어를 호출해주세요. 구독 안내 방법을 도와드릴께요.',
-        },
-      },
-      {
-        type: 'image',
-        title: {
-          type: 'plain_text',
-          text: '/구독 명령어 안내 이미지',
-          emoji: true,
-        },
-        image_url: 'https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_slack_subscribe_example.png',
-        alt_text: 'example',
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*2️⃣ 구독 서비스 사용 중 불편사항이 있으셨다면 피드백을 남겨주세요*. 🍀LOTTERY 앱을 개선하는데 큰 도움이 됩니다!',
-        },
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: ' ',
-        },
-        accessory: {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: '구독해제',
-            emoji: true,
-          },
-          style: 'danger',
-          action_id: SlackActionIDEnum.SLACK_UNSUBSCRIBE,
-        },
-      },
-      {
-        type: 'divider',
-      },
-      {
-        type: 'context',
-        elements: [
-          {
-            type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support.html|게시글>* 을 남겨주시면 답변드리겠습니다.',
-          },
-        ],
-      },
-    ];
-
-    return blocks;
-  }
-
-  async getUnSubscribeConfirmedBlock(userName: string): Promise<(Block | KnownBlock)[]> {
+  getUnSubscribeConfirmedBlock(): (Block | KnownBlock)[] {
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'section',
@@ -1085,6 +945,49 @@ export class BuilderService {
           {
             type: 'mrkdwn',
             text: '*구독 해제를 원하시면 확인 버튼을 눌러주세요. 🥲*',
+          },
+        ],
+      },
+    ];
+
+    return blocks;
+  }
+
+  getSubscribeEmailInputBlock(): (Block | KnownBlock)[] {
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'section',
+        text: {
+          type: 'plain_text',
+          emoji: true,
+          text: '이메일 구독 신청은 메일 주소 확인 후 진행됩니다. ',
+        },
+      },
+      {
+        type: 'input',
+        block_id: SlackBlockIDEnum.EMAIL_SUBSCRIBE_INPUT,
+        element: {
+          type: 'plain_text_input',
+          action_id: SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT,
+        },
+        label: {
+          type: 'plain_text',
+          text: '📧 정확한 이메일 주소를 입력해주세요.',
+          emoji: true,
+        },
+        optional: false,
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*메일 주소 변경은 구독 해지 후 다시 신청해주세요.*',
           },
         ],
       },
