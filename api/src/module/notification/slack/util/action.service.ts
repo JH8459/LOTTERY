@@ -173,7 +173,7 @@ export class ActionService {
     const userId: string = body.user.id;
     const teamId: string = body.user.team_id;
 
-    // 유저 정보를 가져옵니다.
+    // 유저 정보를 조회합니다.
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
     let workspaceIdx: number;
 
@@ -190,8 +190,8 @@ export class ActionService {
       true
     );
 
-    // 슬랙 구독 로그를 저장합니다.
-    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_SUBSCRIBE, userId);
+    // 유저 로그를 저장합니다.
+    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_SUBSCRIBE);
 
     // 유저 정보를 재조회합니다.
     const updateUserInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
@@ -221,39 +221,26 @@ export class ActionService {
     // });
   }
 
-  async unSubscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    // 유저의 정보를 조회합니다.
-    const userId: string = body.user.id;
-    const teamId: string = body.user.team_id;
-
-    const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
-
-    if (userInfo && userInfo.isSlackSubscribe) {
-      // 모달을 출력합니다.
-      await client.views.open({
-        trigger_id: body.trigger_id,
-        view: {
-          type: 'modal',
-          title: {
-            type: 'plain_text',
-            text: '구독 취소 확인',
-          },
-          blocks: await this.builderService.getUnSubscribeConfirmedBlock(body.user.name),
-          close: {
-            type: 'plain_text',
-            text: '닫기',
-          },
-          submit: {
-            type: 'plain_text',
-            text: '확인',
-          },
+  async slackUnSubscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    // 모달창 업데이트
+    await client.views.update({
+      view_id: body.view.id,
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: '구독 취소 확인',
         },
-      });
-    } else {
-      await client.chat.postMessage({
-        channel: body.channel.id,
-        text: `<@${userId}>님은 이미 구독 해지 상태입니다. 구독을 다시 원하시면 '/구독' 명령어를 입력해주세요.`,
-      });
-    }
+        blocks: await this.builderService.getUnSubscribeConfirmedBlock(body.user.name),
+        close: {
+          type: 'plain_text',
+          text: '닫기',
+        },
+        submit: {
+          type: 'plain_text',
+          text: '확인',
+        },
+      },
+    });
   }
 }

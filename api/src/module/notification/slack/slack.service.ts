@@ -136,7 +136,7 @@ export class SlackService implements OnModuleInit {
         await this.actionService.slackSubscribeActionHandler(client, body);
         break;
       case SlackActionIDEnum.SLACK_UNSUBSCRIBE:
-        await this.actionService.unSubscribeActionHandler(client, body);
+        await this.actionService.slackUnSubscribeActionHandler(client, body);
         break;
       default:
         break;
@@ -158,7 +158,7 @@ export class SlackService implements OnModuleInit {
       case SlackBlockIDEnum.SPEETTO_INPUT in viewValue:
         await this.viewSubMissionService.speettoPrizeInfoViewSubmissionHandler(ack, client, body);
         break;
-      case SlackBlockIDEnum.FEEDBACK_INPUT in viewValue:
+      case SlackBlockIDEnum.SLACK_FEEDBACK_INPUT in viewValue:
         // await this.viewSubMissionService.unSubscribeViewSubmissionHandler(ack, client, body);
         break;
       default:
