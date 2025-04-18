@@ -187,7 +187,7 @@ export class ActionService {
       workspaceIdx,
       userId,
       SUBSCRIBE_TYPE.SLACK,
-      false
+      true
     );
 
     // 슬랙 구독 로그를 저장합니다.
