@@ -857,7 +857,7 @@ export class BuilderService {
               emoji: true,
             },
             style: 'primary',
-            action_id: SlackActionIDEnum.EMAIL_SUBSCRIBE,
+            action_id: SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT,
           },
         };
       }
