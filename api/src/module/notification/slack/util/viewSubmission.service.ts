@@ -301,7 +301,78 @@ export class ViewSubmissionService {
         },
       });
     } else {
-      // 해당 이메일 주소로 인증 번호가 담긴 메일을 발송합니다.
+      const originalBlocks = body.view.blocks;
+
+      // EMAIL_CONFIRM_INPUT 블록의 인덱스를 찾습니다.
+      const emailConfirmIndex = originalBlocks.findIndex(
+        (block: Block) => block.block_id === SlackBlockIDEnum.EMAIL_CONFIRM_INPUT
+      );
+
+      // 기존 에러 메시지 블록의 인덱스를 찾습니다.
+      const errorBlockIndex = originalBlocks.findIndex(
+        (block: Block) => block.block_id === SlackBlockIDEnum.INPUT_ERROR_MESSAGE
+      );
+
+      // 에러 메시지 블록이 존재하면 삭제합니다.
+      if (errorBlockIndex !== -1) {
+        originalBlocks.splice(errorBlockIndex, 1);
+      }
+
+      // EMAIL_CONFIRM_INPUT 블록을 읽기 전용 section 블록으로 대체합니다.
+      originalBlocks[emailConfirmIndex] = {
+        type: 'section',
+        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT,
+        text: {
+          type: 'mrkdwn',
+          text: `*📧 이메일:* ${userEmail}`,
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '재전송',
+            emoji: true,
+          },
+          action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+        },
+      };
+
+      // 6자리 인증번호 입력 블록을 추가합니다.
+      const verificationInputBlock = {
+        type: 'input',
+        block_id: SlackBlockIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+        element: {
+          type: 'plain_text_input',
+          action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+          placeholder: {
+            type: 'plain_text',
+            text: '6자리 인증번호를 입력하세요',
+          },
+          max_length: 6,
+        },
+        label: {
+          type: 'plain_text',
+          text: '인증번호 입력',
+          emoji: true,
+        },
+      };
+
+      // 인증번호 입력 블록을 EMAIL_CONFIRM_INPUT 블록 아래에 추가합니다.
+      originalBlocks.splice(emailConfirmIndex + 1, 0, verificationInputBlock);
+
+      // View를 업데이트합니다.
+      await client.views.update({
+        view_id: body.view.id,
+        view: {
+          type: 'modal',
+          title: body.view.title,
+          blocks: originalBlocks,
+          close: body.view.close,
+          submit: body.view.submit,
+        },
+      });
+
+      await ack();
     }
   }
 }
