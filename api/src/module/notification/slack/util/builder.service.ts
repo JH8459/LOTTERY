@@ -1062,10 +1062,10 @@ export class BuilderService {
       },
       {
         type: 'input',
-        block_id: SlackBlockIDEnum.FEEDBACK_INPUT,
+        block_id: SlackBlockIDEnum.SLACK_FEEDBACK_INPUT,
         element: {
           type: 'plain_text_input',
-          action_id: SlackActionIDEnum.FEEDBACK_INPUT,
+          action_id: SlackActionIDEnum.SLACK_FEEDBACK_INPUT,
           multiline: true,
         },
         label: {

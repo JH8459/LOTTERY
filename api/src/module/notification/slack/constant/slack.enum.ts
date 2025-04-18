@@ -9,7 +9,8 @@ export enum SlackActionIDEnum {
   STATISTIC_PRIZE_INFO = 'statistic_prize_info',
   RECENTLY_PRIZE_INFO = 'recently_prize_info',
   ORDER_INPUT = 'order_input',
-  FEEDBACK_INPUT = 'feedback_input',
+  SLACK_FEEDBACK_INPUT = 'slack_feedback_input',
+  EMAIL_FEEDBACK_INPUT = 'email_feedback_input',
   SPEETTO_INPUT = 'speetto_input',
   SLACK_SUBSCRIBE = 'slack_subscribe',
   SLACK_UNSUBSCRIBE = 'slack_unsubscribe',
@@ -19,7 +20,8 @@ export enum SlackActionIDEnum {
 
 export enum SlackBlockIDEnum {
   ORDER_INPUT = 'order_input',
-  FEEDBACK_INPUT = 'feedback_input',
+  SLACK_FEEDBACK_INPUT = 'slack_feedback_input',
+  EMAIL_FEEDBACK_INPUT = 'email_feedback_input',
   SPEETTO_INPUT = 'speetto_input',
   INPUT_ERROR_MESSAGE = 'input_error_message',
 }
