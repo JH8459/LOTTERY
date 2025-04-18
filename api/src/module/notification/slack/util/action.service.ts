@@ -212,13 +212,6 @@ export class ActionService {
         },
       },
     });
-
-    // const text: string = `<@${userId}>님, 구독해주셔서 감사합니다. 매주 월요일 09시에 당첨 결과 정보를 알려드릴게요. 🍀`;
-
-    // await client.chat.postMessage({
-    //   channel: body.channel.id,
-    //   text,
-    // });
   }
 
   async slackUnSubscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
