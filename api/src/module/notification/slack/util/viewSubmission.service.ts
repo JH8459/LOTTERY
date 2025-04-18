@@ -183,7 +183,7 @@ export class ViewSubmissionService {
     });
   }
 
-  async unSubscribeViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
+  async slackFeedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     const teamId: string = body.team.id;
     const userId: string = body.user.id;
 
@@ -233,5 +233,64 @@ export class ViewSubmissionService {
       channel: response.channel.id,
       text,
     });
+  }
+
+  async emailConfirmViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    const userEmail: string =
+      body.view.state.values[SlackBlockIDEnum.EMAIL_CONFIRM_INPUT][SlackActionIDEnum.EMAIL_CONFIRM_INPUT].value;
+
+    // 유효성 검사를 진행합니다.
+    const emailRegex = /^[^@]+@.+$/; // 최소한의 이메일 형식 검증
+
+    if (!emailRegex.test(userEmail)) {
+      const originalBlocks = body.view.blocks;
+      const errorMessage = '⚠️ 이메일 형식이 올바르지 않습니다.';
+
+      const blockIndex: number = originalBlocks.findIndex(
+        (block: Block) => block.block_id === SlackBlockIDEnum.INPUT_ERROR_MESSAGE
+      );
+
+      if (blockIndex !== -1) {
+        originalBlocks[blockIndex] = {
+          type: 'section',
+          block_id: SlackBlockIDEnum.INPUT_ERROR_MESSAGE,
+          text: {
+            type: 'mrkdwn',
+            text: errorMessage,
+          },
+        };
+      } else {
+        originalBlocks.push({
+          type: 'section',
+          block_id: SlackBlockIDEnum.INPUT_ERROR_MESSAGE,
+          text: {
+            type: 'mrkdwn',
+            text: errorMessage,
+          },
+        });
+      }
+
+      await client.views.update({
+        view_id: body.view.id,
+        view: {
+          type: 'modal',
+          title: body.view.title,
+          blocks: originalBlocks,
+          close: body.view.close,
+          submit: body.view.submit,
+        },
+      });
+
+      await ack({
+        response_action: 'update',
+        view: {
+          type: 'modal',
+          title: body.view.title,
+          blocks: originalBlocks,
+          close: body.view.close,
+          submit: body.view.submit,
+        },
+      });
+    }
   }
 }

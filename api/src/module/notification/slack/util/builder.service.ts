@@ -965,10 +965,10 @@ export class BuilderService {
       },
       {
         type: 'input',
-        block_id: SlackBlockIDEnum.EMAIL_SUBSCRIBE_INPUT,
+        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT,
         element: {
           type: 'plain_text_input',
-          action_id: SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT,
+          action_id: SlackActionIDEnum.EMAIL_CONFIRM_INPUT,
         },
         label: {
           type: 'plain_text',
