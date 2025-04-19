@@ -11,7 +11,7 @@ import {
   LottoStatisticInfoInterface,
 } from '../../../../common/interface/lotto.interface';
 
-export const emailTemplate = (
+export const lottoEmailTemplate = (
   lottoInfo: LottoInfoInterface,
   lottoStatisticInfo: LottoStatisticInfoInterface,
   lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface
@@ -140,7 +140,7 @@ export const emailTemplate = (
                                   <td class="pad" style="width: 100%">
                                     <div>
                                       <img
-                                        src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/0db9f180-d222-4b2b-9371-cf9393bf4764/0bd8b69e-4024-4f26-9010-6e2a146401fb/LOTTERY.png"
+                                        src="https://jh8459.s3.ap-northeast-2.amazonaws.com/lottery/lottery_logo.png"
                                         style="
                                           display: block; 
                                           height: auto; 
@@ -3085,7 +3085,7 @@ export const emailTemplate = (
                                             mso-line-height-alt: 16.8px;
                                           "
                                         >
-                                          <span style="font-size: 12px"><strong>구독을 취소하시고 싶으시다면 Github Repository를 방문해주세요.</strong></span>
+                                          <span style="font-size: 12px"><strong>구독 취소는 슬랙 명령어를 통해 신청해주세요.</strong></span>
                                         </p>
                                       </div>
                                     </div>
