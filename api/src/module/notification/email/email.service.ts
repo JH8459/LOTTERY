@@ -34,9 +34,8 @@ export class EmailService {
 
   /**
    *
-   * @param emailInfo
+   * @param emailInfo 이메일 주소
    * @description 로또 당첨 정보 이메일 전송을 위한 작업을 큐에 추가합니다.
-   * @returns void
    */
   async enqueueLottoEmail(emailInfo: string): Promise<void> {
     // 로또 회차 정보, 통계 정보, 당첨금 정보를 Redis에서 가져옵니다.
@@ -62,6 +61,12 @@ export class EmailService {
     });
   }
 
+  /**
+   *
+   * @param emailInfo 이메일 주소
+   * @param verificationCode 인증코드
+   * @description 이메일 인증 코드 전송을 위한 작업을 큐에 추가합니다.
+   */
   async enqueueVerificationCodeEmail(emailInfo: string, verificationCode: string): Promise<void> {
     const mailOptions: ISendMailOptions = {
       to: emailInfo,
@@ -82,7 +87,6 @@ export class EmailService {
   /**
    *
    * @description GitHub의 구독자 목록을 가져와서 이메일 전송 작업을 큐에 추가합니다.
-   * @returns void
    */
   async enqueueLottoEmailToSubscriberList(): Promise<void> {
     try {
@@ -113,10 +117,8 @@ export class EmailService {
 
   /**
    *
-   * @param mailOptions
+   * @param mailOptions 이메일 전송에 필요한 설정값
    * @description 이메일 전송을 실행합니다.
-   * @throws CustomInternalServerErrorException
-   * @returns void
    */
   async sendLottoEmail(mailOptions: ISendMailOptions): Promise<void> {
     try {

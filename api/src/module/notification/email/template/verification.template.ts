@@ -770,97 +770,9 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 수신거부 테이블 (row row-10) -->
+              <!-- 소셜 & 테이블 (row row-10) -->
               <table
                 class="row row-10"
-                align="center"
-                width="100%"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="background-color: #f4f4f4"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          background-color: #fff;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                              style="
-                                padding-top: 40px;
-                                vertical-align: top;
-                              "
-                            >
-                              <table
-                                class="text_block block-1"
-                                width="100%"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="word-break: break-word"
-                              >
-                                <tr>
-                                  <td
-                                    class="pad"
-                                    style="
-                                      padding-bottom: 20px;
-                                      padding-left: 10px;
-                                      padding-right: 10px;
-                                      padding-top: 20px;
-                                    "
-                                  >
-                                    <div>
-                                      <div
-                                        class
-                                        style="
-                                          font-size: 12px;
-                                          mso-line-height-alt: 14.399999999999999px;
-                                          color: #61626f;
-                                          line-height: 1.2;
-                                        "
-                                      >
-                                        <p
-                                          style="
-                                            margin: 0;
-                                            font-size: 14px;
-                                            text-align: center;
-                                            font-weight: 400;
-                                            mso-line-height-alt: 16.8px;
-                                          "
-                                        >
-                                          <span style="font-size: 12px"><strong>구독 취소는 슬랙 명령어를 통해 신청해주세요.</strong></span>
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 소셜 & 테이블 (row row-11) -->
-              <table
-                class="row row-11"
                 align="center"
                 width="100%"
                 cellpadding="0"
