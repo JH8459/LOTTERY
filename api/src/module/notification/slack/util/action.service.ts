@@ -263,8 +263,12 @@ export class ActionService {
   }
 
   async emailResendVerificationCodeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    console.log('재전송 1 ✅');
+
     const userEmail: string =
       body.view.state.values[SlackBlockIDEnum.EMAIL_CONFIRM_INPUT][SlackActionIDEnum.EMAIL_CONFIRM_INPUT].value;
+
+    console.log('재전송 2 ✅: ', userEmail);
 
     const originalBlocks = body.view.blocks;
 
@@ -278,17 +282,7 @@ export class ActionService {
       block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT,
       text: {
         type: 'mrkdwn',
-        text: `*📧 이메일:* ${userEmail}`,
-      },
-      accessory: {
-        type: 'button',
-        text: {
-          type: 'plain_text',
-          text: '재전송 완료',
-          emoji: true,
-        },
-        action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
-        style: 'primary',
+        text: `*📧 이메일:* ${userEmail} ✅ 재전송 완료`,
       },
     };
 
@@ -297,7 +291,7 @@ export class ActionService {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: '🔁 메일 재전송을 다시 하시려면 구독을 다시 신청해주세요.',
+        text: '메일 재전송은 1회만 가능합니다.\n다시 시도하시려면 이메일 구독을 다시 신청해주세요.',
       },
     };
 
