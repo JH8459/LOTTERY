@@ -1,3 +1,17 @@
+const getFormattedSendTime = (date: Date): string => {
+  // 현재 날짜를 기준으로 포맷팅된 문자열을 반환하는 함수입니다.
+  const pad = (n) => n.toString().padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hour = pad(date.getHours());
+  const minute = pad(date.getMinutes());
+  const second = pad(date.getSeconds());
+
+  return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분 ${second}초`;
+};
+
 export const verificationCodeEmailTemplate = (verificationCode: string) => {
   return `<!DOCTYPE html>
   <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
@@ -165,7 +179,7 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                                       >
                                         <strong>
                                           <span>
-                                            인증코드는 1시간 이내로 입력해주세요.
+                                            ${getFormattedSendTime(new Date())} 기준
                                           </span>
                                         </strong>
                                       </p>
@@ -295,7 +309,7 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                                         text-align: right;
                                       "
                                     >
-                                      <p><strong>* 인증코드가 보이지 않는다면 재전송버튼을 눌러 다시 시도해주세요.</strong></p>
+                                      <p><strong>* 인증코드가 보이지 않는다면 다시 시도해주세요.</strong></p>
                                     </div>
                                   </td>
                                 </tr>
@@ -308,9 +322,66 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 인증코드 테이블 (row row-4) -->
+              <!-- 빈 공간 테이블 (row row-4) -->
               <table
                 class="row row-4"
+                align="center"
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="background-color: #f4f4f4"
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <table
+                        class="row-content stack"
+                        align="center"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          background-color: #fff;
+                          width: 600px;
+                          margin: 0 auto;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              class="column column-1"
+                              width="100%"
+                            >
+                              <table
+                                class="text_block block-1"
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                              >
+                                <tr>
+                                  <td class="pad">
+                                    <div
+                                      class="spacer_block block-1"
+                                      style="height: 60px; line-height: 60px;"
+                                    >
+                                      &#8202;
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 인증코드 테이블 (row row-5) -->
+              <table
+                class="row row-5"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -365,9 +436,9 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 빈 공간 테이블 (row row-5) -->
+              <!-- 빈 공간 테이블 (row row-6) -->
               <table
-                class="row row-5"
+                class="row row-6"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -422,9 +493,9 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 안내 문구 테이블 (row row-6) -->
+              <!-- 안내 문구 테이블 (row row-7) -->
               <table
-                class="row row-6"
+                class="row row-7"
                 align="center"
                 width="100%"
                 
@@ -478,63 +549,6 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                                     <p style="margin-bottom: 15px">
                                       <strong>📌 슬랙 채널로 돌아가 상단의 6자리 인증코드를 입력해주세요.</strong>
                                     </p>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 빈 공간 테이블 (row row-7) -->
-              <table
-                class="row row-7"
-                align="center"
-                width="100%"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="background-color: #f4f4f4"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          background-color: #fff;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                            >
-                              <table
-                                class="text_block block-1"
-                                width="100%"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                              >
-                                <tr>
-                                  <td class="pad">
-                                    <div
-                                      class="spacer_block block-1"
-                                      style="height: 60px; line-height: 60px;"
-                                    >
-                                      &#8202;
-                                    </div>
                                   </td>
                                 </tr>
                               </table>
@@ -605,109 +619,9 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 버튼 테이블 (row row-9) -->
+              <!-- 안내사항 테이블 (row row-9) -->
               <table
                 class="row row-9"
-                align="center"
-                width="100%"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="background-color: #f4f4f4"
-              >
-                <tbody>
-                  <tr>
-                    <td>
-                      <table
-                        class="row-content stack"
-                        align="center"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="
-                          background-color: #fff;
-                          color: #000;
-                          width: 600px;
-                          margin: 0 auto;
-                        "
-                      >
-                        <tbody>
-                          <tr>
-                            <td
-                              class="column column-1"
-                              width="100%"
-                            >
-                              <table
-                                class="button_block block-1"
-                                width="100%"
-                                cellpadding="0"
-                                cellspacing="0"
-                                role="presentation"
-                                style="
-                                  vertical-align: middle; 
-                                  padding-bottom: 20px;
-                                "
-                              >
-                                <tr>
-                                  <td class="pad" style="text-align: center">
-                                    <div class="alignment" align="center">
-                                      <div
-                                        style="
-                                          text-decoration: none;
-                                          display: inline-block;
-                                          color: #fff;
-                                          background-color: #555;
-                                          border-radius: 4px;
-                                          width: auto;
-                                          border-top: 0 solid transparent;
-                                          border-right: 0 solid transparent;
-                                          border-bottom: 0 solid transparent;
-                                          border-left: 0 solid transparent;
-                                          padding-top: 5px;
-                                          padding-bottom: 5px;
-                                          font-weight: 900;
-                                          font-size: 16px;
-                                          text-align: center;
-                                          mso-border-alt: none;
-                                          word-break: keep-all;
-                                        "
-                                      >
-                                        <span
-                                          style="
-                                            cursor: pointer;
-                                            padding-left: 20px;
-                                            padding-right: 20px;
-                                            display: inline-block;
-                                            letter-spacing: normal;
-                                            word-break: break-word;
-                                            line-height: 32px;
-                                          "
-                                        >
-                                          <a
-                                            style="text-decoration: none; color: #fff;"
-                                            href="https://dhlottery.co.kr/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                          >
-                                            동행복권 바로가기
-                                          </a>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- 안내사항 테이블 (row row-10) -->
-              <table
-                class="row row-10"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -856,9 +770,9 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 수신거부 테이블 (row row-11) -->
+              <!-- 수신거부 테이블 (row row-10) -->
               <table
-                class="row row-11"
+                class="row row-10"
                 align="center"
                 width="100%"
                 cellpadding="0"
@@ -944,9 +858,9 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                   </tr>
                 </tbody>
               </table>
-              <!-- 소셜 & 테이블 (row row-12) -->
+              <!-- 소셜 & 테이블 (row row-11) -->
               <table
-                class="row row-12"
+                class="row row-11"
                 align="center"
                 width="100%"
                 cellpadding="0"
