@@ -1,18 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { WebClient } from '@slack/web-api';
+import { Block, WebClient } from '@slack/web-api';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { SlackInteractionPayload } from '../interface/payload.interface';
-import { SlackActionIDEnum, SlackSubMitButtonNameEnum } from '../constant/slack.enum';
+import { SlackActionIDEnum, SlackBlockIDEnum, SlackSubMitButtonNameEnum } from '../constant/slack.enum';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { UserInfoDto } from '../dto/user.dto';
 import { RedisService } from 'src/module/redis/redis.service';
 import { LOG_TYPE_ENUM, SUBSCRIBE_TYPE } from 'src/common/constant/enum';
+import { EmailService } from '../../email/email.service';
 
 @Injectable()
 export class ActionService {
   constructor(
     private readonly redisService: RedisService,
+    private readonly emailService: EmailService,
     private readonly slackRepository: SlackRepository,
     private readonly builderService: BuilderService
   ) {}
@@ -256,6 +258,66 @@ export class ActionService {
           type: 'plain_text',
           text: '확인',
         },
+      },
+    });
+  }
+
+  async emailResendVerificationCodeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+    const userEmail: string =
+      body.view.state.values[SlackBlockIDEnum.EMAIL_CONFIRM_INPUT][SlackActionIDEnum.EMAIL_CONFIRM_INPUT].value;
+
+    const originalBlocks = body.view.blocks;
+
+    // EMAIL_CONFIRM_INPUT 블록의 인덱스를 찾습니다.
+    const emailConfirmIndex = originalBlocks.findIndex(
+      (block: Block) => block.block_id === SlackBlockIDEnum.EMAIL_CONFIRM_INPUT
+    );
+
+    originalBlocks[emailConfirmIndex] = {
+      type: 'section',
+      block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT,
+      text: {
+        type: 'mrkdwn',
+        text: `*📧 이메일:* ${userEmail}`,
+      },
+      accessory: {
+        type: 'button',
+        text: {
+          type: 'plain_text',
+          text: '재전송 완료',
+          emoji: true,
+        },
+        action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+        style: 'primary',
+      },
+    };
+
+    // EMAIL_CONFIRM_INPUT 블록 아래에 문구를 삽입합니다.
+    const resendCommentBlock = {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: '🔁 메일 재전송을 다시 하시려면 구독을 다시 신청해주세요.',
+      },
+    };
+
+    originalBlocks.splice(emailConfirmIndex + 1, 0, resendCommentBlock);
+
+    // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
+    const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
+
+    // 인증코드 이메일을 발송합니다.
+    await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
+
+    // 모달창 업데이트
+    await client.views.update({
+      view_id: body.view.id,
+      view: {
+        type: 'modal',
+        title: body.view.title,
+        blocks: originalBlocks,
+        close: body.view.close,
+        submit: body.view.submit,
       },
     });
   }
