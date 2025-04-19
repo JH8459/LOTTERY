@@ -344,22 +344,11 @@ export class ViewSubmissionService {
         },
       };
 
-      // EMAIL_CONFIRM_INPUT_WARNING 블록의 주의사항 메시지를 수정합니다.
-      originalBlocks[emailConfirmWarningIndex] = {
-        type: 'context',
-        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT_WARNING,
-        elements: [
-          {
-            type: 'image',
-            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
-            alt_text: 'notifications warning icon',
-          },
-          {
-            type: 'mrkdwn',
-            text: '*인증코드의 유효시간은 1시간입니다.*',
-          },
-        ],
-      };
+      // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
+      const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
+
+      // 인증코드 이메일을 발송합니다.
+      await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
 
       // 6자리 인증코드 입력 블록을 추가합니다.
       const verificationInputBlock = {
@@ -384,11 +373,22 @@ export class ViewSubmissionService {
       // 인증코드 입력 블록을 EMAIL_CONFIRM_INPUT 블록 아래에 추가합니다.
       originalBlocks.splice(emailConfirmIndex + 1, 0, verificationInputBlock);
 
-      // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
-      const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
-
-      // 인증코드 이메일을 발송합니다.
-      await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
+      // EMAIL_CONFIRM_INPUT_WARNING 블록의 주의사항 메시지를 수정합니다.
+      originalBlocks[emailConfirmWarningIndex] = {
+        type: 'context',
+        block_id: SlackBlockIDEnum.EMAIL_CONFIRM_INPUT_WARNING,
+        elements: [
+          {
+            type: 'image',
+            image_url: 'https://api.slack.com/img/blocks/bkb_template_images/notificationsWarningIcon.png',
+            alt_text: 'notifications warning icon',
+          },
+          {
+            type: 'mrkdwn',
+            text: '*인증코드의 유효시간은 1시간입니다.*',
+          },
+        ],
+      };
 
       // View를 업데이트합니다.
       await client.views.update({
