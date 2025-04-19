@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { emailTemplate } from './template/lotto.template';
+import { lottoEmailTemplate } from './template/lotto.template';
 import { convertDateFormat } from 'src/common/utils/utils';
 import {
   LottoHighestPrizeInfoInterface,
@@ -15,6 +15,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { RedisService } from 'src/module/redis/redis.service';
 import { CustomInternalServerErrorException } from 'src/common/custom/exception/exception.service';
+import { verificationCodeEmailTemplate } from './template/verification.template';
 
 @Injectable()
 export class EmailService {
@@ -49,7 +50,24 @@ export class EmailService {
       to: emailInfo,
       from: this.API_EMAIL_FROM,
       subject: `[LOTTERY🍀] ${lottoInfo.drwNo}회 당첨결과 (${convertDateFormat(lottoInfo.drwNoDate)})`,
-      html: emailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
+      html: lottoEmailTemplate(lottoInfo, lottoStatisticInfo, lottoHighestPrizeInfo),
+    };
+
+    // 큐에 작업을 추가합니다.
+    await this.emailQueue.add('sendEmail', mailOptions, {
+      attempts: 3, // 최대 3회 재시도
+      backoff: 10000, // 10초 간격으로 재시도
+      removeOnComplete: true,
+      removeOnFail: false, // 실패한 작업은 남겨서 확인 가능
+    });
+  }
+
+  async enqueueVerificationCodeEmail(emailInfo: string, verificationCode: string): Promise<void> {
+    const mailOptions: ISendMailOptions = {
+      to: emailInfo,
+      from: this.API_EMAIL_FROM,
+      subject: '[LOTTERY🍀] 이메일 인증 코드',
+      html: verificationCodeEmailTemplate(verificationCode),
     };
 
     // 큐에 작업을 추가합니다.

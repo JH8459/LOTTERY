@@ -387,10 +387,8 @@ export class ViewSubmissionService {
       // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
       const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
 
-      console.log('verificationCode: ', verificationCode);
-
-      // 이메일 인증을 위한 메일을 발송합니다.
-      await this.emailService.enqueueLottoEmail(userEmail);
+      // 인증코드 이메일을 발송합니다.
+      await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
 
       // View를 업데이트합니다.
       await client.views.update({
