@@ -8,5 +8,5 @@ export enum LOG_TYPE_ENUM {
 
 export enum SUBSCRIBE_TYPE {
   SLACK = 'slack',
-  ELMAIL = 'email',
+  EMAIL = 'email',
 }

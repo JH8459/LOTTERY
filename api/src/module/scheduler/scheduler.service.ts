@@ -7,6 +7,7 @@ import { SlackMessageService } from '../notification/slack/util/slackMessage.ser
 import { SchedulerRepository } from './repository/scheduler.repository';
 import { UserEntity } from 'src/entity/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 
 @Injectable()
 export class SchedulerService {
@@ -42,7 +43,7 @@ export class SchedulerService {
 
     // lock 획득을 성공한 prod 환경에서만 실행
     if (lock && this.API_NODE_ENV === 'prod') {
-      const userList: UserEntity[] = await this.schedulerRepository.getSubscribeUsers();
+      const userList: UserEntity[] = await this.schedulerRepository.getSubscribeUsers(SUBSCRIBE_TYPE.SLACK);
 
       if (userList.length) {
         await Promise.all(
