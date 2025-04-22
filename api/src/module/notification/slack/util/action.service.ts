@@ -298,7 +298,7 @@ export class ActionService {
     originalBlocks.splice(emailConfirmIndex + 1, 0, resendCommentBlock);
 
     // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
-    const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
+    const verificationCode: string = await this.redisService.setVerificationCode(userEmail, 60 * 60);
 
     // 인증코드 이메일을 발송합니다.
     await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);

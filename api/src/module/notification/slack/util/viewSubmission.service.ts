@@ -10,9 +10,9 @@ import { Block } from '@slack/bolt';
 import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 import { RedisService } from 'src/module/redis/redis.service';
-import { UserInfoDto } from '../dto/user.dto';
 import { LOG_TYPE_ENUM, SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 import { EmailService } from '../../email/email.service';
+import { UserInfoDto } from '../dto/user.dto';
 
 @Injectable()
 export class ViewSubmissionService {
@@ -310,13 +310,13 @@ export class ViewSubmissionService {
             text: '재전송',
             emoji: true,
           },
-          action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+          action_id: SlackActionIDEnum.EMAIL_VERIFICATION_CODE,
         },
       };
     }
 
     // Redis에서 인증코드 가져오기
-    const verificationCode: string = await this.redisService.getVerificationCode(userEmail, 60 * 60);
+    const verificationCode: string = await this.redisService.setVerificationCode(userEmail, 60 * 60);
 
     // 이메일 발송
     await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
@@ -324,10 +324,10 @@ export class ViewSubmissionService {
     // 인증코드 입력 블록 삽입
     const verificationInputBlock = {
       type: 'input',
-      block_id: SlackBlockIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+      block_id: SlackBlockIDEnum.EMAIL_VERIFICATION_CODE,
       element: {
         type: 'plain_text_input',
-        action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
+        action_id: SlackActionIDEnum.EMAIL_VERIFICATION_CODE,
         placeholder: {
           type: 'plain_text',
           text: '6자리 인증코드를 입력하세요',
@@ -342,7 +342,7 @@ export class ViewSubmissionService {
     };
 
     // 삽입 위치 조정 (중복 방지)
-    const existingCodeInputIndex = findBlockIndex(SlackBlockIDEnum.EMAIL_RESEND_VERIFICATION_CODE);
+    const existingCodeInputIndex = findBlockIndex(SlackBlockIDEnum.EMAIL_VERIFICATION_CODE);
 
     if (existingCodeInputIndex !== -1) {
       originalBlocks[existingCodeInputIndex] = verificationInputBlock;
@@ -376,5 +376,113 @@ export class ViewSubmissionService {
     }
 
     return await updateView(originalBlocks);
+  }
+
+  async verificationCodeViewSubmissionHandler(
+    ack: any,
+    client: WebClient,
+    body: SlackInteractionPayload
+  ): Promise<void> {
+    const userEmail: string =
+      body.view.state.values[SlackBlockIDEnum.EMAIL_CONFIRM_INPUT][SlackActionIDEnum.EMAIL_CONFIRM_INPUT].value;
+
+    const inputVerificationCode: string =
+      body.view.state.values[SlackBlockIDEnum.EMAIL_VERIFICATION_CODE][SlackActionIDEnum.EMAIL_VERIFICATION_CODE].value;
+
+    const verificationCode = await this.redisService.getVerificationCode(userEmail);
+    const originalBlocks = [...body.view.blocks]; // 원본 복사 (불변성 확보)
+
+    const updateView = async (updatedBlocks: Block[]): Promise<void> => {
+      const viewPayload: ModalView = {
+        type: 'modal',
+        title: body.view.title,
+        blocks: updatedBlocks,
+        close: body.view.close,
+        submit: body.view.submit,
+      };
+
+      await client.views.update({
+        view_id: body.view.id,
+        view: viewPayload,
+      });
+
+      await ack({
+        response_action: 'update',
+        view: viewPayload,
+      });
+    };
+
+    const findBlockIndex = (blockId: string) => originalBlocks.findIndex((block: Block) => block.block_id === blockId);
+
+    // ✅ 인증코드가 올바르지 않은 경우
+    if (inputVerificationCode !== verificationCode) {
+      const errorMessageBlock = {
+        type: 'section',
+        block_id: SlackBlockIDEnum.INPUT_ERROR_MESSAGE,
+        text: {
+          type: 'mrkdwn',
+          text: '⚠️ 인증코드가 올바르지 않습니다.',
+        },
+      };
+
+      const errorIndex = findBlockIndex(SlackBlockIDEnum.INPUT_ERROR_MESSAGE);
+      const emailInputIndex = findBlockIndex(SlackBlockIDEnum.EMAIL_CONFIRM_INPUT);
+
+      if (errorIndex !== -1) {
+        originalBlocks[errorIndex] = errorMessageBlock;
+      } else if (emailInputIndex !== -1) {
+        originalBlocks.splice(emailInputIndex + 1, 0, errorMessageBlock);
+      }
+
+      return await updateView(originalBlocks);
+    }
+
+    // ✅ 인증코드가 올바른 경우
+    // 기존 에러 메시지 블록 제거
+    const errorIndex = findBlockIndex(SlackBlockIDEnum.INPUT_ERROR_MESSAGE);
+    if (errorIndex !== -1) originalBlocks.splice(errorIndex, 1);
+
+    const userId: string = body.user.id;
+    const teamId: string = body.user.team_id;
+
+    // 유저 정보를 조회합니다.
+    const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+    let workspaceIdx: number;
+
+    if (!userInfo) {
+      workspaceIdx = await this.slackRepository.getWorkSpaceIdx(teamId);
+    }
+
+    // 유저 정보를 업데이트합니다. (이메일 서비스 구독)
+    const userIdx = await this.slackRepository.upsertSubscribeStatus(
+      userInfo,
+      workspaceIdx,
+      userId,
+      SUBSCRIBE_TYPE.EMAIL,
+      true
+    );
+
+    // 유저 로그를 저장합니다.
+    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.EMAIL_SUBSCRIBE);
+
+    // 유저 정보를 재조회합니다.
+    const updateUserInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+
+    // 모달창 업데이트
+    await client.views.update({
+      view_id: body.view.id,
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: '구독 서비스 관리',
+        },
+        blocks: this.builderService.getSubscribeInputBlock(updateUserInfo),
+        close: {
+          type: 'plain_text',
+          text: '닫기',
+        },
+      },
+    });
   }
 }

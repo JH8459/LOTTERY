@@ -19,7 +19,7 @@ export enum SlackActionIDEnum {
   EMAIL_CONFIRM_INPUT = 'email_confirm_input',
   EMAIL_CONFIRM = 'email_confirm',
   EMAIL_UNSUBSCRIBE = 'email_unsubscribe',
-  EMAIL_RESEND_VERIFICATION_CODE = 'email_resend_verification_code',
+  EMAIL_VERIFICATION_CODE = 'email_resend_verification_code',
 }
 
 export enum SlackBlockIDEnum {
@@ -29,7 +29,7 @@ export enum SlackBlockIDEnum {
   EMAIL_CONFIRM_INPUT = 'email_confirm_input',
   EMAIL_CONFIRM_INPUT_WARNING = 'email_confirm_input_warning',
   EMAIL_CONFIRM = 'email_confirm',
-  EMAIL_RESEND_VERIFICATION_CODE = 'email_resend_verification_code',
+  EMAIL_VERIFICATION_CODE = 'email_verification_code',
   EMAIL_FEEDBACK_INPUT = 'email_feedback_input',
   SPEETTO_INPUT = 'speetto_input',
   INPUT_ERROR_MESSAGE = 'input_error_message',
