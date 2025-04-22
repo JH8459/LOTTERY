@@ -1,8 +1,10 @@
 name: Deploy to NAS (CD)
 
 on:
-  pull_request:
-    branches: [prod]
+  workflow_run:
+    workflows: ['Build & Push Docker Images (CI)']
+    types:
+      - completed
 
 jobs:
   deploy:
