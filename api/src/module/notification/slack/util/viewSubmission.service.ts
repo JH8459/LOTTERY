@@ -310,7 +310,7 @@ export class ViewSubmissionService {
             text: '재전송',
             emoji: true,
           },
-          action_id: SlackActionIDEnum.EMAIL_VERIFICATION_CODE,
+          action_id: SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE,
         },
       };
     }
