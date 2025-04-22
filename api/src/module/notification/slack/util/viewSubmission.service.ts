@@ -383,12 +383,19 @@ export class ViewSubmissionService {
     client: WebClient,
     body: SlackInteractionPayload
   ): Promise<void> {
-    const userEmail: string =
-      body.view.state.values[SlackBlockIDEnum.EMAIL_CONFIRM_INPUT][SlackActionIDEnum.EMAIL_CONFIRM_INPUT].value;
+    // block_id가 'email_confirm_input'인 블록을 찾습니다.
+    const emailBlock = body.view.blocks.find((block) => block.block_id === SlackBlockIDEnum.EMAIL_CONFIRM_INPUT);
 
+    // 이메일 값을 추출합니다.
+    const emailRegex = /<mailto:(.*?)\|/; // 이메일 추출을 위한 정규식
+    const match = emailBlock['text']['text'].match(emailRegex);
+    const userEmail = match ? match[1] : null;
+
+    // 인증코드 입력값을 가져옵니다.
     const inputVerificationCode: string =
       body.view.state.values[SlackBlockIDEnum.EMAIL_VERIFICATION_CODE][SlackActionIDEnum.EMAIL_VERIFICATION_CODE].value;
 
+    // Redis에서 인증코드를 가져옵니다.
     const verificationCode = await this.redisService.getVerificationCode(userEmail);
     const originalBlocks = [...body.view.blocks]; // 원본 복사 (불변성 확보)
 

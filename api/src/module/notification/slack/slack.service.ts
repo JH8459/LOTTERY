@@ -166,11 +166,11 @@ export class SlackService implements OnModuleInit {
       case SlackBlockIDEnum.SLACK_FEEDBACK_INPUT in viewValue:
         await this.viewSubMissionService.slackFeedbackViewSubmissionHandler(ack, client, body);
         break;
-      case SlackBlockIDEnum.EMAIL_VERIFICATION_CODE in viewValue:
-        await this.viewSubMissionService.verificationCodeViewSubmissionHandler(ack, client, body);
-        break;
       case SlackBlockIDEnum.EMAIL_CONFIRM_INPUT in viewValue:
         await this.viewSubMissionService.emailConfirmViewSubmissionHandler(ack, client, body);
+        break;
+      case SlackBlockIDEnum.EMAIL_VERIFICATION_CODE in viewValue:
+        await this.viewSubMissionService.verificationCodeViewSubmissionHandler(ack, client, body);
         break;
       default:
         break;
