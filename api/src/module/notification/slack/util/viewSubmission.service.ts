@@ -440,7 +440,23 @@ export class ViewSubmissionService {
     // ✅ 인증코드가 올바른 경우
     // 기존 에러 메시지 블록 제거
     const errorIndex = findBlockIndex(SlackBlockIDEnum.INPUT_ERROR_MESSAGE);
-    if (errorIndex !== -1) originalBlocks.splice(errorIndex, 1);
+
+    if (errorIndex !== -1) {
+      originalBlocks.splice(errorIndex, 1);
+    }
+
+    // 기존 이메일 입력 블록 업데이트 (블록 ID 제거)
+    const emailInputIndex = findBlockIndex(SlackBlockIDEnum.EMAIL_CONFIRM_INPUT);
+
+    if (emailInputIndex !== -1) {
+      originalBlocks[emailInputIndex] = {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*📧 이메일:* ${userEmail}`,
+        },
+      };
+    }
 
     const userId: string = body.user.id;
     const teamId: string = body.user.team_id;
