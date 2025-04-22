@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { InsertResult, Repository } from 'typeorm';
+import { InsertQueryBuilder, InsertResult, Repository, SelectQueryBuilder, UpdateQueryBuilder } from 'typeorm';
 import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
@@ -75,30 +75,36 @@ export class SlackRepository {
     workspaceIdx: number,
     userId: string,
     subscribeType: SUBSCRIBE_TYPE,
-    isSubscribe: boolean
+    isSubscribe: boolean,
+    userEmail?: string
   ): Promise<number> {
     if (userInfo) {
-      await this.userModel
+      const updateQueryBuilder: UpdateQueryBuilder<UserEntity> = this.userModel
         .createQueryBuilder('userEntity')
-        .update(UserEntity)
-        .set(
-          subscribeType === SUBSCRIBE_TYPE.SLACK ? { isSlackSubscribe: isSubscribe } : { isEmailSubscribe: isSubscribe }
-        )
-        .where('userIdx = :userIdx', { userIdx: userInfo.userIdx })
-        .execute();
+        .update(UserEntity);
+
+      if (subscribeType === SUBSCRIBE_TYPE.SLACK) {
+        updateQueryBuilder.set({ isSlackSubscribe: isSubscribe });
+      } else {
+        updateQueryBuilder.set({ isEmailSubscribe: isSubscribe, userEmail: userEmail });
+      }
+
+      await updateQueryBuilder.where('userIdx = :userIdx', { userIdx: userInfo.userIdx }).execute();
 
       return userInfo.userIdx;
     } else {
-      const insertResult: InsertResult = await this.userModel
-        .createQueryBuilder()
+      const insertQueryBuilder: InsertQueryBuilder<UserEntity> = this.userModel
+        .createQueryBuilder('userEntity')
         .insert()
-        .into(UserEntity)
-        .values(
-          subscribeType === SUBSCRIBE_TYPE.SLACK
-            ? { workspaceIdx, userId, isSlackSubscribe: isSubscribe }
-            : { workspaceIdx, userId, isEmailSubscribe: isSubscribe }
-        )
-        .execute();
+        .into(UserEntity);
+
+      if (subscribeType === SUBSCRIBE_TYPE.SLACK) {
+        insertQueryBuilder.values({ workspaceIdx, userId, isSlackSubscribe: isSubscribe });
+      } else {
+        insertQueryBuilder.values({ workspaceIdx, userId, userEmail, isEmailSubscribe: isSubscribe });
+      }
+
+      const insertResult: InsertResult = await insertQueryBuilder.execute();
 
       return insertResult.identifiers[0].userIdx;
     }

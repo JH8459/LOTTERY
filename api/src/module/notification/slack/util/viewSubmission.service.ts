@@ -482,7 +482,8 @@ export class ViewSubmissionService {
       workspaceIdx,
       userId,
       SUBSCRIBE_TYPE.EMAIL,
-      true
+      true,
+      userEmail
     );
 
     // 유저 로그를 저장합니다.
@@ -494,6 +495,22 @@ export class ViewSubmissionService {
     // 모달창 업데이트
     await client.views.update({
       view_id: body.view.id,
+      view: {
+        type: 'modal',
+        title: {
+          type: 'plain_text',
+          text: '구독 서비스 관리',
+        },
+        blocks: this.builderService.getSubscribeInputBlock(updateUserInfo),
+        close: {
+          type: 'plain_text',
+          text: '닫기',
+        },
+      },
+    });
+
+    await ack({
+      response_action: 'update',
       view: {
         type: 'modal',
         title: {
