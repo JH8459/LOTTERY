@@ -74,9 +74,9 @@ jobs:
             COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}
             EOF
 
-            echo "🌀 GitHub prod 브랜치 코드 최신화"
+            echo "🌀 GitHub master 브랜치 코드 최신화"
             git fetch origin
-            git reset --hard origin/prod
+            git reset --hard origin/master
 
             echo "📁 필요한 디렉토리 생성"
             mkdir -p ./api/logs ./api/public ./api/resource
