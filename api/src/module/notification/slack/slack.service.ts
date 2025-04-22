@@ -11,6 +11,7 @@ import { SlackInteractionPayload } from './interface/payload.interface';
 import { ActionService } from './util/action.service';
 import { ViewSubmissionService } from './util/viewSubmission.service';
 import { ClientService } from './util/client.service';
+import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -136,10 +137,13 @@ export class SlackService implements OnModuleInit {
         await this.actionService.slackSubscribeActionHandler(client, body);
         break;
       case SlackActionIDEnum.SLACK_UNSUBSCRIBE:
-        await this.actionService.slackUnSubscribeActionHandler(client, body);
+        await this.actionService.unSubscribeActionHandler(client, body, SUBSCRIBE_TYPE.SLACK);
         break;
       case SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT:
         await this.actionService.emailSubscribeInputActionHandler(client, body);
+        break;
+      case SlackActionIDEnum.EMAIL_UNSUBSCRIBE:
+        await this.actionService.unSubscribeActionHandler(client, body, SUBSCRIBE_TYPE.EMAIL);
         break;
       case SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE:
         await this.actionService.emailResendVerificationCodeActionHandler(client, body);
@@ -165,7 +169,10 @@ export class SlackService implements OnModuleInit {
         await this.viewSubMissionService.speettoPrizeInfoViewSubmissionHandler(ack, client, body);
         break;
       case SlackBlockIDEnum.SLACK_FEEDBACK_INPUT in viewValue:
-        await this.viewSubMissionService.slackFeedbackViewSubmissionHandler(ack, client, body);
+        await this.viewSubMissionService.feedbackViewSubmissionHandler(ack, client, body, SUBSCRIBE_TYPE.SLACK);
+        break;
+      case SlackBlockIDEnum.EMAIL_FEEDBACK_INPUT in viewValue:
+        await this.viewSubMissionService.feedbackViewSubmissionHandler(ack, client, body, SUBSCRIBE_TYPE.EMAIL);
         break;
       case SlackBlockIDEnum.EMAIL_CONFIRM_INPUT in viewValue:
         await this.viewSubMissionService.emailConfirmViewSubmissionHandler(ack, client, body);

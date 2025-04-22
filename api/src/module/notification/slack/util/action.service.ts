@@ -216,7 +216,11 @@ export class ActionService {
     });
   }
 
-  async slackUnSubscribeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
+  async unSubscribeActionHandler(
+    client: WebClient,
+    body: SlackInteractionPayload,
+    subscribeType: SUBSCRIBE_TYPE
+  ): Promise<void> {
     // 모달창 업데이트
     await client.views.update({
       view_id: body.view.id,
@@ -226,7 +230,7 @@ export class ActionService {
           type: 'plain_text',
           text: '구독 취소 확인',
         },
-        blocks: this.builderService.getUnSubscribeConfirmedBlock(),
+        blocks: this.builderService.getUnSubscribeConfirmedBlock(subscribeType),
         close: {
           type: 'plain_text',
           text: '닫기',

@@ -10,6 +10,7 @@ import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
 import { RedisService } from 'src/module/redis/redis.service';
 import { UserInfoDto } from '../dto/user.dto';
+import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 
 @Injectable()
 export class BuilderService {
@@ -910,7 +911,7 @@ export class BuilderService {
     return blocks;
   }
 
-  getUnSubscribeConfirmedBlock(): (Block | KnownBlock)[] {
+  getUnSubscribeConfirmedBlock(subscribeType: SUBSCRIBE_TYPE): (Block | KnownBlock)[] {
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'section',
@@ -922,10 +923,16 @@ export class BuilderService {
       },
       {
         type: 'input',
-        block_id: SlackBlockIDEnum.SLACK_FEEDBACK_INPUT,
+        block_id:
+          subscribeType === SUBSCRIBE_TYPE.SLACK
+            ? SlackBlockIDEnum.SLACK_FEEDBACK_INPUT
+            : SlackBlockIDEnum.EMAIL_FEEDBACK_INPUT,
         element: {
           type: 'plain_text_input',
-          action_id: SlackActionIDEnum.SLACK_FEEDBACK_INPUT,
+          action_id:
+            subscribeType === SUBSCRIBE_TYPE.SLACK
+              ? SlackActionIDEnum.SLACK_FEEDBACK_INPUT
+              : SlackActionIDEnum.EMAIL_FEEDBACK_INPUT,
           multiline: true,
         },
         label: {

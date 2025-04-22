@@ -185,7 +185,12 @@ export class ViewSubmissionService {
     });
   }
 
-  async slackFeedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
+  async feedbackViewSubmissionHandler(
+    ack: any,
+    client: WebClient,
+    body: SlackInteractionPayload,
+    subscribeType: SUBSCRIBE_TYPE
+  ): Promise<void> {
     const teamId = body.team.id;
     const userId = body.user.id;
 
@@ -198,16 +203,22 @@ export class ViewSubmissionService {
       userInfo,
       workspaceIdx,
       userId,
-      SUBSCRIBE_TYPE.SLACK,
+      subscribeType,
       false
     );
 
     // 구독 해제 로그 저장
-    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE);
+    const logType: LOG_TYPE_ENUM =
+      subscribeType === SUBSCRIBE_TYPE.SLACK ? LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE : LOG_TYPE_ENUM.EMAIL_UNSUBSCRIBE;
+
+    await this.slackRepository.saveUserlog(userIdx, logType);
 
     // 피드백 추출
     const feedback =
-      body.view.state.values[SlackBlockIDEnum.SLACK_FEEDBACK_INPUT]?.[SlackActionIDEnum.SLACK_FEEDBACK_INPUT]?.value;
+      subscribeType === SUBSCRIBE_TYPE.SLACK
+        ? body.view.state.values[SlackBlockIDEnum.SLACK_FEEDBACK_INPUT]?.[SlackActionIDEnum.SLACK_FEEDBACK_INPUT]?.value
+        : body.view.state.values[SlackBlockIDEnum.EMAIL_FEEDBACK_INPUT]?.[SlackActionIDEnum.EMAIL_FEEDBACK_INPUT]
+            ?.value;
 
     if (feedback) {
       await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.FEEDBACK_INPUT, feedback);
@@ -221,7 +232,10 @@ export class ViewSubmissionService {
 
     // 🎯 피드백 여부에 따라 메시지 구성
     const buildUnsubscribeMessage = (userId: string, hasFeedback: boolean): string => {
-      let message = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
+      const serviceName = subscribeType === SUBSCRIBE_TYPE.SLACK ? '슬랙 알림' : '이메일 뉴스레터';
+
+      let message = `<@${userId}>님, ${serviceName} 서비스의 구독이 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
+
       if (hasFeedback) {
         message += ' (소중한 피드백 감사합니다. 👍)';
       }
