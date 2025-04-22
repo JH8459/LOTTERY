@@ -263,12 +263,8 @@ export class ActionService {
   }
 
   async emailResendVerificationCodeActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    console.log('재전송 1 ✅');
-
     const userEmail: string =
       body.view.state.values[SlackBlockIDEnum.EMAIL_CONFIRM_INPUT][SlackActionIDEnum.EMAIL_CONFIRM_INPUT].value;
-
-    console.log('재전송 2 ✅: ', userEmail);
 
     const originalBlocks = body.view.blocks;
 
