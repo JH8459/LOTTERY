@@ -141,7 +141,7 @@ export class SlackService implements OnModuleInit {
       case SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT:
         await this.actionService.emailSubscribeInputActionHandler(client, body);
         break;
-      case SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE:
+      case SlackActionIDEnum.EMAIL_VERIFICATION_CODE:
         await this.actionService.emailResendVerificationCodeActionHandler(client, body);
       default:
         break;
@@ -169,6 +169,8 @@ export class SlackService implements OnModuleInit {
       case SlackBlockIDEnum.EMAIL_CONFIRM_INPUT in viewValue:
         await this.viewSubMissionService.emailConfirmViewSubmissionHandler(ack, client, body);
         break;
+      case SlackBlockIDEnum.EMAIL_VERIFICATION_CODE in viewValue:
+        await this.viewSubMissionService.verificationCodeViewSubmissionHandler(ack, client, body);
       default:
         break;
     }

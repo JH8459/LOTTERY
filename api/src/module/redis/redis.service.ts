@@ -128,12 +128,19 @@ export class RedisService {
     return lottoHighestPrizeInfo;
   }
 
-  async getVerificationCode(userEmail: string, ttl: number): Promise<string> {
+  async setVerificationCode(userEmail: string, ttl: number): Promise<string> {
     // 랜덤한 6자리 숫자 코드를 생성합니다.
     const verificationCode: string = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Redis에 이메일과 인증 코드를 저장합니다.
     await this.redis.set(userEmail, verificationCode, 'EX', ttl);
+
+    return verificationCode;
+  }
+
+  async getVerificationCode(userEmail: string): Promise<string> {
+    // Redis에서 이메일에 알맞는 인증 코드를 가져옵니다.
+    const verificationCode: string = await this.redis.get(userEmail);
 
     return verificationCode;
   }
