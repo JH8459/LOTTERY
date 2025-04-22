@@ -186,18 +186,14 @@ export class ViewSubmissionService {
   }
 
   async slackFeedbackViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    const teamId: string = body.team.id;
-    const userId: string = body.user.id;
+    const teamId = body.team.id;
+    const userId = body.user.id;
 
-    // 유저 정보를 가져옵니다.
-    const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
-    let workspaceIdx: number;
+    // 유저 정보 조회
+    const userInfo = await this.slackRepository.getUserInfo(teamId, userId);
+    const workspaceIdx = userInfo ? userInfo.workspaceIdx : await this.slackRepository.getWorkSpaceIdx(teamId);
 
-    if (!userInfo) {
-      workspaceIdx = await this.slackRepository.getWorkSpaceIdx(teamId);
-    }
-
-    // 정보를 업데이트합니다. (구독 해제)
+    // 유저 구독 상태 업데이트 (구독 해제)
     const userIdx = await this.slackRepository.upsertSubscribeStatus(
       userInfo,
       workspaceIdx,
@@ -206,33 +202,37 @@ export class ViewSubmissionService {
       false
     );
 
-    // 슬랙 구독 해제 로그를 저장합니다.
+    // 구독 해제 로그 저장
     await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE);
 
-    // 구독 해제 메시지를 작성합니다.
-    let text = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
-
-    const feedback: string =
-      body.view.state.values[SlackBlockIDEnum.SLACK_FEEDBACK_INPUT][SlackActionIDEnum.SLACK_FEEDBACK_INPUT].value;
+    // 피드백 추출
+    const feedback =
+      body.view.state.values[SlackBlockIDEnum.SLACK_FEEDBACK_INPUT]?.[SlackActionIDEnum.SLACK_FEEDBACK_INPUT]?.value;
 
     if (feedback) {
-      // 피드백이 있을 경우 저장합니다.
       await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.FEEDBACK_INPUT, feedback);
-
-      text += ' (소중한 피드백 감사합니다. 👍)';
     }
 
-    // View를 업데이트합니다. (모달 창 닫기)
+    // View 닫기
     await ack();
 
-    // 유저와 앱 간의 개인 채널을 엽니다.
-    const response: ConversationsOpenResponse = await client.conversations.open({
-      users: userId,
-    });
+    // 개인 채널 열기
+    const { channel } = await client.conversations.open({ users: userId });
 
-    // 채널에 메시지를 발송합니다.
+    // 🎯 피드백 여부에 따라 메시지 구성
+    const buildUnsubscribeMessage = (userId: string, hasFeedback: boolean): string => {
+      let message = `<@${userId}>님, 구독 해제되었습니다. 🍀LOTTERY는 항상 더 나은 서비스가 되도록 노력하겠습니다.`;
+      if (hasFeedback) {
+        message += ' (소중한 피드백 감사합니다. 👍)';
+      }
+
+      return message;
+    };
+
+    // 메시지 전송
+    const text = buildUnsubscribeMessage(userId, Boolean(feedback));
     await client.chat.postMessage({
-      channel: response.channel.id,
+      channel: channel.id,
       text,
     });
   }
