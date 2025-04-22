@@ -487,7 +487,7 @@ export class ViewSubmissionService {
     );
 
     // 유저 로그를 저장합니다.
-    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.EMAIL_SUBSCRIBE);
+    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.EMAIL_SUBSCRIBE, userEmail);
 
     // 유저 정보를 재조회합니다.
     const updateUserInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
