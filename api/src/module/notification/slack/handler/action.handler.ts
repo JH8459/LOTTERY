@@ -25,37 +25,43 @@ export class ActionHandler {
   async registerActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
     const actionId: string = body.actions[0].action_id;
 
-    switch (actionId) {
-      case SlackActionIDEnum.PRIZE_INFO:
-        return this.handlePrizeInfo(client, body);
-
-      case SlackActionIDEnum.RECENTLY_PRIZE_INFO:
-        return this.handleRecentlyPrizeInfo(client, body);
-
-      case SlackActionIDEnum.STATISTIC_PRIZE_INFO:
-        return this.handleStatisticPrizeInfo(client, body);
-
-      case SlackActionIDEnum.SPEETTO_INFO:
-        return this.handleSpeettoInfo(client, body);
-
-      case SlackActionIDEnum.SLACK_SUBSCRIBE:
-        return this.handleSlackSubscribe(client, body);
-
-      case SlackActionIDEnum.SLACK_UNSUBSCRIBE:
-        return this.handleUnsubscribe(client, body, SUBSCRIBE_TYPE.SLACK);
-
-      case SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT:
-        return this.handleEmailSubscribeInput(client, body);
-
-      case SlackActionIDEnum.EMAIL_UNSUBSCRIBE:
-        return this.handleUnsubscribe(client, body, SUBSCRIBE_TYPE.EMAIL);
-
-      case SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE:
-        return this.handleResendVerificationCode(client, body);
-
-      default:
-        this.loggerService.warn(`[SlackActionHandler] Unknown action ID: ${actionId}`);
+    if (actionId === SlackActionIDEnum.PRIZE_INFO) {
+      return this.handlePrizeInfo(client, body);
     }
+
+    if (actionId === SlackActionIDEnum.RECENTLY_PRIZE_INFO) {
+      return this.handleRecentlyPrizeInfo(client, body);
+    }
+
+    if (actionId === SlackActionIDEnum.STATISTIC_PRIZE_INFO) {
+      return this.handleStatisticPrizeInfo(client, body);
+    }
+
+    if (actionId === SlackActionIDEnum.SPEETTO_INFO) {
+      return this.handleSpeettoInfo(client, body);
+    }
+
+    if (actionId === SlackActionIDEnum.SLACK_SUBSCRIBE) {
+      return this.handleSlackSubscribe(client, body);
+    }
+
+    if (actionId === SlackActionIDEnum.SLACK_UNSUBSCRIBE) {
+      return this.handleUnsubscribe(client, body, SUBSCRIBE_TYPE.SLACK);
+    }
+
+    if (actionId === SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT) {
+      return this.handleEmailSubscribeInput(client, body);
+    }
+
+    if (actionId === SlackActionIDEnum.EMAIL_UNSUBSCRIBE) {
+      return this.handleUnsubscribe(client, body, SUBSCRIBE_TYPE.EMAIL);
+    }
+
+    if (actionId === SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE) {
+      return this.handleResendVerificationCode(client, body);
+    }
+
+    this.loggerService.warn(`[SlackActionHandler] 알 수 없는 action 요청입니다. ID: ${actionId}`);
   }
 
   private async handlePrizeInfo(client: WebClient, body: SlackInteractionPayload): Promise<void> {
