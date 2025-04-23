@@ -4,7 +4,7 @@ import { App } from '@slack/bolt';
 
 @Injectable()
 /**
- * @description: CommandHandler는 Slack App의 Command를 처리하는 핸들러 클래스입니다. (Command 등록 책임을 가지고 있습니다.)
+ * @description: CommandHandler는 Slack App의 Command를 처리하는 핸들러 클래스입니다.
  * @constructor
  * @param {CommandService} commandService - CommandService 인스턴스입니다.
  */
