@@ -31,7 +31,7 @@ export class SlackService implements OnModuleInit {
     private readonly clientService: ClientService
   ) {
     // Slack App과 ExpressReceiver를 생성합니다.
-    const { app, receiver } = this.slackAppFactory.createApp();
+    const { app, receiver } = this.slackAppFactory.createSlackApp();
     this.APP = app;
     this.RECEIVER = receiver;
     // Slack App의 Signing Secret과 Bot Token을 설정합니다.

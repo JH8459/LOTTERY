@@ -26,7 +26,7 @@ export class SlackAppFactory {
    * @description: Slack App과 ExpressReceiver를 생성하는 메서드입니다.
    * @returns { app: App; receiver: ExpressReceiver }
    */
-  createApp(): { app: App; receiver: ExpressReceiver } {
+  public createSlackApp(): { app: App; receiver: ExpressReceiver } {
     const receiver = new ExpressReceiver({
       signingSecret: this.API_SLACK_SIGNING_SECRET,
     });
