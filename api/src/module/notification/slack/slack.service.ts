@@ -13,6 +13,7 @@ import { ViewSubmissionService } from './util/viewSubmission.service';
 import { ClientService } from './util/client.service';
 import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 import { SlackAppFactory } from './config/slackAppFactory';
+import { CommandHandler } from './handler/command.handler';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -25,44 +26,22 @@ export class SlackService implements OnModuleInit {
     private readonly configService: ConfigService,
     private readonly slackAppFactory: SlackAppFactory,
     private readonly slackRepository: SlackRepository,
-    private readonly commandService: CommandService,
     private readonly actionService: ActionService,
     private readonly viewSubMissionService: ViewSubmissionService,
-    private readonly clientService: ClientService
+    private readonly clientService: ClientService,
+    private readonly commandHandler: CommandHandler
   ) {
     // Slack App과 ExpressReceiver를 생성합니다.
     const { app, receiver } = this.slackAppFactory.createSlackApp();
     this.APP = app;
     this.RECEIVER = receiver;
-    // Slack App의 Signing Secret과 Bot Token을 설정합니다.
     this.API_SLACK_CLIENT_ID = this.configService.get<string>('API_SLACK_CLIENT_ID');
     this.API_SLACK_CLIENT_SECRET = this.configService.get<string>('API_SLACK_CLIENT_SECRET');
   }
 
   onModuleInit() {
-    // '/로또' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.APP.command('/로또', async ({ command, ack }) => {
-      // Command 요청을 확인합니다.
-      await ack();
-      // 로또 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
-      await this.commandService.lottoPrizeInfoCommandHandler(command);
-    });
-
-    // '/스피또' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.APP.command('/스피또', async ({ command, ack }) => {
-      // Command 요청을 확인합니다.
-      await ack();
-      // 스피또 당첨 정보 조회 Command를 처리하는 메서드를 호출합니다.
-      await this.commandService.speettoPrizeInfoCommandHandler(command);
-    });
-
-    // '/구독' command를 처리하는 이벤트 핸들러를 등록합니다.
-    this.APP.command('/구독', async ({ command, ack }) => {
-      // Command 요청을 확인합니다.
-      await ack();
-      // 구독 Command를 처리하는 메서드를 호출합니다.
-      await this.commandService.subscribeCommandHandler(command);
-    });
+    // Slack Slash Command를 처리하는 핸들러를 등록합니다.
+    this.commandHandler.registerCommandHandler(this.APP);
   }
 
   getSlackApp() {
