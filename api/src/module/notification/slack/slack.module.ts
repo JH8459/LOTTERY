@@ -19,6 +19,7 @@ import { UserLogEntity } from 'src/entity/userLog.entity';
 import { EmailModule } from '../email/email.module';
 import { SlackAppFactory } from './config/slackAppFactory';
 import { CommandHandler } from './handler/command.handler';
+import { ActionHandler } from './handler/action.handler';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CommandHandler } from './handler/command.handler';
     SlackMessageService,
     ClientService,
     CommandHandler,
+    ActionHandler,
   ],
   controllers: [SlackController],
   exports: [SlackMessageService, WebHookService],

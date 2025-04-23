@@ -2,11 +2,10 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { App, ExpressReceiver } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import { SlackActionIDEnum, SlackBlockIDEnum } from './constant/slack.enum';
+import { SlackBlockIDEnum } from './constant/slack.enum';
 import { SlackRepository } from './repository/slack.repository';
 import axios, { AxiosResponse } from 'axios';
 import * as querystring from 'querystring';
-import { CommandService } from './util/command.service';
 import { SlackInteractionPayload } from './interface/payload.interface';
 import { ActionService } from './util/action.service';
 import { ViewSubmissionService } from './util/viewSubmission.service';
@@ -14,6 +13,7 @@ import { ClientService } from './util/client.service';
 import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 import { SlackAppFactory } from './config/slackAppFactory';
 import { CommandHandler } from './handler/command.handler';
+import { ActionHandler } from './handler/action.handler';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
@@ -26,10 +26,10 @@ export class SlackService implements OnModuleInit {
     private readonly configService: ConfigService,
     private readonly slackAppFactory: SlackAppFactory,
     private readonly slackRepository: SlackRepository,
-    private readonly actionService: ActionService,
     private readonly viewSubMissionService: ViewSubmissionService,
     private readonly clientService: ClientService,
-    private readonly commandHandler: CommandHandler
+    private readonly commandHandler: CommandHandler,
+    private readonly actionHandler: ActionHandler
   ) {
     // Slack App과 ExpressReceiver를 생성합니다.
     const { app, receiver } = this.slackAppFactory.createSlackApp();
@@ -88,42 +88,10 @@ export class SlackService implements OnModuleInit {
 
   async slackBlockActionsHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
     await ack();
-
     // 클라이언트를 생성합니다.
-    const actionId: string = body.actions[0].action_id;
     const client: WebClient = await this.clientService.getWebClientById(body.user.team_id);
-
-    switch (actionId) {
-      case SlackActionIDEnum.PRIZE_INFO:
-        await this.actionService.prizeInfoActionHandler(client, body);
-        break;
-      case SlackActionIDEnum.RECENTLY_PRIZE_INFO:
-        await this.actionService.recentlyPrizeInfoActionHandler(client, body);
-        break;
-      case SlackActionIDEnum.STATISTIC_PRIZE_INFO:
-        await this.actionService.statisticPrizeInfoActionHandler(client, body);
-        break;
-      case SlackActionIDEnum.SPEETTO_INFO:
-        await this.actionService.speettoInfoActionHandler(client, body);
-        break;
-      case SlackActionIDEnum.SLACK_SUBSCRIBE:
-        await this.actionService.slackSubscribeActionHandler(client, body);
-        break;
-      case SlackActionIDEnum.SLACK_UNSUBSCRIBE:
-        await this.actionService.unSubscribeActionHandler(client, body, SUBSCRIBE_TYPE.SLACK);
-        break;
-      case SlackActionIDEnum.EMAIL_SUBSCRIBE_INPUT:
-        await this.actionService.emailSubscribeInputActionHandler(client, body);
-        break;
-      case SlackActionIDEnum.EMAIL_UNSUBSCRIBE:
-        await this.actionService.unSubscribeActionHandler(client, body, SUBSCRIBE_TYPE.EMAIL);
-        break;
-      case SlackActionIDEnum.EMAIL_RESEND_VERIFICATION_CODE:
-        await this.actionService.emailResendVerificationCodeActionHandler(client, body);
-        break;
-      default:
-        break;
-    }
+    // 액션 핸들러를 등록합니다.
+    await this.actionHandler.registerActionHandler(client, body);
   }
 
   async slackViewSubMissionHandler(ack: any, body: SlackInteractionPayload): Promise<void> {
