@@ -17,6 +17,7 @@ import { BullModule } from '@nestjs/bull';
 import { ClientService } from './util/client.service';
 import { UserLogEntity } from 'src/entity/userLog.entity';
 import { EmailModule } from '../email/email.module';
+import { SlackAppFactory } from './config/slackAppFactory';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { EmailModule } from '../email/email.module';
     forwardRef(() => EmailModule),
   ],
   providers: [
+    SlackAppFactory,
     SlackService,
     SlackRepository,
     BuilderService,

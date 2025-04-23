@@ -12,40 +12,34 @@ import { ActionService } from './util/action.service';
 import { ViewSubmissionService } from './util/viewSubmission.service';
 import { ClientService } from './util/client.service';
 import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
+import { SlackAppFactory } from './config/slackAppFactory';
 
 @Injectable()
 export class SlackService implements OnModuleInit {
   private APP: App;
   private RECEIVER: ExpressReceiver;
-  private readonly API_SLACK_SIGNING_SECRET: string;
-  private readonly API_SLACK_BOT_TOKEN: string;
   private readonly API_SLACK_CLIENT_ID: string;
   private readonly API_SLACK_CLIENT_SECRET: string;
 
   constructor(
-    public readonly configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly slackAppFactory: SlackAppFactory,
     private readonly slackRepository: SlackRepository,
     private readonly commandService: CommandService,
     private readonly actionService: ActionService,
     private readonly viewSubMissionService: ViewSubmissionService,
     private readonly clientService: ClientService
   ) {
-    this.API_SLACK_SIGNING_SECRET = this.configService.get<string>('API_SLACK_SIGNING_SECRET');
-    this.API_SLACK_BOT_TOKEN = this.configService.get<string>('API_SLACK_BOT_TOKEN');
+    // Slack App과 ExpressReceiver를 생성합니다.
+    const { app, receiver } = this.slackAppFactory.createApp();
+    this.APP = app;
+    this.RECEIVER = receiver;
+    // Slack App의 Signing Secret과 Bot Token을 설정합니다.
     this.API_SLACK_CLIENT_ID = this.configService.get<string>('API_SLACK_CLIENT_ID');
     this.API_SLACK_CLIENT_SECRET = this.configService.get<string>('API_SLACK_CLIENT_SECRET');
   }
 
   onModuleInit() {
-    this.RECEIVER = new ExpressReceiver({
-      signingSecret: this.API_SLACK_SIGNING_SECRET,
-    });
-
-    this.APP = new App({
-      token: this.API_SLACK_BOT_TOKEN,
-      receiver: this.RECEIVER,
-    });
-
     // '/로또' command를 처리하는 이벤트 핸들러를 등록합니다.
     this.APP.command('/로또', async ({ command, ack }) => {
       // Command 요청을 확인합니다.
