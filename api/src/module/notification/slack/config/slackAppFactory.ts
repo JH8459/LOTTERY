@@ -4,7 +4,6 @@ import { App, ExpressReceiver } from '@slack/bolt';
 
 @Injectable()
 /**
- * @class
  * @description: SlackAppFactory는 Slack App과 ExpressReceiver를 생성하는 팩토리 클래스입니다. (App, Receiver 초기화 책임을 가지고 있습니다.)
  * @constructor
  * @param {ConfigService} configService - NestJS ConfigService 인스턴스입니다.
