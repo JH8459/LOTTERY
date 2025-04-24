@@ -14,7 +14,7 @@ export class SlackAppFactory {
   private readonly API_SLACK_SIGNING_SECRET: string;
   private readonly API_SLACK_BOT_TOKEN: string;
 
-  constructor(public readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService) {
     this.API_SLACK_SIGNING_SECRET = this.configService.get<string>('API_SLACK_SIGNING_SECRET');
     this.API_SLACK_BOT_TOKEN = this.configService.get<string>('API_SLACK_BOT_TOKEN');
   }
