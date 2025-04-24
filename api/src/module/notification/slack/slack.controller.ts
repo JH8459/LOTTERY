@@ -12,7 +12,7 @@ export class SlackController {
 
   @Get('auth')
   async slackOAuthCallback(@Query('code') code: string, @Res() res: Response): Promise<void> {
-    const url: string = await this.slackService.getAccessToken(code);
+    const url: string = await this.slackService.authorizeSlackCode(code);
 
     res.redirect(url);
   }
@@ -31,18 +31,14 @@ export class SlackController {
     const ack = res.send.bind(res);
     const type: string = bodyToJson.type;
 
-    switch (type) {
+    if (type === SlackActionTypeEnum.BLOCK_ACTIONS) {
       // Block Actions 이벤트를 처리합니다.
-      case SlackActionTypeEnum.BLOCK_ACTIONS:
-        await this.slackService.slackBlockActionsHandler(ack, bodyToJson);
-        break;
+      await this.slackService.slackBlockActionsHandler(ack, bodyToJson);
+    }
+
+    if (type === SlackActionTypeEnum.VIEW_SUBMISSION) {
       // View Submission 이벤트를 처리합니다.
-      case SlackActionTypeEnum.VIEW_SUBMISSION:
-        await this.slackService.slackViewSubMissionHandler(ack, bodyToJson);
-        break;
-      // 기타 이벤트는 무시합니다.
-      default:
-        break;
+      await this.slackService.slackViewSubMissionHandler(ack, bodyToJson);
     }
   }
 }

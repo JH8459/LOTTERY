@@ -20,10 +20,14 @@ import { EmailModule } from '../email/email.module';
 import { SlackAppFactory } from './config/slackAppFactory';
 import { CommandHandler } from './handler/command.handler';
 import { ActionHandler } from './handler/action.handler';
+import { ViewSubmissionHandler } from './handler/viewSubmission.handler';
+import { AuthService } from './util/auth.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, UserLogEntity]),
+    HttpModule,
     BullModule.registerQueue({ name: 'slackQueue' }),
     forwardRef(() => EmailModule),
   ],
@@ -38,8 +42,10 @@ import { ActionHandler } from './handler/action.handler';
     WebHookService,
     SlackMessageService,
     ClientService,
+    AuthService,
     CommandHandler,
     ActionHandler,
+    ViewSubmissionHandler,
   ],
   controllers: [SlackController],
   exports: [SlackMessageService, WebHookService],
