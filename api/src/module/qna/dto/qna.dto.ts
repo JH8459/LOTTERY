@@ -5,4 +5,4 @@ class QnaOptionalDto extends PickType(QnaEntity, ['name']) {}
 
 class QnaRequiredDto extends PickType(QnaEntity, ['email', 'question']) {}
 
-export class QnaRegistInfoDto extends IntersectionType(QnaRequiredDto, QnaOptionalDto) {}
+export class QnaRegistInfoDto extends IntersectionType(QnaRequiredDto, PartialType(QnaOptionalDto)) {}
