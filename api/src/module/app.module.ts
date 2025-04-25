@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import * as ioredis from '@nestjs-modules/ioredis';
+import { RedisModule as IORedisModule } from '@nestjs-modules/ioredis';
 import { LoggerMiddleware } from 'src/common/custom/logger/logger.middleware';
 import { HealthModule } from './health/health.module';
 import { NotificationsModule } from './notification/notification.module';
@@ -22,7 +22,7 @@ import { ResponseInterceptor } from 'src/common/custom/interceptor/response.inte
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync(TYPE_ORM_CONFIG),
     MailerModule.forRootAsync(EMAIL_CONFIG),
-    ioredis.RedisModule.forRootAsync(REDIS_CONFIG),
+    IORedisModule.forRootAsync(REDIS_CONFIG),
     BullModule.forRootAsync(BULL_CONFIG),
     HealthModule,
     LoggerModule,
