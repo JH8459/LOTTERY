@@ -1,5 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { join } from 'path';
 
 export const TYPE_ORM_CONFIG: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -12,25 +13,8 @@ export const TYPE_ORM_CONFIG: TypeOrmModuleAsyncOptions = {
     password: configService.get<string>('DB_PASSWORD'),
     database: configService.get<string>('DB_DATABASE'),
     charset: 'utf8mb4',
-    entities: ['dist/**/*.entity.js'],
-    synchronize: false,
+    entities: [join(__dirname, '../entity/**/*.entity{.ts,.js}')],
+    synchronize: configService.get<string>('NODE_ENV') === 'test',
     logging: configService.get<string>('API_NODE_ENV') === 'dev',
-  }),
-};
-
-export const TYPE_ORM_TEST_CONFIG: TypeOrmModuleAsyncOptions = {
-  imports: [ConfigModule],
-  inject: [ConfigService],
-  useFactory: (configService: ConfigService) => ({
-    type: 'mariadb',
-    host: 'lottery_test_db',
-    port: 3306,
-    username: 'root',
-    password: 'testpassword',
-    database: 'testdb',
-    charset: 'utf8mb4',
-    entities: ['dist/**/*.entity.js'],
-    synchronize: true,
-    logging: false,
   }),
 };
