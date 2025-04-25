@@ -9,7 +9,7 @@ import { EMAIL_CONFIG } from 'src/config/email.config';
 import { BULL_CONFIG, REDIS_CONFIG } from 'src/config/redis.config';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TYPE_ORM_CONFIG, TYPE_ORM_TEST_CONFIG } from 'src/config/typeorm.config';
+import { TYPE_ORM_CONFIG } from 'src/config/typeorm.config';
 import { QnaModule } from './qna/qna.module';
 import { BullModule } from '@nestjs/bull';
 import { RedisModule } from './redis/redis.module';
@@ -20,7 +20,7 @@ import { ResponseInterceptor } from 'src/common/custom/interceptor/response.inte
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync(process.env.API_NODE_ENV === 'test' ? TYPE_ORM_TEST_CONFIG : TYPE_ORM_CONFIG),
+    TypeOrmModule.forRootAsync(TYPE_ORM_CONFIG),
     MailerModule.forRootAsync(EMAIL_CONFIG),
     ioredis.RedisModule.forRootAsync(REDIS_CONFIG),
     BullModule.forRootAsync(BULL_CONFIG),

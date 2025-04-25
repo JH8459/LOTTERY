@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LottoEntity } from 'src/entity/lotto.entity';
-import { InsertQueryBuilder, InsertResult, Repository, SelectQueryBuilder, UpdateQueryBuilder } from 'typeorm';
+import { InsertQueryBuilder, InsertResult, Repository, UpdateQueryBuilder } from 'typeorm';
 import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
