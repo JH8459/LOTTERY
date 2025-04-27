@@ -34,7 +34,7 @@ export class AuthService {
   }
   /**
    * @description - 주어진 code를 사용하여 워크스페이스에 대한 Slack 인증 절차를 수행하고 accessToken과 워크스페이스 정보를 DB에 저장합니다.
-   * @param {string} code - Slack OAuth 인증 코드
+   * @param {string} code - Slack OAuth 인증 코드입니다.
    * @returns {Promise<string>} - Redirect URL
    * @throws - 인증 실패 시 'https://slack.com'으로 Redirect
    */
@@ -42,6 +42,9 @@ export class AuthService {
     try {
       const oAuthResponseInfo: SlackOAuthResponse = await this.fetchOAuthInfo(code);
       const teamResponseInfo: SlackTeamResponse = await this.fetchTeamInfo(oAuthResponseInfo);
+
+      console.log('oAuthResponseInfo', oAuthResponseInfo);
+      console.log('teamResponseInfo', teamResponseInfo);
 
       // accessToken과 팀 워크스페이스 정보를 DB에 저장
       await this.slackRepository.saveAccessToken(
@@ -104,11 +107,13 @@ export class AuthService {
    */
   private async fetchTeamInfo({ accessToken, appId }: SlackOAuthResponse): Promise<SlackTeamResponse | null> {
     try {
-      const response: AxiosResponse = await axios.get('https://slack.com/api/team.info', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await firstValueFrom(
+        this.httpService.get('https://slack.com/api/team.info', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+      );
 
       if (!response.data.ok) {
         return null;
