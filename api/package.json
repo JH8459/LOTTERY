@@ -7,10 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
     "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "test:docker:start": "docker compose --env-file .env.test -f docker-compose.test.yml up -d",
     "test": "npm run test:docker:start && jest --config jest-e2e.json --forceExit",
