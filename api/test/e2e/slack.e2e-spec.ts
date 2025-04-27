@@ -92,4 +92,36 @@ describe('SlackController E2E - /slack/auth', () => {
     // Assert (리다이렉트 URL 검증)
     expect(result).toBe('https://slack.com');
   });
+
+  it(`❌ authorizeSlackCode - auth.service.ts의 fetchTeamInfo 메서드 인증 실패 시 'https://slack.com'으로 Redirect URL을 반환하는가?`, async () => {
+    // Arrange
+    const mockAccessToken = 'fake-access-token';
+    const mockAppId = 'fake-app-id';
+
+    // 1. Slack OAuth Access Token API Mock
+    jest.spyOn(httpService, 'post').mockReturnValueOnce(
+      of({
+        data: {
+          ok: true,
+          access_token: mockAccessToken,
+          app_id: mockAppId,
+        },
+      } as AxiosResponse)
+    );
+
+    // 2. Slack Team Info API Mock
+    jest.spyOn(httpService, 'get').mockReturnValueOnce(
+      of({
+        data: {
+          ok: false,
+        },
+      } as AxiosResponse)
+    );
+
+    // Act
+    const result = await slackService.authorizeSlackCode('test-code');
+
+    // Assert (리다이렉트 URL 검증)
+    expect(result).toBe('https://slack.com');
+  });
 });
