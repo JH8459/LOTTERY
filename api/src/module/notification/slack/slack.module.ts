@@ -27,8 +27,8 @@ import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     TypeOrmModule.forFeature([LottoEntity, SpeettoEntity, WorkspaceEntity, UserEntity, UserLogEntity]),
-    HttpModule,
     BullModule.registerQueue({ name: 'slackQueue' }),
+    HttpModule,
     forwardRef(() => EmailModule),
   ],
   providers: [

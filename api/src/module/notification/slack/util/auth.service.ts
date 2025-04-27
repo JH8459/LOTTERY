@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SlackRepository } from '../repository/slack.repository';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { CustomLoggerService } from 'src/module/logger/logger.service';
 import { CustomInternalServerErrorException } from 'src/common/custom/exception/exception.service';
 import { HttpService } from '@nestjs/axios';
@@ -108,7 +108,7 @@ export class AuthService {
    */
   private async fetchTeamInfo({ accessToken, appId }: SlackOAuthResponse): Promise<SlackTeamResponse | null> {
     try {
-      const response = await firstValueFrom(
+      const response: AxiosResponse = await firstValueFrom(
         this.httpService.get('https://slack.com/api/team.info', {
           headers: {
             Authorization: `Bearer ${accessToken}`,

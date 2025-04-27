@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
-import { CustomLoggerService } from 'src/module/logger/logger.service';
 import { CustomBadRequestException } from 'src/common/custom/exception/exception.service';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class WebHookService {
   private readonly API_SLACK_WEBHOOK_URL: string;
 
-  constructor(public readonly configService: ConfigService, private readonly loggerService: CustomLoggerService) {
+  constructor(private readonly configService: ConfigService, private readonly httpService: HttpService) {
     this.API_SLACK_WEBHOOK_URL = this.configService.get<string>('API_SLACK_WEBHOOK_URL');
   }
 
@@ -18,9 +18,11 @@ export class WebHookService {
     }
 
     try {
-      await axios.post(this.API_SLACK_WEBHOOK_URL, {
-        text: message,
-      });
+      await firstValueFrom(
+        this.httpService.post(this.API_SLACK_WEBHOOK_URL, {
+          text: message,
+        })
+      );
     } catch (error) {
       throw new CustomBadRequestException('Slack Webhook 메시지 전송에 실패했습니다.');
     }

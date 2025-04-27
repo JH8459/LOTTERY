@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { lottoEmailTemplate } from './template/lotto.template';
 import { convertDateFormat } from 'src/common/utils/utils';
 import {
@@ -16,6 +16,8 @@ import { Queue } from 'bull';
 import { RedisService } from 'src/module/redis/redis.service';
 import { CustomInternalServerErrorException } from 'src/common/custom/exception/exception.service';
 import { verificationCodeEmailTemplate } from './template/verification.template';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class EmailService {
@@ -24,6 +26,7 @@ export class EmailService {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
     private readonly mailerService: MailerService,
     private readonly redisService: RedisService,
     @InjectQueue('emailQueue') private readonly emailQueue: Queue
@@ -96,17 +99,22 @@ export class EmailService {
         },
       };
 
-      const subscriberList: AxiosResponse = await axios.get(
-        'https://api.github.com/repos/jh8459/LOTTERY/subscribers',
-        axiosReqConfig
+      const subscriberListResponse: AxiosResponse = await firstValueFrom(
+        this.httpService.get('https://api.github.com/repos/jh8459/LOTTERY/subscribers', axiosReqConfig)
       );
 
-      await Promise.all(
-        subscriberList.data.map(async (subscriber: PublicSubscriberInfoInterface): Promise<void> => {
-          const subscriberInfo: AxiosResponse = await axios.get(subscriber.url, axiosReqConfig);
+      const subscriberList: PublicSubscriberInfoInterface[] = subscriberListResponse.data;
 
-          if (subscriberInfo.data.email !== null && subscriberInfo.data.email !== '') {
-            await this.enqueueLottoEmail(subscriberInfo.data.email);
+      await Promise.all(
+        subscriberList.map(async (subscriber: PublicSubscriberInfoInterface) => {
+          const subscriberInfoResponse: AxiosResponse = await firstValueFrom(
+            this.httpService.get(subscriber.url, axiosReqConfig)
+          );
+
+          const { email } = subscriberInfoResponse.data;
+
+          if (email) {
+            await this.enqueueLottoEmail(email);
           }
         })
       );

@@ -4,9 +4,10 @@ import { EmailController } from './email.controller';
 import { BullModule } from '@nestjs/bull';
 import { EmailProcessor } from './email.processor';
 import { SlackModule } from '../slack/slack.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [BullModule.registerQueue({ name: 'emailQueue' }), forwardRef(() => SlackModule)],
+  imports: [BullModule.registerQueue({ name: 'emailQueue' }), HttpModule, forwardRef(() => SlackModule)],
   providers: [EmailService, EmailProcessor],
   controllers: [EmailController],
   exports: [EmailService],
