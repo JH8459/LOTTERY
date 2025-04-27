@@ -43,9 +43,6 @@ export class AuthService {
       const oAuthResponseInfo: SlackOAuthResponse = await this.fetchOAuthInfo(code);
       const teamResponseInfo: SlackTeamResponse = await this.fetchTeamInfo(oAuthResponseInfo);
 
-      console.log('oAuthResponseInfo', oAuthResponseInfo);
-      console.log('teamResponseInfo', teamResponseInfo);
-
       // accessToken과 팀 워크스페이스 정보를 DB에 저장
       await this.slackRepository.saveAccessToken(
         teamResponseInfo.workspaceName,

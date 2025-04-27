@@ -41,6 +41,11 @@ export class SlackService implements OnModuleInit {
     return this.RECEIVER;
   }
 
+  /**
+   * @description: Slack App의 OAuth 인증을 처리하는 메서드입니다.
+   * @param {string} code - Slack OAuth 인증 코드입니다.
+   * @returns {Promise<string>}
+   */
   async authorizeSlackCode(code: string): Promise<string> {
     const url: string = await this.authService.authorizeSlackCode(code);
 
