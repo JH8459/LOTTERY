@@ -1,15 +1,102 @@
-name: Deploy to NAS (CD)
+name: CI & CD
 
 on:
-  workflow_run:
-    workflows: ['E2E Test & Build Docker Images (CI)']
-    types:
-      - completed
+  push:
+    branches: [master]
 
 jobs:
+  test:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.0'
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: npm install
+
+      - name: Create .env.test
+        working-directory: ./api
+        run: |
+          [ -f ./.env.test ] && rm ./.env.test
+          cat <<EOF > .env.test
+          DB_HOST=${{ secrets.TEST_DB_HOST }}
+          DB_PORT=${{ secrets.TEST_DB_PORT }}
+          DB_USER=${{ secrets.TEST_DB_USER }}
+          DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}
+          DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}
+          API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
+          API_EMAIL_USERNAME=${{ secrets.API_EMAIL_USERNAME }}
+          API_EMAIL_PASSWORD=${{ secrets.API_EMAIL_PASSWORD }}
+          API_EMAIL_HOST=${{ secrets.API_EMAIL_HOST }}
+          API_EMAIL_PORT=${{ secrets.API_EMAIL_PORT }}
+          API_EMAIL_FROM=${{ secrets.API_EMAIL_FROM }}
+          API_REDIS_HOST=${{ secrets.TEST_API_REDIS_HOST }}
+          API_REDIS_PORT=${{ secrets.TEST_API_REDIS_PORT }}
+          API_SLACK_SIGNING_SECRET=${{ secrets.API_SLACK_SIGNING_SECRET }}
+          API_SLACK_BOT_TOKEN=${{ secrets.API_SLACK_BOT_TOKEN }}
+          API_SLACK_CLIENT_ID=${{ secrets.API_SLACK_CLIENT_ID }}
+          API_SLACK_CLIENT_SECRET=${{ secrets.API_SLACK_CLIENT_SECRET }}
+          API_SLACK_WEBHOOK_URL=${{ secrets.API_SLACK_WEBHOOK_URL }}
+          COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}
+          SWAGGER_USERNAME=${{ secrets.SWAGGER_USERNAME }}
+          SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
+          EOF
+
+      - name: Start docker-compose.test.yml (DB + Redis)
+        working-directory: ./api
+        run: docker compose --env-file .env.test -f docker-compose.test.yml up -d
+
+      - name: Run Tests
+        working-directory: ./api
+        run: npm run test
+
+  build:
+    name: Build Docker Images
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # Build and push API
+      - name: Build and Push lottery_api_server Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest ./api
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest
+
+      # Build and push Crawler
+      - name: Build and Push lottery_crawler_server Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest ./crawler
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest
+
+      # Build and push Website
+      - name: Build and Push lottery_website Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest ./website
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest
+
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Deploy to NAS
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
