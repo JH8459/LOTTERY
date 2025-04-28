@@ -20,7 +20,6 @@ import { SlackOAuthResponse, SlackTeamResponse } from '../interface/response.int
  * @property {string} API_SLACK_CLIENT_SECRET - Slack Client Secret입니다.
  */
 export class AuthService {
-  private readonly NODE_ENV: string;
   private readonly API_SLACK_CLIENT_ID: string;
   private readonly API_SLACK_CLIENT_SECRET: string;
 
@@ -30,7 +29,6 @@ export class AuthService {
     private readonly loggerService: CustomLoggerService,
     private readonly slackRepository: SlackRepository
   ) {
-    this.NODE_ENV = this.configService.get<string>('NODE_ENV');
     this.API_SLACK_CLIENT_ID = this.configService.get<string>('API_SLACK_CLIENT_ID');
     this.API_SLACK_CLIENT_SECRET = this.configService.get<string>('API_SLACK_CLIENT_SECRET');
   }
@@ -54,9 +52,7 @@ export class AuthService {
 
       return teamResponseInfo.appRedirectUrl;
     } catch (error) {
-      if (this.NODE_ENV !== 'test') {
-        this.loggerService.error('Slack OAuth 인증 중 문제가 발생했습니다.', error);
-      }
+      this.loggerService.error('Slack OAuth 인증 중 문제가 발생했습니다.', error);
 
       return 'https://slack.com';
     }
