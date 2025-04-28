@@ -11,7 +11,7 @@ services:
     env_file:
       - ./api/.env
     environment:
-      - TZ=Asia/Seoul
+      API_NODE_ENV: dev
     restart: always
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${API_SERVER_PORT}/health']
