@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   lottery_test_db:
     image: mariadb:latest
     container_name: lottery_test_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - ${DB_PORT}:3306
     command: --default-authentication-plugin=mysql_native_password
