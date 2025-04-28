@@ -117,6 +117,6 @@ describe('SlackController E2E - /slack/auth', () => {
     // 리다이렉트 URL 검증
     const redirectUrl: string = await slackService.authorizeSlackCode('test-code');
 
-    expect(redirectUrl).toBe('https://slack.com123');
+    expect(redirectUrl).toBe('https://slack.com');
   });
 });
