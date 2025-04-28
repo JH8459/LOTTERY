@@ -1,0 +1,60 @@
+name: Run E2E (TEST)
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    name: TEST
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.0'
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: npm install
+
+      - name: Create .env.test
+        working-directory: ./api
+        run: |
+          [ -f ./.env.test ] && rm ./.env.test
+          cat <<EOF > .env.test
+          DB_HOST=${{ secrets.TEST_DB_HOST }}
+          DB_PORT=${{ secrets.TEST_DB_PORT }}
+          DB_USER=${{ secrets.TEST_DB_USER }}
+          DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}
+          DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}
+          API_NODE_ENV=${{ secrets.TEST_API_NODE_ENV }}
+          API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
+          API_EMAIL_USERNAME=${{ secrets.API_EMAIL_USERNAME }}
+          API_EMAIL_PASSWORD=${{ secrets.API_EMAIL_PASSWORD }}
+          API_EMAIL_HOST=${{ secrets.API_EMAIL_HOST }}
+          API_EMAIL_PORT=${{ secrets.API_EMAIL_PORT }}
+          API_EMAIL_FROM=${{ secrets.API_EMAIL_FROM }}
+          API_REDIS_HOST=${{ secrets.TEST_API_REDIS_HOST }}
+          API_REDIS_PORT=${{ secrets.TEST_API_REDIS_PORT }}
+          API_SLACK_SIGNING_SECRET=${{ secrets.API_SLACK_SIGNING_SECRET }}
+          API_SLACK_BOT_TOKEN=${{ secrets.API_SLACK_BOT_TOKEN }}
+          API_SLACK_CLIENT_ID=${{ secrets.API_SLACK_CLIENT_ID }}
+          API_SLACK_CLIENT_SECRET=${{ secrets.API_SLACK_CLIENT_SECRET }}
+          API_SLACK_WEBHOOK_URL=${{ secrets.API_SLACK_WEBHOOK_URL }}
+          COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}
+          SWAGGER_USERNAME=${{ secrets.SWAGGER_USERNAME }}
+          SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
+          EOF
+
+      - name: Start docker-compose.test.yml (DB + Redis)
+        working-directory: ./api
+        run: docker compose --env-file .env.test -f docker-compose.test.yml up -d
+
+      - name: Run Tests
+        working-directory: ./api
+        run: npm run test
