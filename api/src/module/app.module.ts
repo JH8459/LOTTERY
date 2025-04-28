@@ -19,7 +19,10 @@ import { ResponseInterceptor } from 'src/common/custom/interceptor/response.inte
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.API_NODE_ENV === 'test' ? ['.env.test'] : ['.env'],
+    }),
     TypeOrmModule.forRootAsync(TYPE_ORM_CONFIG),
     MailerModule.forRootAsync(EMAIL_CONFIG),
     IORedisModule.forRootAsync(REDIS_CONFIG),
