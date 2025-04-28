@@ -5,7 +5,7 @@ import { join } from 'path';
 export const TYPE_ORM_CONFIG: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
   inject: [ConfigService],
-  useFactory: (configService: ConfigService) => {
+  useFactory: async (configService: ConfigService): Promise<TypeOrmModuleAsyncOptions> => {
     const config: TypeOrmModuleOptions = {
       type: 'mariadb',
       host: configService.get<string>('DB_HOST'),
