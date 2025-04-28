@@ -57,7 +57,10 @@ jobs:
 
       - name: Run Tests
         working-directory: ./api
-        run: npm run test
+        run: |
+          set -e
+          npm run test
+
   build:
     name: Build Docker Images
     needs: test
