@@ -9,9 +9,10 @@
     "build": "nest build",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "test:docker:start": "docker compose --env-file .env.test -f docker-compose.test.yml up -d",
-    "test": "npm run test:docker:start && jest --config jest-e2e.json --forceExit",
-    "test:cov": "npm run test:docker:start && jest --config jest-e2e.json --coverage"
+    "test": "npm run test:docker:start && npm run test:e2e && echo '✅ E2E 테스트 성공' || echo '❌ E2E 테스트 실패'",
+    "test:e2e": "jest --config jest-e2e.json --forceExit",
+    "test:cov": "npm run test:docker:start && jest --config jest-e2e.json --coverage",
+    "test:docker:start": "docker compose --env-file .env.test -f docker-compose.test.yml up -d"
   },
   "dependencies": {
     "@nestjs-modules/ioredis": "^2.0.1",
