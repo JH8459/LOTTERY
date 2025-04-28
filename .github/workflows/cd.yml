@@ -27,7 +27,6 @@ jobs:
             echo "📦 COMMON .env 생성"
             [ -f .env ] && rm .env
             cat <<EOF > .env
-            NODE_ENV=${{ secrets.NODE_ENV }}
             API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
             CRAWLER_SERVER_PORT=${{ secrets.CRAWLER_SERVER_PORT }}
             WEBSITE_PORT=${{ secrets.WEBSITE_PORT }}
@@ -42,7 +41,6 @@ jobs:
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_DATABASE=${{ secrets.DB_DATABASE }}
-            API_NODE_ENV=${{ secrets.API_NODE_ENV }}
             API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
             API_EMAIL_USERNAME=${{ secrets.API_EMAIL_USERNAME }}
             API_EMAIL_PASSWORD=${{ secrets.API_EMAIL_PASSWORD }}

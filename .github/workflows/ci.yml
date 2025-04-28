@@ -32,7 +32,6 @@ jobs:
           DB_USER=${{ secrets.TEST_DB_USER }}
           DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}
           DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}
-          API_NODE_ENV=${{ secrets.TEST_API_NODE_ENV }}
           API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
           API_EMAIL_USERNAME=${{ secrets.API_EMAIL_USERNAME }}
           API_EMAIL_PASSWORD=${{ secrets.API_EMAIL_PASSWORD }}
