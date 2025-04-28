@@ -62,6 +62,7 @@ jobs:
     name: Build Docker Images
     needs: test
     runs-on: ubuntu-latest
+    if: success()
 
     steps:
       - name: Checkout Repository
