@@ -1,4 +1,4 @@
-name: Run E2E (TEST)
+name: E2E Test & Build Docker Images (CI)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    name: TEST
+    name: E2E Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -51,10 +51,6 @@ jobs:
           SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
           EOF
 
-      - name: Check .env.test contents
-        working-directory: ./api
-        run: cat .env.test
-
       - name: Start docker-compose.test.yml (DB + Redis)
         working-directory: ./api
         run: docker compose --env-file .env.test -f docker-compose.test.yml up -d
@@ -62,3 +58,38 @@ jobs:
       - name: Run Tests
         working-directory: ./api
         run: npm run test
+  build:
+    name: Build Docker Images
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # Build and push API
+      - name: Build and Push lottery_api_server Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest ./api
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest
+
+      # Build and push Crawler
+      - name: Build and Push lottery_crawler_server Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest ./crawler
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest
+
+      # Build and push Website
+      - name: Build and Push lottery_website Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest ./website
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest

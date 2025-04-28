@@ -2,7 +2,7 @@ name: Deploy to NAS (CD)
 
 on:
   workflow_run:
-    workflows: ['Build & Push Docker Images (CI)']
+    workflows: ['E2E Test & Build Docker Images (CI)']
     types:
       - completed
 
