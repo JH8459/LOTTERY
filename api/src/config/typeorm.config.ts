@@ -16,7 +16,7 @@ export const TYPE_ORM_CONFIG: TypeOrmModuleAsyncOptions = {
       charset: 'utf8mb4',
       entities: [join(__dirname, '../entity/**/*.entity{.ts,.js}')],
       synchronize: configService.get<string>('NODE_ENV') === 'test',
-      logging: true,
+      logging: false,
     };
 
     console.log('📦 [TYPEORM CONFIG]:', config);
