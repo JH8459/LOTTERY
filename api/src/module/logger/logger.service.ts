@@ -1,4 +1,5 @@
 import { Injectable, LoggerService } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as winston from 'winston';
 import * as winstonDaily from 'winston-daily-rotate-file';
 
@@ -8,9 +9,12 @@ import * as winstonDaily from 'winston-daily-rotate-file';
  */
 @Injectable()
 export class CustomLoggerService implements LoggerService {
-  private logger: winston.Logger;
+  private readonly logger: winston.Logger;
+  private readonly API_NODE_ENV: string;
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
+    this.API_NODE_ENV = this.configService.get<string>('API_NODE_ENV');
+
     // logger format 설정
     const logFormatOption = (colorize?: boolean): winston.Logform.Format =>
       winston.format.combine(
@@ -72,22 +76,32 @@ export class CustomLoggerService implements LoggerService {
   }
 
   async error(message: string, stack?: string, context?: any): Promise<void> {
-    this.logger.error(message, { stack, context });
+    if (this.API_NODE_ENV !== 'test') {
+      this.logger.error(message, { stack, context });
+    }
   }
 
   log(message: string, context?: any): void {
-    this.logger.info(message, { context });
+    if (this.API_NODE_ENV !== 'test') {
+      this.logger.info(message, { context });
+    }
   }
 
   warn(message: string, context?: any): void {
-    this.logger.warn(message, { context });
+    if (this.API_NODE_ENV !== 'test') {
+      this.logger.warn(message, { context });
+    }
   }
 
   debug(message: string, context?: any): void {
-    this.logger.debug(message, { context });
+    if (this.API_NODE_ENV !== 'test') {
+      this.logger.debug(message, { context });
+    }
   }
 
   verbose(message: string, context?: any): void {
-    this.logger.verbose(message, { context });
+    if (this.API_NODE_ENV !== 'test') {
+      this.logger.verbose(message, { context });
+    }
   }
 }
