@@ -62,16 +62,16 @@ describe('SlackController E2E - /slack/auth', () => {
       } as AxiosResponse)
     );
 
+    // 리다이렉트 URL 검증
+    const redirectUrl: string = await slackService.authorizeSlackCode('test-code');
+
+    expect(redirectUrl).toBe(`https://${mockTeamDomain}.slack.com/app_redirect?app=${mockAppId}`);
+
     // accessToken DB 저장 검증
     const accessToken: string = await slackRepository.getAccessToken(mockTeamId);
 
     expect(accessToken).not.toBeNull();
     expect(accessToken).toBe(mockAccessToken);
-
-    // 리다이렉트 URL 검증
-    const redirectUrl: string = await slackService.authorizeSlackCode('test-code');
-
-    expect(redirectUrl).toBe(`https://${mockTeamDomain}.slack.com/app_redirect?app=${mockAppId}`);
   });
 
   it(`❌ authorizeSlackCode - auth.service.ts의 fetchOAuthInfo 메서드 인증 실패 시 'https://slack.com'으로 Redirect URL을 반환하는가?`, async () => {
