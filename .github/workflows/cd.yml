@@ -8,11 +8,24 @@ on:
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Deploy to NAS
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to NAS via SSH and deploy
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Connect to NAS via SSH - Test Connection
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.NAS_HOST }}
+          username: ${{ secrets.NAS_USER }}
+          password: ${{ secrets.NAS_PASSWORD }}
+          port: ${{ secrets.NAS_PORT }}
+          script: echo "✅ NAS 접속 성공"
+
+      - name: Update Git Repository on NAS
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.NAS_HOST }}
@@ -20,21 +33,32 @@ jobs:
           password: ${{ secrets.NAS_PASSWORD }}
           port: ${{ secrets.NAS_PORT }}
           script: |
-            echo "✅ NAS 접속 성공"
-
             cd /volume1/docker/lottery
+            echo "🌀 GitHub master 브랜치 최신화"
+            git fetch origin
+            git reset --hard origin/master
 
-            echo "📦 COMMON .env 생성"
-            [ -f .env ] && rm .env
+      - name: Create .env files on NAS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.NAS_HOST }}
+          username: ${{ secrets.NAS_USER }}
+          password: ${{ secrets.NAS_PASSWORD }}
+          port: ${{ secrets.NAS_PORT }}
+          script: |
+            cd /volume1/docker/lottery
+            echo "📦 .env 파일 생성 시작"
+
+            # 공통 .env
+            mkdir -p ./api ./crawler
+            rm -f .env ./api/.env ./crawler/.env
+
             cat <<EOF > .env
             API_SERVER_PORT=${{ secrets.API_SERVER_PORT }}
             CRAWLER_SERVER_PORT=${{ secrets.CRAWLER_SERVER_PORT }}
             WEBSITE_PORT=${{ secrets.WEBSITE_PORT }}
             EOF
 
-            echo "📦 API .env 생성"
-            mkdir -p ./api
-            [ -f ./api/.env ] && rm ./api/.env
             cat <<EOF > ./api/.env
             DB_HOST=${{ secrets.DB_HOST }}
             DB_PORT=${{ secrets.DB_PORT }}
@@ -59,9 +83,6 @@ jobs:
             SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
             EOF
 
-            echo "📦 CRAWLER .env 생성"
-            mkdir -p ./crawler
-            [ -f ./crawler/.env ] && rm ./crawler/.env
             cat <<EOF > ./crawler/.env
             DB_HOST=${{ secrets.DB_HOST }}
             DB_PORT=${{ secrets.DB_PORT }}
@@ -72,22 +93,25 @@ jobs:
             COMMON_GITHUB_TOKEN=${{ secrets.COMMON_GITHUB_TOKEN }}
             EOF
 
-            echo "🌀 GitHub master 브랜치 코드 최신화"
-            git fetch origin
-            git reset --hard origin/master
+            echo "✅ .env 파일 생성 완료"
 
-            echo "📁 필요한 디렉토리 생성"
-            mkdir -p ./api/logs ./api/public ./api/resource
-            mkdir -p ./crawler/logs ./crawler/public ./crawler/resource
-            mkdir -p ./redis-data
+      - name: Docker Pull, Down, Up on NAS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.NAS_HOST }}
+          username: ${{ secrets.NAS_USER }}
+          password: ${{ secrets.NAS_PASSWORD }}
+          port: ${{ secrets.NAS_PORT }}
+          script: |
+            cd /volume1/docker/lottery
 
-            echo "🐳 Docker 이미지 Pull"
+            echo "🐳 최신 Docker 이미지 Pull"
             /usr/local/bin/docker-compose pull
 
-            echo "🧨 기존 컨테이너 중지"
+            echo "🧨 기존 컨테이너 중지 및 삭제"
             /usr/local/bin/docker-compose down
 
-            echo "🚀 최신 이미지로 컨테이너 재시작"
+            echo "🚀 새 컨테이너 실행"
             /usr/local/bin/docker-compose up -d
 
-            echo "✅ 배포 완료 🎉"
+            echo "🎉 배포 완료"
