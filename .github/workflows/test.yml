@@ -51,6 +51,10 @@ jobs:
           SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }}
           EOF
 
+      - name: Check .env.test contents
+        working-directory: ./api
+        run: cat .env.test
+
       - name: Start docker-compose.test.yml (DB + Redis)
         working-directory: ./api
         run: docker compose --env-file .env.test -f docker-compose.test.yml up -d
