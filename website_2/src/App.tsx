@@ -1,9 +1,13 @@
-function App() {
+import Footer from './components/Footer';
+import Header from './components/Header';
+import AppRoutes from './router';
+
+export default function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-blue-500">Hello, Tailwind CSS 4.0!</h1>
-    </div>
+    <>
+      <Header />
+      <AppRoutes />
+      <Footer />
+    </>
   );
 }
-
-export default App;
