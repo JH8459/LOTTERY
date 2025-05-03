@@ -1,12 +1,9 @@
 FROM node:20.11.0
 
 WORKDIR /crawler/
-
-COPY ./package*.json /crawler/
-
-RUN npm install
-
 COPY . /crawler
 
+RUN npm install
 RUN npm run build
-CMD npm run start
+
+CMD ["npm", "run", "start"]
