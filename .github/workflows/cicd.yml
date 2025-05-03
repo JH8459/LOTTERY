@@ -79,19 +79,19 @@ jobs:
       # Build and push API
       - name: Build and Push lottery_api_server Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest ./api
+          docker build --no-cache -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest ./api
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_api_server:latest
 
       # Build and push Crawler
       - name: Build and Push lottery_crawler_server Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest ./crawler
+          docker build --no-cache -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest ./crawler
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_crawler_server:latest
 
       # Build and push Website
       - name: Build and Push lottery_website Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest ./website
+          docker build --no-cache -t ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest ./website
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/lottery_website:latest
 
   deploy:
