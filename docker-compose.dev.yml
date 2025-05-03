@@ -35,8 +35,6 @@ services:
       - ./crawler/resource:/crawler/resource
     env_file:
       - ./crawler/.env
-    environment:
-      - TZ=Asia/Seoul
     restart: always
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${CRAWLER_SERVER_PORT}/health']
