@@ -65,8 +65,6 @@ services:
     container_name: lottery_website
     ports:
       - '${WEBSITE_PORT}:${WEBSITE_PORT}'
-    volumes:
-      - ./website:/usr/share/nginx/html:ro
     restart: always
     networks:
       - lottery_net
