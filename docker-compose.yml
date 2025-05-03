@@ -65,6 +65,8 @@ services:
     container_name: lottery_website
     ports:
       - '${WEBSITE_PORT}:${WEBSITE_PORT}'
+    volumes:
+      - ./website:/website
     restart: always
     networks:
       - lottery_net

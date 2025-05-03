@@ -70,7 +70,7 @@ services:
     ports:
       - '${WEBSITE_PORT}:${WEBSITE_PORT}'
     volumes:
-      - ./website:/usr/share/nginx/html:ro
+      - ./website:/website
     restart: always
     networks:
       - lottery_net
