@@ -30,9 +30,7 @@ services:
     ports:
       - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
     volumes:
-      - ./crawler/logs:/crawler/logs
-      - ./crawler/public:/crawler/public
-      - ./crawler/resource:/crawler/resource
+      - ./crawler:/crawler
     env_file:
       - ./crawler/.env
     restart: always
@@ -68,7 +66,8 @@ services:
     ports:
       - '${WEBSITE_PORT}:${WEBSITE_PORT}'
     volumes:
-      - ./website:/website
+      - ./website/public:/website/public
+      - ./website/src:/website/src
     restart: always
     networks:
       - lottery_net
