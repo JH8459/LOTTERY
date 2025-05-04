@@ -28,9 +28,12 @@ export default function Privacy() {
             <div>
               <p className="font-bold mb-1">1. 수집하는 정보:</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
-                <li>팀 워크스페이스 이름과 팀 워크스페이스 고유 ID</li>
                 <li>
-                  슬랙 유저들의 고유 ID (<strong className="text-green-700">"/구독"</strong> 명령어 사용 시)
+                  팀 워크스페이스 이름과 고유 <strong>워크스페이스 ID</strong>
+                </li>
+                <li>
+                  유저들의 고유 <strong>슬랙 ID</strong>와 <strong>이메일 주소</strong> (
+                  <strong className="text-green-700">"/구독"</strong> 명령어 사용 시)
                 </li>
               </ul>
             </div>
@@ -38,10 +41,10 @@ export default function Privacy() {
             <div>
               <p className="font-bold mb-1">2. 수집 목적:</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
-                <li>팀 워크스페이스 별로 앱이 원활하게 기능을 제공하기 위함</li>
+                <li>팀 워크스페이스에서 앱이 원활하게 기능을 제공하기 위함</li>
                 <li>
-                  <strong className="text-green-700">"/구독"</strong> 명령어를 통해 개인 앱 채널을 열어 다이렉트
-                  메시지를 보내기 위함
+                  <strong className="text-green-700">"/구독"</strong> 명령어를 사용한 유저에게 다이렉트 메시지 혹은
+                  뉴스레터 메일을 보내기 위함
                 </li>
               </ul>
             </div>
@@ -49,7 +52,7 @@ export default function Privacy() {
             <div>
               <p className="font-bold mb-1">3. 보관 및 삭제 정책:</p>
               <ul className="list-disc list-inside ml-4 space-y-1">
-                <li>구독 해지 시 슬랙 유저 ID는 한 달 후에 폐기됨</li>
+                <li>구독 해지 시 개인정보는 한 달 후에 폐기됨</li>
                 <li>개인정보는 별도로 암호화된 DB 서버에 저장됨</li>
                 <li>접근 권한은 IP와 도메인 통제를 통해 허용된 담당자만 접근 가능</li>
               </ul>
