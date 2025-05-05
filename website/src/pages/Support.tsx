@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import Alert from '../components/common/Alert';
 
 export default function Support() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [responseMsg, setResponseMsg] = useState('');
-  const [responseColor, setResponseColor] = useState('text-green-600');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState<'success' | 'error'>('success');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,16 +24,15 @@ export default function Support() {
         setName('');
         setEmail('');
         setMessage('');
-        setResponseMsg('소중한 의견 감사합니다.');
-        setResponseColor('text-green-600');
+        setAlertMessage('소중한 의견 감사합니다.');
+        setAlertType('success');
       } else {
-        setResponseMsg('문제가 발생했습니다. 다시 시도해주세요.');
-        setResponseColor('text-red-600');
+        setAlertMessage('문제가 발생했습니다. 다시 시도해주세요.');
+        setAlertType('error');
       }
-
-      setTimeout(() => setResponseMsg(''), 3000);
     } catch (err) {
-      alert('에러 발생: ' + err);
+      setAlertMessage('에러가 발생했습니다. 다시 시도해주세요.');
+      setAlertType('error');
     }
   };
 
@@ -59,6 +59,9 @@ export default function Support() {
         <div className="w-full md:w-[50%] space-y-6 text-gray-800">
           <h2 className="text-xl font-semibold">문의하기</h2>
           <p>문의하실 내용이 있으신가요? 아래의 서식을 채워 작성해주시면 답변드리겠습니다.</p>
+
+          {/* Alert */}
+          {alertMessage && <Alert type={alertType} message={alertMessage} onClose={() => setAlertMessage('')} />}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
@@ -104,8 +107,7 @@ export default function Support() {
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3">
-              <div className={`text-sm font-medium ${responseColor}`}>{responseMsg}</div>
+            <div className="flex justify-end">
               <button
                 type="submit"
                 className="bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-8 rounded-md shadow-md"

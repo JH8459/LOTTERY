@@ -1,4 +1,4 @@
-import EmailAuthForm from '../components/Email/EmailAuthForm';
+import NewsletterPreviewForm from '../components/Email/NewsletterPreviewForm';
 import SectionTitle from '../components/common/SectionTitle';
 
 export default function Home() {
@@ -58,7 +58,7 @@ export default function Home() {
           </div>
         </div>
         {/* 하단: 이메일 구독 입력창 */}
-        <EmailAuthForm />
+        <NewsletterPreviewForm />
       </main>
     </>
   );
