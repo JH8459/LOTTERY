@@ -547,7 +547,7 @@ export const verificationCodeEmailTemplate = (verificationCode: string) => {
                                       padding-right: 5px"
                                   >
                                     <p style="margin-bottom: 15px">
-                                      <strong>📌 슬랙 채널로 돌아가 상단의 6자리 인증코드를 입력해주세요.</strong>
+                                      <strong>📌 상단의 6자리 인증코드를 입력해주세요.</strong>
                                     </p>
                                   </td>
                                 </tr>
