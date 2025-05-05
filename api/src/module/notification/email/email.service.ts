@@ -17,7 +17,6 @@ import {
   CustomInternalServerErrorException,
 } from 'src/common/custom/exception/exception.service';
 import { verificationCodeEmailTemplate } from './template/verification.template';
-import { HttpService } from '@nestjs/axios';
 import { BadRequestError } from './error/400.error';
 
 @Injectable()
@@ -26,7 +25,6 @@ export class EmailService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
     private readonly mailerService: MailerService,
     private readonly redisService: RedisService,
     @InjectQueue('emailQueue') private readonly emailQueue: Queue
@@ -44,7 +42,7 @@ export class EmailService {
     const validVerificationCode: string = await this.redisService.getVerificationCode(emailInfo);
 
     if (verificationCode !== validVerificationCode) {
-      throw new CustomBadRequestException(BadRequestError.VERIFICATION_CODE_INVALID.message);
+      throw new CustomBadRequestException(BadRequestError.VERIFICATION_CODE_UNMATCH.message);
     }
 
     // 로또 회차 정보, 통계 정보, 당첨금 정보를 Redis에서 가져옵니다.
