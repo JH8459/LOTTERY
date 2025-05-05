@@ -1,4 +1,4 @@
-import { SectionTitleProps } from './interface/props.interface';
+import { SectionTitleProps } from '../interface/props.interface';
 
 export default function SectionTitle({ title, subtitle }: SectionTitleProps) {
   return (
