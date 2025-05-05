@@ -7,7 +7,9 @@ services:
     ports:
       - '${API_SERVER_PORT}:${API_SERVER_PORT}'
     volumes:
-      - ./api:/api
+      - ./api/logs:/api/logs
+      - ./api/resource:/api/resource
+      - ./api/src:/api/src
     env_file:
       - ./api/.env
     environment:
@@ -30,7 +32,9 @@ services:
     ports:
       - '${CRAWLER_SERVER_PORT}:${CRAWLER_SERVER_PORT}'
     volumes:
-      - ./crawler:/crawler
+      - ./crawler/logs:/crawler/logs
+      - ./crawler/resource:/crawler/resource
+      - ./crawler/src:/crawler/src
     env_file:
       - ./crawler/.env
     restart: always
