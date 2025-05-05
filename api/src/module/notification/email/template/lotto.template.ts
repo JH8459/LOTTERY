@@ -2991,7 +2991,7 @@ export const lottoEmailTemplate = (
                                           혹은
                                           <a
                                             style="text-decoration: underline; color: #fff"
-                                            href="https://lottery.jh8459.com/support.html"
+                                            href="https://lottery.jh8459.com/support"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                           >

@@ -566,7 +566,7 @@ export class BuilderService {
         elements: [
           {
             type: 'mrkdwn',
-            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support.html|게시글>* 을 남겨주시면 답변드리겠습니다.',
+            text: ':pushpin: 궁금하신 사항이 있으신가요? *<https://lottery.jh8459.com/support|게시글>* 을 남겨주시면 답변드리겠습니다.',
           },
         ],
       },
@@ -897,7 +897,7 @@ export class BuilderService {
           },
           {
             type: 'mrkdwn',
-            text: '*이메일이 수신이 안되시면 <https://lottery.jh8459.com/support.html|문의하기>* 게시판에 남겨주세요.',
+            text: '*이메일이 수신이 안되시면 <https://lottery.jh8459.com/support|문의하기>* 게시판에 남겨주세요.',
           },
         ],
       },
