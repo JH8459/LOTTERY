@@ -23,15 +23,12 @@ export class ValidationPipeService {
           );
         });
 
-        const allMessages = validationErrors
-          .map((error) => {
-            const field = error.property;
-            const messages = Object.values(error.constraints ?? {}).join(', ');
-            return `• ${field}: ${messages}`;
-          })
-          .join('\n');
+        const firstError = validationErrors[0];
+        const firstErrorMessage = firstError
+          ? Object.values(firstError.constraints ?? {}).join(', ')
+          : '유효성 검사 에러가 발생했습니다.';
 
-        throw new CustomBadRequestException(allMessages);
+        throw new CustomBadRequestException(firstErrorMessage);
       },
     };
   }
