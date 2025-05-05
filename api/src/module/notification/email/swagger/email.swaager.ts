@@ -102,8 +102,58 @@ export const SEND_EMAIL_SWAGGER: SwaggerMethod = {
     },
     API_OK_RESPONSE: {
       status: HttpStatus.OK,
-      description: '응답 성공',
-      type: ResponseDto,
+      description: '요청 성공시 응답',
+      schema: {
+        example: {
+          statusCode: HttpStatus.OK,
+          message: '뉴스레터 이메일 발송 요청 성공',
+        } as ResponseDto,
+      },
+    },
+    API_BAD_REQUEST_RESPONSE: {
+      status: HttpStatus.BAD_REQUEST,
+      description: '잘못된 요청시 응답',
+      content: {
+        'application/json': {
+          examples: {
+            EMAIL_EMPTY: {
+              summary: '잘못된 요청 예시 (이메일 주소를 입력하지 않은 경우)',
+              value: {
+                statusCode: BadRequestError.EMAIL_EMPTY.statusCode,
+                message: BadRequestError.EMAIL_EMPTY.message,
+              },
+            },
+            EMAIL_INVALID: {
+              summary: '잘못된 요청 예시 (이메일 주소 형식이 올바르지 않은 경우)',
+              value: {
+                statusCode: BadRequestError.EMAIL_INVALID.statusCode,
+                message: BadRequestError.EMAIL_INVALID.message,
+              },
+            },
+            VERIFICATION_CODE_EMPTY: {
+              summary: '잘못된 요청 예시 (인증코드를 입력하지 않은 경우)',
+              value: {
+                statusCode: BadRequestError.VERIFICATION_CODE_EMPTY.statusCode,
+                message: BadRequestError.VERIFICATION_CODE_EMPTY.message,
+              },
+            },
+            VERIFICATION_CODE_INVALID: {
+              summary: '잘못된 요청 예시 (인증코드 형식이 올바르지 않은 경우)',
+              value: {
+                statusCode: BadRequestError.VERIFICATION_CODE_INVALID.statusCode,
+                message: BadRequestError.VERIFICATION_CODE_INVALID.message,
+              },
+            },
+            VERIFICATION_CODE_NOT_MATCH: {
+              summary: '잘못된 요청 예시 (인증코드가 일치하지 않는 경우)',
+              value: {
+                statusCode: BadRequestError.VERIFICATION_CODE_UNMATCH.statusCode,
+                message: BadRequestError.VERIFICATION_CODE_UNMATCH.message,
+              },
+            },
+          },
+        },
+      },
     },
     API_INTERNEL_SERVER_ERR_RESPONSE: {
       status: 500,

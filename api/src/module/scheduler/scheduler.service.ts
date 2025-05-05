@@ -30,7 +30,7 @@ export class SchedulerService {
 
     // lock 획득을 성공한 prod 환경에서만 실행
     if (lock && this.API_NODE_ENV === 'prod') {
-      await this.emailService.enqueueLottoEmailToSubscriberList();
+      // await this.emailService.enqueueLottoEmailToSubscriberList();
 
       await this.redisService.unLock(lockKey);
     }

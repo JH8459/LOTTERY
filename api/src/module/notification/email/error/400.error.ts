@@ -18,4 +18,8 @@ export const BadRequestError: ErrorType = {
     statusCode: HttpStatus.BAD_REQUEST,
     message: '인증 코드 형식이 올바르지 않습니다.',
   },
+  VERIFICATION_CODE_UNMATCH: {
+    statusCode: HttpStatus.BAD_REQUEST,
+    message: '인증 코드가 일치하지 않습니다.',
+  },
 };
