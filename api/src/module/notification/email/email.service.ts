@@ -119,7 +119,7 @@ export class EmailService {
         })
       );
     } catch (err) {
-      throw new CustomInternalServerErrorException(InternalServerError.GITHUB.message);
+      throw new CustomInternalServerErrorException(InternalServerError.EMAIL_REQUEST.message);
     }
   }
 
@@ -132,7 +132,7 @@ export class EmailService {
     try {
       await this.mailerService.sendMail(mailOptions);
     } catch (err) {
-      throw new CustomInternalServerErrorException('메일 전송에 실패했습니다.');
+      throw new CustomInternalServerErrorException(InternalServerError.EMAIL_SEND.message);
     }
   }
 }
