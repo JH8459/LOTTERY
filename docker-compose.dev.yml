@@ -65,7 +65,7 @@ services:
   lottery_website:
     build:
       context: ./website
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: lottery_website
     ports:
       - '${WEBSITE_PORT}:${WEBSITE_PORT}'
