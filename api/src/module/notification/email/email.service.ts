@@ -35,14 +35,17 @@ export class EmailService {
   /**
    *
    * @param emailInfo 이메일 주소
+   * @param verificationCode 인증코드 (선택)
    * @description 로또 당첨 정보 이메일 전송을 위한 작업을 큐에 추가합니다.
    */
-  async enqueueLottoEmail(emailInfo: string, verificationCode: string): Promise<void> {
-    // 인증코드가 유효한지 확인합니다.
-    const validVerificationCode: string = await this.redisService.getVerificationCode(emailInfo);
+  async enqueueLottoEmail(emailInfo: string, verificationCode?: string): Promise<void> {
+    if (verificationCode) {
+      // 인증코드가 유효한지 확인합니다.
+      const validVerificationCode: string = await this.redisService.getVerificationCode(emailInfo);
 
-    if (verificationCode !== validVerificationCode) {
-      throw new CustomBadRequestException(BadRequestError.VERIFICATION_CODE_UNMATCH.message);
+      if (verificationCode !== validVerificationCode) {
+        throw new CustomBadRequestException(BadRequestError.VERIFICATION_CODE_UNMATCH.message);
+      }
     }
 
     // 로또 회차 정보, 통계 정보, 당첨금 정보를 Redis에서 가져옵니다.
