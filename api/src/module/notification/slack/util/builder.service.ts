@@ -8,17 +8,17 @@ import {
 import { convertDateFormat, convertKRLocaleStringFormat, convertKoreanStringFormat } from 'src/common/utils/utils';
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
-import { RedisService } from 'src/module/redis/redis.service';
 import { UserInfoDto } from '../dto/user.dto';
 import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
+import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
 
 @Injectable()
 export class BuilderService {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly lottoRedisRepository: LottoRedisRepository) {}
 
   async getLottoDrwnoPrizeInfoBlock(lottoInfo?: LottoInfoInterface): Promise<(Block | KnownBlock)[]> {
     if (!lottoInfo) {
-      lottoInfo = await this.redisService.getRecentlyLottoInfo();
+      lottoInfo = await this.lottoRedisRepository.getRecentlyLottoInfo();
     }
 
     const block: (Block | KnownBlock)[] = [
@@ -576,10 +576,11 @@ export class BuilderService {
   }
 
   async getLottoStatisticPrizeInfoBlock(): Promise<(Block | KnownBlock)[]> {
-    const lottoStatisticInfo: LottoStatisticInfoInterface = await this.redisService.getRecentlyLottoStatisticInfo();
+    const lottoStatisticInfo: LottoStatisticInfoInterface =
+      await this.lottoRedisRepository.getRecentlyLottoStatisticInfo();
 
     const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface =
-      await this.redisService.getRecentlyLottoHighestPrizeInfo();
+      await this.lottoRedisRepository.getRecentlyLottoHighestPrizeInfo();
 
     const blocks: (Block | KnownBlock)[] = [
       {

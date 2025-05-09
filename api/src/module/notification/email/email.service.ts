@@ -11,13 +11,14 @@ import {
 import { InternalServerError } from './error/500.error';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { RedisService } from 'src/module/redis/redis.service';
 import {
   CustomBadRequestException,
   CustomInternalServerErrorException,
 } from 'src/common/custom/exception/exception.service';
 import { verificationCodeEmailTemplate } from './template/verification.template';
 import { BadRequestError } from './error/400.error';
+import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
+import { VerificationRedisRepository } from 'src/module/redis/repository/verification.redis.repository';
 
 @Injectable()
 export class EmailService {
@@ -26,8 +27,9 @@ export class EmailService {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-    private readonly redisService: RedisService,
-    @InjectQueue('emailQueue') private readonly emailQueue: Queue
+    @InjectQueue('emailQueue') private readonly emailQueue: Queue,
+    private readonly lottoRedisRepository: LottoRedisRepository,
+    private readonly verificationRedisRepository: VerificationRedisRepository
   ) {
     this.API_EMAIL_FROM = this.configService.get<string>('API_EMAIL_FROM');
   }
@@ -41,7 +43,7 @@ export class EmailService {
   async enqueueLottoEmail(emailInfo: string, verificationCode?: string): Promise<void> {
     if (verificationCode) {
       // 인증코드가 유효한지 확인합니다.
-      const validVerificationCode: string = await this.redisService.getVerificationCode(emailInfo);
+      const validVerificationCode: string = await this.verificationRedisRepository.getVerificationCode(emailInfo);
 
       if (verificationCode !== validVerificationCode) {
         throw new CustomBadRequestException(BadRequestError.VERIFICATION_CODE_UNMATCH.message);
@@ -49,10 +51,11 @@ export class EmailService {
     }
 
     // 로또 회차 정보, 통계 정보, 당첨금 정보를 Redis에서 가져옵니다.
-    const lottoInfo: LottoInfoInterface = await this.redisService.getRecentlyLottoInfo();
-    const lottoStatisticInfo: LottoStatisticInfoInterface = await this.redisService.getRecentlyLottoStatisticInfo();
+    const lottoInfo: LottoInfoInterface = await this.lottoRedisRepository.getRecentlyLottoInfo();
+    const lottoStatisticInfo: LottoStatisticInfoInterface =
+      await this.lottoRedisRepository.getRecentlyLottoStatisticInfo();
     const lottoHighestPrizeInfo: LottoHighestPrizeInfoInterface =
-      await this.redisService.getRecentlyLottoHighestPrizeInfo();
+      await this.lottoRedisRepository.getRecentlyLottoHighestPrizeInfo();
 
     // 이메일 전송 작업을 위한 옵션을 설정합니다.
     const mailOptions: ISendMailOptions = {

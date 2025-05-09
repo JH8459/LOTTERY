@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { WebClient, ConversationsOpenResponse, ModalView } from '@slack/web-api';
+import { WebClient, ModalView } from '@slack/web-api';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { SlackInteractionPayload } from '../interface/payload.interface';
@@ -9,24 +8,27 @@ import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { Block } from '@slack/bolt';
 import { LottoInfoInterface } from '../../../../common/interface/lotto.interface';
 import { SpeettoInfoInterface } from '../../../../common/interface/speetto.interface';
-import { RedisService } from 'src/module/redis/redis.service';
 import { LOG_TYPE_ENUM, SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 import { EmailService } from '../../email/email.service';
 import { UserInfoDto } from '../dto/user.dto';
+import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
+import { SpeettoRedisRepository } from 'src/module/redis/repository/speetto.redis.repository';
+import { VerificationRedisRepository } from 'src/module/redis/repository/verification.redis.repository';
 
 @Injectable()
 export class ViewSubmissionService {
   constructor(
-    public readonly configService: ConfigService,
-    private readonly redisService: RedisService,
     private readonly emailService: EmailService,
+    private readonly builderService: BuilderService,
     private readonly slackRepository: SlackRepository,
-    private readonly builderService: BuilderService
+    private readonly lottoRedisRepository: LottoRedisRepository,
+    private readonly spettoRedisRepository: SpeettoRedisRepository,
+    private readonly vefificationRedisRepository: VerificationRedisRepository
   ) {}
 
   async lottoPrizeInfoViewSubmissionHandler(ack: any, client: WebClient, body: SlackInteractionPayload): Promise<void> {
     // 최신 로또 회차 번호와 입력한 로또 회차 번호를 가져옵니다.
-    let recentlyDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
+    let recentlyDrwNo: number = await this.lottoRedisRepository.getRecentlyLottoDrwNo();
 
     if (!recentlyDrwNo) {
       // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
@@ -144,7 +146,7 @@ export class ViewSubmissionService {
     );
 
     // 최신 스피또 당첨 정보를 Redis에서 가져옵니다.
-    let speettoInfo: SpeettoInfoInterface = await this.redisService.getRecentlySpettoInfo(speettoType);
+    let speettoInfo: SpeettoInfoInterface = await this.spettoRedisRepository.getRecentlySpettoInfo(speettoType);
 
     if (!speettoInfo) {
       // Redis에 저장된 스피또 정보가 없을 경우, DB에서 조회합니다.
@@ -330,7 +332,7 @@ export class ViewSubmissionService {
     }
 
     // Redis에서 인증코드 가져오기
-    const verificationCode: string = await this.redisService.setVerificationCode(userEmail, 60 * 60);
+    const verificationCode: string = await this.vefificationRedisRepository.setVerificationCode(userEmail, 60 * 60);
 
     // 이메일 발송
     await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
@@ -410,7 +412,7 @@ export class ViewSubmissionService {
       body.view.state.values[SlackBlockIDEnum.EMAIL_VERIFICATION_CODE][SlackActionIDEnum.EMAIL_VERIFICATION_CODE].value;
 
     // Redis에서 인증코드를 가져옵니다.
-    const verificationCode = await this.redisService.getVerificationCode(userEmail);
+    const verificationCode = await this.vefificationRedisRepository.getVerificationCode(userEmail);
     const originalBlocks = [...body.view.blocks]; // 원본 복사 (불변성 확보)
 
     const updateView = async (updatedBlocks: Block[]): Promise<void> => {

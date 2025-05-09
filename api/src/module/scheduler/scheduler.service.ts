@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { EmailService } from '../notification/email/email.service';
-import { RedisService } from '../redis/redis.service';
 import { SchedulerLockKeyEnum } from './constant/scheduler.enum';
 import { SlackMessageService } from '../notification/slack/util/slackMessage.service';
 import { SchedulerRepository } from './repository/scheduler.repository';
 import { ConfigService } from '@nestjs/config';
 import { SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 import { SubscribeUserInfoDto } from './dto/user.dto';
+import { RedisLockService } from '../redis/util/redisLock.service';
 
 @Injectable()
 export class SchedulerService {
   private readonly API_NODE_ENV: string;
 
   constructor(
-    public readonly configService: ConfigService,
-    private readonly redisService: RedisService,
+    private readonly configService: ConfigService,
+    private readonly redisLockService: RedisLockService,
     private readonly schedulerRepository: SchedulerRepository,
     private readonly emailService: EmailService,
     private readonly slackMessageService: SlackMessageService
@@ -26,7 +26,7 @@ export class SchedulerService {
   @Cron('0 9 * * 0', { timeZone: 'Asia/Seoul' })
   async sendLottoEmailToSubscriberListScheduler(): Promise<void> {
     const lockKey: SchedulerLockKeyEnum = SchedulerLockKeyEnum.EMAIL_SEND_LOCK;
-    const lock: string = await this.redisService.setLock(lockKey);
+    const lock: boolean = await this.redisLockService.setLock(lockKey);
 
     // lock 획득을 성공한 prod 환경에서만 실행
     if (lock && this.API_NODE_ENV === 'prod') {
@@ -42,14 +42,14 @@ export class SchedulerService {
         );
       }
 
-      await this.redisService.unLock(lockKey);
+      await this.redisLockService.unLock(lockKey);
     }
   }
 
   @Cron('0 9 * * 1', { timeZone: 'Asia/Seoul' })
   async sendSlackMessageToSubscriberListScheduler(): Promise<void> {
     const lockKey: SchedulerLockKeyEnum = SchedulerLockKeyEnum.SLACK_MESSAGE_SEND_LOCK;
-    const lock: string = await this.redisService.setLock(lockKey);
+    const lock: boolean = await this.redisLockService.setLock(lockKey);
 
     // lock 획득을 성공한 prod 환경에서만 실행
     if (lock && this.API_NODE_ENV === 'prod') {
@@ -66,7 +66,7 @@ export class SchedulerService {
         );
       }
 
-      await this.redisService.unLock(lockKey);
+      await this.redisLockService.unLock(lockKey);
     }
   }
 }

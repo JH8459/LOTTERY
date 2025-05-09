@@ -1,24 +1,26 @@
-import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Redis from 'ioredis';
 import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
-import { WebClient, ConversationsOpenResponse } from '@slack/web-api';
+import { WebClient } from '@slack/web-api';
 import { SlashCommand } from '@slack/bolt';
 import { UserInfoDto } from '../dto/user.dto';
 import { SlackSubMitButtonNameEnum } from '../constant/slack.enum';
 import { RedisService } from 'src/module/redis/redis.service';
 import { ClientService } from './client.service';
+import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
+import { VerificationRedisRepository } from 'src/module/redis/repository/verification.redis.repository';
 
 @Injectable()
 export class CommandService {
   constructor(
     public readonly configService: ConfigService,
     private readonly redisService: RedisService,
-    private readonly slackRepository: SlackRepository,
     private readonly builderService: BuilderService,
-    private readonly clientService: ClientService
+    private readonly clientService: ClientService,
+    private readonly slackRepository: SlackRepository,
+    private readonly lottoRedisRepository: LottoRedisRepository,
+    private readonly verificationRedisRepository: VerificationRedisRepository
   ) {}
 
   async lottoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
@@ -26,7 +28,7 @@ export class CommandService {
     const client: WebClient = await this.clientService.getWebClientById(command.team_id);
 
     // 최신 로또 회차 정보를 가져옵니다.
-    let recentlyLottoDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
+    let recentlyLottoDrwNo: number = await this.lottoRedisRepository.getRecentlyLottoDrwNo();
 
     if (!recentlyLottoDrwNo) {
       // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
@@ -88,11 +90,6 @@ export class CommandService {
     const userId: string = command.user_id;
     const teamId: string = command.team_id;
 
-    // // 유저와 앱 간의 개인 채널을 엽니다.
-    // const response: ConversationsOpenResponse = await client.conversations.open({
-    //   users: userId,
-    // });
-
     // 유저의 정보를 조회합니다.
     const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
 
@@ -112,19 +109,5 @@ export class CommandService {
         },
       },
     });
-
-    // if (userInfo && userInfo.isSlackSubscribe) {
-    //   // 유저의 앱 채널에서 구독 취소 메시지를 발송합니다.
-    //   await client.chat.postMessage({
-    //     channel: response.channel.id,
-    //     blocks: await this.builderService.getUnSubscribeInfoBlock(userId),
-    //   });
-    // } else {
-    //   // 유저의 앱 채널에서 구독 신청 메시지를 발송합니다.
-    //   await client.chat.postMessage({
-    //     channel: response.channel.id,
-    //     blocks: await this.builderService.getSubscribeInfoBlock(userId),
-    //   });
-    // }
   }
 }

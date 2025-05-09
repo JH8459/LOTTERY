@@ -6,21 +6,23 @@ import { SlackInteractionPayload } from '../interface/payload.interface';
 import { SlackActionIDEnum, SlackBlockIDEnum, SlackSubMitButtonNameEnum } from '../constant/slack.enum';
 import { convertKRLocaleStringFormat } from 'src/common/utils/utils';
 import { UserInfoDto } from '../dto/user.dto';
-import { RedisService } from 'src/module/redis/redis.service';
 import { LOG_TYPE_ENUM, SUBSCRIBE_TYPE } from 'src/common/constant/enum';
 import { EmailService } from '../../email/email.service';
+import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
+import { VerificationRedisRepository } from 'src/module/redis/repository/verification.redis.repository';
 
 @Injectable()
 export class ActionService {
   constructor(
-    private readonly redisService: RedisService,
     private readonly emailService: EmailService,
+    private readonly builderService: BuilderService,
     private readonly slackRepository: SlackRepository,
-    private readonly builderService: BuilderService
+    private readonly lottoRedisRepository: LottoRedisRepository,
+    private readonly verificationRedisRepository: VerificationRedisRepository
   ) {}
 
   async prizeInfoActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    let recentlyDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
+    let recentlyDrwNo: number = await this.lottoRedisRepository.getRecentlyLottoDrwNo();
 
     if (!recentlyDrwNo) {
       // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
@@ -49,7 +51,7 @@ export class ActionService {
   }
 
   async recentlyPrizeInfoActionHandler(client: WebClient, body: SlackInteractionPayload): Promise<void> {
-    let recentlyDrwNo: number = await this.redisService.getRecentlyLottoDrwNo();
+    let recentlyDrwNo: number = await this.lottoRedisRepository.getRecentlyLottoDrwNo();
 
     if (!recentlyDrwNo) {
       // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
@@ -303,7 +305,7 @@ export class ActionService {
     originalBlocks.splice(emailConfirmIndex + 1, 0, resendCommentBlock);
 
     // Redis에서 6자리 인증코드를 가져옵니다. (유효시간: 1시간)
-    const verificationCode: string = await this.redisService.setVerificationCode(userEmail, 60 * 60);
+    const verificationCode: string = await this.verificationRedisRepository.setVerificationCode(userEmail, 60 * 60);
 
     // 인증코드 이메일을 발송합니다.
     await this.emailService.enqueueVerificationCodeEmail(userEmail, verificationCode);
