@@ -1,38 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { WebClient } from '@slack/web-api';
 import { SlashCommand } from '@slack/bolt';
 import { UserInfoDto } from '../dto/user.dto';
 import { SlackSubMitButtonNameEnum } from '../constant/slack.enum';
-import { RedisService } from 'src/module/redis/redis.service';
 import { ClientService } from './client.service';
 import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
-import { VerificationRedisRepository } from 'src/module/redis/repository/verification.redis.repository';
+import { LottoSlackRepository } from '../repository/lotto.slack.repository';
+import { UserSlackRepository } from '../repository/user.slack.repository';
 
 @Injectable()
 export class CommandService {
   constructor(
     public readonly configService: ConfigService,
-    private readonly redisService: RedisService,
     private readonly builderService: BuilderService,
     private readonly clientService: ClientService,
-    private readonly slackRepository: SlackRepository,
+    private readonly lottoSlackRepository: LottoSlackRepository,
     private readonly lottoRedisRepository: LottoRedisRepository,
-    private readonly verificationRedisRepository: VerificationRedisRepository
+    private readonly userSlackRepository: UserSlackRepository
   ) {}
 
   async lottoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
     // 클라이언트를 생성합니다.
-    const client: WebClient = await this.clientService.getWebClientById(command.team_id);
+    const client: WebClient = await this.clientService.getWebClient(command.team_id);
 
     // 최신 로또 회차 정보를 가져옵니다.
     let recentlyLottoDrwNo: number = await this.lottoRedisRepository.getRecentlyLottoDrwNo();
 
     if (!recentlyLottoDrwNo) {
       // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
-      recentlyLottoDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
+      recentlyLottoDrwNo = await this.lottoSlackRepository.getRecentlyLottoDrwNo();
     }
 
     // 모달을 출력합니다.
@@ -59,7 +57,7 @@ export class CommandService {
 
   async speettoPrizeInfoCommandHandler(command: SlashCommand): Promise<void> {
     // 클라이언트를 생성합니다.
-    const client: WebClient = await this.clientService.getWebClientById(command.team_id);
+    const client: WebClient = await this.clientService.getWebClient(command.team_id);
 
     // 모달을 출력합니다.
     await client.views.open({
@@ -85,13 +83,13 @@ export class CommandService {
 
   async subscribeCommandHandler(command: SlashCommand): Promise<void> {
     // 클라이언트를 생성합니다.
-    const client: WebClient = await this.clientService.getWebClientById(command.team_id);
+    const client: WebClient = await this.clientService.getWebClient(command.team_id);
 
     const userId: string = command.user_id;
     const teamId: string = command.team_id;
 
     // 유저의 정보를 조회합니다.
-    const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+    const userInfo: UserInfoDto = await this.userSlackRepository.getUserInfo({ workspaceId: teamId, userId });
 
     // 모달을 출력합니다.
     await client.views.open({

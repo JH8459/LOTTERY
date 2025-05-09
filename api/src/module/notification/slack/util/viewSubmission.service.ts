@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { WebClient, ModalView } from '@slack/web-api';
-import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { SlackInteractionPayload } from '../interface/payload.interface';
 import { SlackActionIDEnum, SlackBlockIDEnum } from '../constant/slack.enum';
@@ -14,15 +13,24 @@ import { UserInfoDto } from '../dto/user.dto';
 import { LottoRedisRepository } from 'src/module/redis/repository/lotto.redis.repository';
 import { SpeettoRedisRepository } from 'src/module/redis/repository/speetto.redis.repository';
 import { VerificationRedisRepository } from 'src/module/redis/repository/verification.redis.repository';
+import { LottoSlackRepository } from '../repository/lotto.slack.repository';
+import { SpeettoSlackRepository } from '../repository/speetto.slack.repository';
+import { UserSlackRepository } from '../repository/user.slack.repository';
+import { WorkspaceSlackRepository } from '../repository/workspace.slack.repository';
+import { UserLogSlackRepository } from '../repository/userLog.slack.repository';
 
 @Injectable()
 export class ViewSubmissionService {
   constructor(
     private readonly emailService: EmailService,
     private readonly builderService: BuilderService,
-    private readonly slackRepository: SlackRepository,
+    private readonly lottoSlackRepository: LottoSlackRepository,
     private readonly lottoRedisRepository: LottoRedisRepository,
+    private readonly speetoSlackRepository: SpeettoSlackRepository,
     private readonly spettoRedisRepository: SpeettoRedisRepository,
+    private readonly userSlackRepository: UserSlackRepository,
+    private readonly userLogSlackRepository: UserLogSlackRepository,
+    private readonly workspaceSlackRepository: WorkspaceSlackRepository,
     private readonly vefificationRedisRepository: VerificationRedisRepository
   ) {}
 
@@ -32,7 +40,7 @@ export class ViewSubmissionService {
 
     if (!recentlyDrwNo) {
       // Redis에 저장된 최근 로또 회차 번호가 없을 경우, DB에서 조회합니다.
-      recentlyDrwNo = await this.slackRepository.getRecentlyLottoDrwNo();
+      recentlyDrwNo = await this.lottoSlackRepository.getRecentlyLottoDrwNo();
     }
 
     const drwNo: number = Number(
@@ -98,7 +106,7 @@ export class ViewSubmissionService {
         },
       });
     } else {
-      const lottoInfo: LottoInfoInterface = await this.slackRepository.getLottoInfo(drwNo);
+      const lottoInfo: LottoInfoInterface = await this.lottoSlackRepository.getLottoInfo(drwNo);
 
       await ack({
         response_action: 'update',
@@ -150,7 +158,7 @@ export class ViewSubmissionService {
 
     if (!speettoInfo) {
       // Redis에 저장된 스피또 정보가 없을 경우, DB에서 조회합니다.
-      speettoInfo = await this.slackRepository.getSpeettoInfo(speettoType);
+      speettoInfo = await this.speetoSlackRepository.getSpeettoInfo(speettoType);
     }
 
     await ack({
@@ -196,12 +204,12 @@ export class ViewSubmissionService {
     const teamId = body.team.id;
     const userId = body.user.id;
 
-    // 유저 정보 조회
-    const userInfo = await this.slackRepository.getUserInfo(teamId, userId);
-    const workspaceIdx = userInfo ? userInfo.workspaceIdx : await this.slackRepository.getWorkSpaceIdx(teamId);
+    const userInfo: UserInfoDto = await this.userSlackRepository.getUserInfo({ workspaceId: teamId, userId });
+
+    const workspaceIdx = userInfo ? userInfo.workspaceIdx : await this.workspaceSlackRepository.getWorkSpaceIdx(teamId);
 
     // 유저 구독 상태 업데이트 (구독 해제)
-    const userIdx = await this.slackRepository.upsertSubscribeStatus(
+    const userIdx = await this.userSlackRepository.upsertSubscribeStatus(
       userInfo,
       workspaceIdx,
       userId,
@@ -213,7 +221,7 @@ export class ViewSubmissionService {
     const logType: LOG_TYPE_ENUM =
       subscribeType === SUBSCRIBE_TYPE.SLACK ? LOG_TYPE_ENUM.SLACK_UNSUBSCRIBE : LOG_TYPE_ENUM.EMAIL_UNSUBSCRIBE;
 
-    await this.slackRepository.saveUserlog(userIdx, logType);
+    await this.userLogSlackRepository.insertUserlog(userIdx, logType);
 
     // 피드백 추출
     const feedback =
@@ -223,7 +231,7 @@ export class ViewSubmissionService {
             ?.value;
 
     if (feedback) {
-      await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.FEEDBACK_INPUT, feedback);
+      await this.userLogSlackRepository.insertUserlog(userIdx, LOG_TYPE_ENUM.FEEDBACK_INPUT, feedback);
     }
 
     // View 닫기
@@ -485,15 +493,15 @@ export class ViewSubmissionService {
     const teamId: string = body.user.team_id;
 
     // 유저 정보를 조회합니다.
-    const userInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+    const userInfo: UserInfoDto = await this.userSlackRepository.getUserInfo({ workspaceId: teamId, userId });
     let workspaceIdx: number;
 
     if (!userInfo) {
-      workspaceIdx = await this.slackRepository.getWorkSpaceIdx(teamId);
+      workspaceIdx = await this.workspaceSlackRepository.getWorkSpaceIdx(teamId);
     }
 
     // 유저 정보를 업데이트합니다. (이메일 서비스 구독)
-    const userIdx = await this.slackRepository.upsertSubscribeStatus(
+    const userIdx = await this.userSlackRepository.upsertSubscribeStatus(
       userInfo,
       workspaceIdx,
       userId,
@@ -503,10 +511,10 @@ export class ViewSubmissionService {
     );
 
     // 유저 로그를 저장합니다.
-    await this.slackRepository.saveUserlog(userIdx, LOG_TYPE_ENUM.EMAIL_SUBSCRIBE, userEmail);
+    await this.userLogSlackRepository.insertUserlog(userIdx, LOG_TYPE_ENUM.EMAIL_SUBSCRIBE, userEmail);
 
     // 유저 정보를 재조회합니다.
-    const updateUserInfo: UserInfoDto = await this.slackRepository.getUserInfo(teamId, userId);
+    const updateUserInfo: UserInfoDto = await this.userSlackRepository.getUserInfo({ workspaceId: teamId, userId });
 
     // 모달창 업데이트
     await client.views.update({

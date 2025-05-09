@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { SlackRepository } from '../repository/slack.repository';
 import { ConfigService } from '@nestjs/config';
 import { AxiosResponse } from 'axios';
 import { CustomLoggerService } from 'src/module/logger/logger.service';
@@ -7,6 +6,7 @@ import { CustomInternalServerErrorException } from 'src/common/custom/exception/
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { SlackOAuthResponse, SlackTeamResponse } from '../interface/response.interface';
+import { WorkspaceSlackRepository } from '../repository/workspace.slack.repository';
 
 @Injectable()
 /**
@@ -15,7 +15,7 @@ import { SlackOAuthResponse, SlackTeamResponse } from '../interface/response.int
  * @param {ConfigService} configService - NestJS ConfigService 인스턴스입니다.
  * @param {HttpService} httpService - NestJS HttpService 인스턴스입니다.
  * @param {CustomLoggerService} loggerService - CustomLoggerService 인스턴스입니다.
- * @param {SlackRepository} slackRepository - SlackRepository 인스턴스입니다.
+ * @param {WorkspaceSlackRepository} workspaceSlackRepository - workspaceSlackRepository 인스턴스입니다.
  * @property {string} API_SLACK_CLIENT_ID - Slack Client ID입니다.
  * @property {string} API_SLACK_CLIENT_SECRET - Slack Client Secret입니다.
  */
@@ -27,11 +27,12 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
     private readonly loggerService: CustomLoggerService,
-    private readonly slackRepository: SlackRepository
+    private readonly workspaceSlackRepository: WorkspaceSlackRepository
   ) {
     this.API_SLACK_CLIENT_ID = this.configService.get<string>('API_SLACK_CLIENT_ID');
     this.API_SLACK_CLIENT_SECRET = this.configService.get<string>('API_SLACK_CLIENT_SECRET');
   }
+
   /**
    * @description - 주어진 code를 사용하여 워크스페이스에 대한 Slack 인증 절차를 수행하고 accessToken과 워크스페이스 정보를 DB에 저장합니다.
    * @param {string} code - Slack OAuth 인증 코드입니다.
@@ -44,7 +45,7 @@ export class AuthService {
       const teamResponseInfo: SlackTeamResponse = await this.fetchTeamInfo(oAuthResponseInfo);
 
       // accessToken과 팀 워크스페이스 정보를 DB에 저장
-      await this.slackRepository.saveAccessToken(
+      await this.workspaceSlackRepository.upsertAccessToken(
         teamResponseInfo.workspaceName,
         teamResponseInfo.workspaceId,
         oAuthResponseInfo.accessToken

@@ -56,7 +56,7 @@ export class SlackService implements OnModuleInit {
     await ack();
 
     // 클라이언트를 생성합니다.
-    const client: WebClient = await this.clientService.getWebClientById(body.user.team_id);
+    const client: WebClient = await this.clientService.getWebClient(body.user.team_id);
     // 핸들러를 등록합니다.
     await this.actionHandler.registerActionHandler(client, body);
   }
@@ -65,7 +65,7 @@ export class SlackService implements OnModuleInit {
     const teamId: string = body.team.id;
 
     // 클라이언트를 생성합니다.
-    const client: WebClient = await this.clientService.getWebClientById(teamId);
+    const client: WebClient = await this.clientService.getWebClient(teamId);
     // 핸들러를 등록합니다.
     await this.viewSubmissionHandler.registerViewSubmissionHandler(ack, client, body);
   }

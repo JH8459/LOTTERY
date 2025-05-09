@@ -3,7 +3,6 @@ import { SlackController } from './slack.controller';
 import { SlackService } from './slack.service';
 import { LottoEntity } from 'src/entity/lotto.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SlackRepository } from './repository/slack.repository';
 import { BuilderService } from './util/builder.service';
 import { WorkspaceEntity } from 'src/entity/workspace.entity';
 import { UserEntity } from 'src/entity/user.entity';
@@ -23,6 +22,11 @@ import { ActionHandler } from './handler/action.handler';
 import { ViewSubmissionHandler } from './handler/viewSubmission.handler';
 import { AuthService } from './util/auth.service';
 import { HttpModule } from '@nestjs/axios';
+import { LottoSlackRepository } from './repository/lotto.slack.repository';
+import { SpeettoSlackRepository } from './repository/speetto.slack.repository';
+import { UserSlackRepository } from './repository/user.slack.repository';
+import { UserLogSlackRepository } from './repository/userLog.slack.repository';
+import { WorkspaceSlackRepository } from './repository/workspace.slack.repository';
 
 @Module({
   imports: [
@@ -34,7 +38,6 @@ import { HttpModule } from '@nestjs/axios';
   providers: [
     SlackAppFactory,
     SlackService,
-    SlackRepository,
     BuilderService,
     CommandService,
     ActionService,
@@ -46,6 +49,11 @@ import { HttpModule } from '@nestjs/axios';
     CommandHandler,
     ActionHandler,
     ViewSubmissionHandler,
+    LottoSlackRepository,
+    SpeettoSlackRepository,
+    UserSlackRepository,
+    UserLogSlackRepository,
+    WorkspaceSlackRepository,
   ],
   controllers: [SlackController],
   exports: [SlackMessageService, WebHookService],

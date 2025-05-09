@@ -1,26 +1,23 @@
 import { WebClient, ConversationsOpenResponse, ChatPostMessageResponse } from '@slack/web-api';
 import { UserInfoDto } from '../dto/user.dto';
-import { SlackRepository } from '../repository/slack.repository';
 import { BuilderService } from './builder.service';
 import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
 import { ClientService } from './client.service';
+import { UserSlackRepository } from '../repository/user.slack.repository';
 
 @Injectable()
 export class SlackMessageService {
   constructor(
-    private readonly slackRepository: SlackRepository,
-    private readonly builderService: BuilderService,
     private readonly clientService: ClientService,
-    @InjectQueue('slackQueue') private readonly slackQueue: Queue
+    private readonly builderService: BuilderService,
+    private readonly userSlackRepository: UserSlackRepository
   ) {}
 
   async sendSlackMessageToSubscriberList(userIdx: number): Promise<void> {
-    const userInfo: UserInfoDto = await this.slackRepository.getUserInfoByIdx(userIdx);
+    const userInfo: UserInfoDto = await this.userSlackRepository.getUserInfo({ userIdx });
 
     // 클라이언트를 생성합니다.
-    const client: WebClient = await this.clientService.getWebClientById(userInfo.workspaceId);
+    const client: WebClient = await this.clientService.getWebClient(userInfo.workspaceId);
 
     // 유저와 앱 간의 개인 채널을 엽니다.
     const response: ConversationsOpenResponse = await client.conversations.open({

@@ -5,13 +5,13 @@ import { of } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { AppModule } from 'src/module/app.module';
 import { SlackService } from 'src/module/notification/slack/slack.service';
-import { SlackRepository } from 'src/module/notification/slack/repository/slack.repository';
+import { WorkspaceSlackRepository } from 'src/module/notification/slack/repository/workspace.slack.repository';
 
 describe('SlackController E2E - /slack/auth', () => {
   let app: INestApplication;
   let httpService: HttpService;
   let slackService: SlackService;
-  let slackRepository: SlackRepository;
+  let workspaceSlackRepository: WorkspaceSlackRepository;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -23,7 +23,7 @@ describe('SlackController E2E - /slack/auth', () => {
 
     httpService = moduleFixture.get<HttpService>(HttpService);
     slackService = moduleFixture.get<SlackService>(SlackService);
-    slackRepository = moduleFixture.get<SlackRepository>(SlackRepository);
+    workspaceSlackRepository = moduleFixture.get<WorkspaceSlackRepository>(WorkspaceSlackRepository);
   });
 
   afterAll(async () => {
@@ -68,7 +68,7 @@ describe('SlackController E2E - /slack/auth', () => {
     expect(redirectUrl).toBe(`https://${mockTeamDomain}.slack.com/app_redirect?app=${mockAppId}`);
 
     // accessToken DB 저장 검증
-    const accessToken: string = await slackRepository.getAccessToken(mockTeamId);
+    const accessToken: string = await workspaceSlackRepository.getAccessToken(mockTeamId);
 
     expect(accessToken).not.toBeNull();
     expect(accessToken).toBe(mockAccessToken);
