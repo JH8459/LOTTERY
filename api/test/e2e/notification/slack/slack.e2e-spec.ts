@@ -1,16 +1,16 @@
+import * as supertest from 'supertest';
+import { Response as SupertestResponse } from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { of } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { AppModule } from 'src/module/app.module';
-import { SlackService } from 'src/module/notification/slack/slack.service';
 import { WorkspaceSlackRepository } from 'src/module/notification/slack/repository/workspace.slack.repository';
 
 describe('SlackController E2E - /slack/auth', () => {
   let app: INestApplication;
   let httpService: HttpService;
-  let slackService: SlackService;
   let workspaceSlackRepository: WorkspaceSlackRepository;
 
   beforeAll(async () => {
@@ -22,7 +22,6 @@ describe('SlackController E2E - /slack/auth', () => {
     await app.init();
 
     httpService = moduleFixture.get<HttpService>(HttpService);
-    slackService = moduleFixture.get<SlackService>(SlackService);
     workspaceSlackRepository = moduleFixture.get<WorkspaceSlackRepository>(WorkspaceSlackRepository);
   });
 
@@ -30,14 +29,16 @@ describe('SlackController E2E - /slack/auth', () => {
     await app.close();
   });
 
-  it('✅ authorizeSlackCode - auth.service.ts의 fetchOAuthInfo, fetchTeamInfo 메서드가 모두 성공시 의도한 accessToken을 저장하고 Redirect URL을 반환하는가?', async () => {
+  it(`✅ '/slack/auth' API`, async () => {
     const mockAccessToken = 'fake-access-token';
     const mockAppId = 'fake-app-id';
     const mockTeamId = 'fake-team-id';
     const mockTeamName = 'fake-team-name';
     const mockTeamDomain = 'fake-domain';
+    const code = 'test-code';
+    const expectedRedirectUrl = `https://${mockTeamDomain}.slack.com/app_redirect?app=${mockAppId}`;
 
-    // 1. Slack OAuth Access Token API Mock
+    // 1. Slack OAuth Access Token API Mock (인증 성공 ✅)
     jest.spyOn(httpService, 'post').mockReturnValueOnce(
       of({
         data: {
@@ -48,7 +49,7 @@ describe('SlackController E2E - /slack/auth', () => {
       } as AxiosResponse)
     );
 
-    // 2. Slack Team Info API Mock
+    // 2. Slack Team Info API Mock (인증 성공 ✅)
     jest.spyOn(httpService, 'get').mockReturnValueOnce(
       of({
         data: {
@@ -62,20 +63,28 @@ describe('SlackController E2E - /slack/auth', () => {
       } as AxiosResponse)
     );
 
-    // 리다이렉트 URL 검증
-    const redirectUrl: string = await slackService.authorizeSlackCode('test-code');
+    // API 응답이 의도한 URL로 리다이렉트 되는지 검증
+    const response: SupertestResponse = await supertest(app.getHttpServer())
+      .get(`/slack/auth?code=${code}`)
+      .expect(302);
 
-    expect(redirectUrl).toBe(`https://${mockTeamDomain}.slack.com/app_redirect?app=${mockAppId}`);
+    const locationHeader: string | undefined = response.header?.location;
 
-    // accessToken DB 저장 검증
-    const accessToken: string = await workspaceSlackRepository.getAccessToken(mockTeamId);
+    expect(locationHeader).toBeDefined();
+    expect(locationHeader).toBe(expectedRedirectUrl);
 
-    expect(accessToken).not.toBeNull();
+    // API 호출 후 accessToken이 DB에 저장되었는지 검증
+    const accessToken = await workspaceSlackRepository.getAccessToken(mockTeamId);
+
+    expect(accessToken).toBeDefined();
     expect(accessToken).toBe(mockAccessToken);
   });
 
-  it(`❌ authorizeSlackCode - auth.service.ts의 fetchOAuthInfo 메서드 인증 실패 시 'https://slack.com'으로 Redirect URL을 반환하는가?`, async () => {
-    // 1. Slack OAuth Access Token API Mock (인증 실패)
+  it(`❌ '/slack/auth' API - Slack OAuth Access Token API 인증 실패 시`, async () => {
+    const code = 'test-code';
+    const expectedRedirectUrl = 'https://slack.com';
+
+    // 1. Slack OAuth Access Token API Mock (인증 실패 ❌)
     jest.spyOn(httpService, 'post').mockReturnValueOnce(
       of({
         data: {
@@ -84,17 +93,24 @@ describe('SlackController E2E - /slack/auth', () => {
       } as AxiosResponse)
     );
 
-    // 리다이렉트 URL 검증
-    const redirectUrl: string = await slackService.authorizeSlackCode('test-code');
+    // API 응답이 의도한 URL로 리다이렉트 되는지 검증
+    const response: SupertestResponse = await supertest(app.getHttpServer())
+      .get(`/slack/auth?code=${code}`)
+      .expect(302);
 
-    expect(redirectUrl).toBe('https://slack.com');
+    const locationHeader: string | undefined = response.header?.location;
+
+    expect(locationHeader).toBeDefined();
+    expect(locationHeader).toBe(expectedRedirectUrl);
   });
 
-  it(`❌ authorizeSlackCode - auth.service.ts의 fetchTeamInfo 메서드 인증 실패 시 'https://slack.com'으로 Redirect URL을 반환하는가?`, async () => {
+  it(`❌ '/slack/auth' API - Slack Team Info API 인증 실패 시`, async () => {
     const mockAccessToken = 'fake-access-token';
     const mockAppId = 'fake-app-id';
+    const code = 'test-code';
+    const expectedRedirectUrl = 'https://slack.com';
 
-    // 1. Slack OAuth Access Token API Mock
+    // 1. Slack OAuth Access Token API Mock (인증 성공 ✅)
     jest.spyOn(httpService, 'post').mockReturnValueOnce(
       of({
         data: {
@@ -105,7 +121,7 @@ describe('SlackController E2E - /slack/auth', () => {
       } as AxiosResponse)
     );
 
-    // 2. Slack Team Info API Mock (인증 실패)
+    // 2. Slack Team Info API Mock (인증 실패 ❌)
     jest.spyOn(httpService, 'get').mockReturnValueOnce(
       of({
         data: {
@@ -114,9 +130,14 @@ describe('SlackController E2E - /slack/auth', () => {
       } as AxiosResponse)
     );
 
-    // 리다이렉트 URL 검증
-    const redirectUrl: string = await slackService.authorizeSlackCode('test-code');
+    // API 응답이 의도한 URL로 리다이렉트 되는지 검증
+    const response: SupertestResponse = await supertest(app.getHttpServer())
+      .get(`/slack/auth?code=${code}`)
+      .expect(302);
 
-    expect(redirectUrl).toBe('https://slack.com');
+    const locationHeader: string | undefined = response.header?.location;
+
+    expect(locationHeader).toBeDefined();
+    expect(locationHeader).toBe(expectedRedirectUrl);
   });
 });
