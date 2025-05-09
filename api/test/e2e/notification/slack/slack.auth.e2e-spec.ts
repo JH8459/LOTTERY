@@ -5,8 +5,8 @@ import { INestApplication } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { of } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { AppModule } from 'src/module/app.module';
 import { WorkspaceSlackRepository } from 'src/module/notification/slack/repository/workspace.slack.repository';
+import { AppModule } from 'src/module/app.module';
 
 describe('SlackController E2E - /slack/auth', () => {
   let app: INestApplication;
@@ -21,8 +21,8 @@ describe('SlackController E2E - /slack/auth', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    httpService = moduleFixture.get<HttpService>(HttpService);
-    workspaceSlackRepository = moduleFixture.get<WorkspaceSlackRepository>(WorkspaceSlackRepository);
+    httpService = app.get<HttpService>(HttpService);
+    workspaceSlackRepository = app.get<WorkspaceSlackRepository>(WorkspaceSlackRepository);
   });
 
   afterAll(async () => {
