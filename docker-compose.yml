@@ -12,6 +12,11 @@ services:
     environment:
       API_NODE_ENV: prod
     restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${API_SERVER_PORT}/health']
       interval: 1h
@@ -32,6 +37,11 @@ services:
     env_file:
       - ./crawler/.env
     restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${CRAWLER_SERVER_PORT}/health']
       interval: 1h
@@ -47,6 +57,11 @@ services:
     restart: always
     volumes:
       - ./redis-data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 1h
@@ -64,6 +79,11 @@ services:
     volumes:
       - ./website/public:/website/public
     restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
     networks:
       - lottery_net
 
